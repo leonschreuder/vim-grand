@@ -1,0 +1,8 @@
+Python Unittesting setup:
+
+compiler pyunit
+set makeprg=python
+MakeGreen -m unittest discover
+
+
+http://www.sontek.net/blog/2011/05/07/turning_vim_into_a_modern_python_ide.html#test-integration

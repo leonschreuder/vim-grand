@@ -8,9 +8,8 @@ class ClassPath:
 
     def getPathsFromFile(self):
         list = []
-	with open('python/example-classpath-file') as f:
+        with open('example-classpath-file', 'U') as f:
             for line in f:
-                list.append(line)
+                list.append(line.rstrip())
         return ':'.join(list)
-
 
