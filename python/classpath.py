@@ -34,9 +34,13 @@ class ClassPath:
 
     def getPathsFromFile(self):
         list = []
+
         filename = '.syntastic-classpath'
         print os.getcwd()
+
+        #TODO test this
         if (os.path.isfile(filename)):
+
             with open(filename, 'U') as f:
                 for line in f:
                     list.append(line.rstrip())
