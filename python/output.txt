@@ -1,0 +1,23 @@
+E..
+======================================================================
+ERROR: test_getAndroidVersionFromBuildGradle (test_classpath.TestClassPath)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/laschreuder/.vim/bundle/vim-android-gradle/python/test_classpath.py", line 18, in test_getAndroidVersionFromBuildGradle
+    result = ClassPath().getAndroidVersionFromBuildGradle()
+AttributeError: ClassPath instance has no attribute 'getAndroidVersionFromBuildGradle'
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+FAILED (errors=1)
+E..
+======================================================================
+ERROR: test_getAndroidVersionFromBuildGradle (test_classpath.TestClassPath)
+----------------------------------------------------------------------
+TypeError: test_getAndroidVersionFromBuildGradle() takes no arguments (1 given)
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.000s
+
+FAILED (errors=1)
