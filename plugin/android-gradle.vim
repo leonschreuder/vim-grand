@@ -22,17 +22,22 @@ sys.path.append(lib_path)
 
 #print sys.path
 
-from classpath import ClassPath
+from PathsResolver import PathsResolver
 
 
-returnedClassPaths = ClassPath().getAllClassPaths();
-print returnedClassPaths
+resolvedClassPaths = PathsResolver().getAllClassPaths()
+resolvedSourcePaths = PathsResolver().getAllSourcePaths()
+print resolvedClassPaths
 
-vim.command("let $CLASSPATH = '" + ':'.join(returnedClassPaths) + "'")
-vim.command("setlocal path=" + ','.join(returnedClassPaths))
+vim.command("let $CLASSPATH = '" + ':'.join(resolvedClassPaths) + "'")
+vim.command("let $SRCPATH = '" + ':'.join(resolvedSourcePaths) + "'")
+vim.command("setlocal path=" + ','.join(resolvedClassPaths))
 
 vim.command("silent! call javacomplete#SetClassPath($CLASSPATH)")
 vim.command("silent! call javacomplete#SetSourcePath($SRCPATH)")
 
 EOF
 endfunction
+
+command! AndroidSetup call AndroidGradle()
+

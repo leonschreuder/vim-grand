@@ -4,43 +4,58 @@ import re
 import os
 import sys
 
-class ClassPath:
+class PathsResolver:
     def __init__(self):
         sys.path.append(os.getcwd())
 
 
     def getAllClassPaths(self):
-        paths = []
-        paths.extend(self.getProjectSources())
-        paths.extend(self.getProjectBuildSources())
-        paths.extend(self.getPathsFromFile())
-        paths.append(self.getAndroidSdkJar())
-        return paths
+        classPathsAndJars = []
+        # x addProjectClassPath > '.bin/classes'
+        # x addGradleSDKJar > 'platforms/android-19/android.jar'
+        # - addGradleClassPath >
+            # - /build/bundles/debug/classes.jar   ??
+            # - /libs/*.jar
+        # - addPropertiesClassPath > paths specified in project.properties (only non gradle?)
+
+        classPathsAndJars.extend(self.getProjectSourcePaths()) # Does syntastic need this?
+        classPathsAndJars.extend(self.getGeneratedProjectClassPaths())
+        classPathsAndJars.extend(self.getGradleClassPathsFromFile())
+        classPathsAndJars.append(self.getAndroidSdkJar())
+        return classPathsAndJars
 
     def getAllSourcePaths(self):
-        None
+        # 'paths' sourcePaths
+        #addProjectClassPath > None
+        #addGradleSDKJar > 'sources/android-19/'
+        #addGradleClassPath >
+            # ./src (if available)
+        #addPropertiesClassPath > paths specified in project.properties (only non gradle?)
+
+        sourcePaths = []
+        sourcePaths.extend(self.getProjectSourcePaths())
+        sourcePaths.append(self.getAndroidSdkSourcePath())
+        return sourcePaths
 
 
-    def getProjectSources(self):
+    def getProjectSourcePaths(self):
         projectClassPath = './src/main/java'
         projectResPath = './src/main/res'
         #return ':'.join([projectClassPath, generatedSources])
         return [projectClassPath, projectResPath]
 
-    def getProjectBuildSources(self):
+    def getGeneratedProjectClassPaths(self):
         generatedDebugClasses =  './build/intermediates/classes/debug'
         return [generatedDebugClasses]
 
 
-    def getPathsFromFile(self):
+    def getGradleClassPathsFromFile(self):
         list = []
 
-        filename = '.syntastic-classpath'
+        filename = 'gradle-sources'
         print os.getcwd()
 
-        #TODO test this
         if (os.path.isfile(filename)):
-
             with open(filename, 'U') as f:
                 for line in f:
                     list.append(line.rstrip())
