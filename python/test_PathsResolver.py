@@ -3,7 +3,7 @@
 import unittest
 import os
 
-from classpath import PathsResolver
+from PathsResolver import PathsResolver
 
 class TestClassPath (unittest.TestCase):
     def setUp(self):

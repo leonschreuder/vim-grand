@@ -39,5 +39,29 @@ vim.command("silent! call javacomplete#SetSourcePath($SRCPATH)")
 EOF
 endfunction
 
+
+
+function! AndroidUpdateTags()
+python << EOF
+import vim
+import os
+import sys
+#sys.path.append(os.getcwd())
+
+script_path = vim.eval('s:python_folder_path')
+lib_path = os.path.join(script_path, '.') 
+print lib_path
+sys.path.append(lib_path)
+
+from TagsHandler import TagsHandler
+
+TagsHandler().executeCtagsCommand()
+
+
+EOF
+endfunction
+
+
+
 command! AndroidSetup call AndroidGradle()
 
