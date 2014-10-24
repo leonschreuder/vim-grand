@@ -3,7 +3,8 @@
 import sys
 import os
 
-from subprocess import call
+#from subprocess import call
+from subprocess import Popen
 from PathsResolver import PathsResolver
 
 class TagsHandler:
@@ -19,12 +20,13 @@ class TagsHandler:
         ctagsShellCommand = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
         finalCommandArray += ctagsShellCommand
 
-        ctagsTargetFile = ['-f', '.tags'] #TODO make tag file name/location dynamic
-        finalCommandArray += ctagsTargetFile
+        
+        ctagsTargetFile = 'tags' #TODO make tag file name/location dynamic
+        finalCommandArray += ['-f', ctagsTargetFile]
 
         sourcePaths = PathsResolver().getAllSourcePaths();
         finalCommandArray += sourcePaths
 
         print " ".join(finalCommandArray)
 
-        call(finalCommandArray)
+        Popen(finalCommandArray)
