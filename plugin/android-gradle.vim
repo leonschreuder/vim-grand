@@ -55,7 +55,7 @@ sys.path.append(lib_path)
 
 from TagsHandler import TagsHandler
 
-TagsHandler().executeCtagsCommand()
+TagsHandler().generateTagsFile()
 
 
 EOF
