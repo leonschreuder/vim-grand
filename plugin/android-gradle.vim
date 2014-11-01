@@ -3,10 +3,17 @@ if !has('python')
     finish
 endif
 
+
+function! AndroidGradle()
+	execute "pyfile " . s:python_folder_path . "vim_android_gradle.py"
+endfunction
+
+" We no longer need the stuff below. (right?)
+
 let s:script_folder_path = escape( expand( '<sfile>:p:h' ), '\' )
 let s:python_folder_path = s:script_folder_path . '/../python/'
 
-function! AndroidGradle()
+function! AndroidGradleOld()
 python << EOF
 import vim
 

@@ -5,7 +5,7 @@ import os
 
 #from subprocess import call
 from subprocess import Popen
-from PathsResolver import PathsResolver
+from paths_resolver import PathsResolver
 
 class TagsHandler:
     def __init__(self):
