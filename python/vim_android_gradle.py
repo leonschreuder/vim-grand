@@ -5,31 +5,46 @@ import os
 import sys
 
 # Look for modules in the project folder (not just cwd)
-current_script_dir = vim.eval('expand("<sfile>:p:h")')
+# TODO: Doesn't work inside function
+#current_script_dir = vim.eval('expand("<sfile>:p:h")')
+
+current_script_dir = vim.eval('s:python_folder_path')
 sys.path.append(current_script_dir)
+
+
 
 from paths_resolver import PathsResolver
 
 def setupEnvironmentClassPaths():
     resolvedClassPaths = PathsResolver().getAllClassPaths()
 
-    # Setting $CLASSPATH variable (used by Syntastic)
-    vim.command("let $CLASSPATH = '" + ':'.join(resolvedClassPaths) + "'")
+    setClassPathVariable(resolvedClassPaths) # used by Syntastic?
+    setLocalPathVariable(resolvedClassPaths)
+    addClasspathToJavacomplete()
 
+def setClassPathVariable(paths):
+    vim.command("let $CLASSPATH = '" + ':'.join(paths) + "'")
+
+def setLocalPathVariable(paths):
     # TODO
     # Realy don't know what this is used for. Is it for syntastic?
-    vim.command("setlocal path=" + ','.join(resolvedClassPaths))
+    vim.command("setlocal path=" + ','.join(paths))
 
-    # Adding Paths to javacomplete
+def addClasspathToJavacomplete():
     vim.command("silent! call javacomplete#SetClassPath($CLASSPATH)")
+
+
 
 def setupEnvironmentSourcePaths():
     resolvedSourcePaths = PathsResolver().getAllSourcePaths()
 
-    # Setting $SRCPATH variable (used by Syntastic)
-    vim.command("let $SRCPATH = '" + ':'.join(resolvedSourcePaths) + "'")
+    setSourcePathVariable(resolvedSourcePaths) # used by Syntastic?
+    addSourcepathToJavacomplete()
 
-    # Adding Paths to javacomplete
+def setSourcePathVariable(paths):
+    vim.command("let $SRCPATH = '" + ':'.join(paths) + "'")
+
+def addSourcepathToJavacomplete():
     vim.command("silent! call javacomplete#SetSourcePath($SRCPATH)")
 
 
