@@ -8,8 +8,14 @@ endif
 let l:script_folder_path = escape( expand( '<sfile>:p:h' ), '\' )
 let s:python_folder_path = l:script_folder_path . '/../python/'
 
-function! AndroidGradle()
-	execute "pyfile " . s:python_folder_path . "vim_android_gradle.py"
+
+command! GrandPaths call GrandPaths()
+function! GrandPaths()
+	execute "pyfile " . s:python_folder_path . "vim_grand_paths.py"
+endfunction
+
+function! GrandCtags()
+	execute "pyfile " . s:python_folder_path . "vim_grand_ctags.py"
 endfunction
 
 
@@ -49,10 +55,6 @@ endfunction
 
 
 
-function! AndroidUpdateTags()
-	execute "pyfile " . s:python_folder_path . "vim_android_upgrade_tags.py"
-endfunction
-
 
 function! AndroidUpdateTags()
 python << EOF
@@ -76,5 +78,4 @@ endfunction
 
 
 
-command! AndroidSetup call AndroidGradle()
 

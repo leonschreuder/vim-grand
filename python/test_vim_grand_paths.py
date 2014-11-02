@@ -6,7 +6,7 @@ import sys
 import os
 sys.modules['vim'] = VimMock()
 
-import vim_android_gradle
+import vim_grand_paths
 
 class TestAndroidGradle (unittest.TestCase):
 
@@ -18,7 +18,7 @@ class TestAndroidGradle (unittest.TestCase):
         androidHome = os.environ.get('ANDROID_HOME')
         expectedString = "let $CLASSPATH = './src/main/java:./src/main/res:./build/intermediates/classes/debug:/path/a:/path/b:"+androidHome+"/platforms/android-19/android.jar'"
 
-        vim_android_gradle.setupEnvironmentClassPaths()
+        vim_grand_paths.setupEnvironmentClassPaths()
 
         self.assertEquals(expectedString, self.vim.commandInput[0])
         self.assertEquals("setlocal path=./src/main/java,./src/main/res,./build/intermediates/classes/debug,/path/a,/path/b,"+androidHome+"/platforms/android-19/android.jar", self.vim.commandInput[1])
@@ -29,7 +29,7 @@ class TestAndroidGradle (unittest.TestCase):
         androidHome = os.environ.get('ANDROID_HOME')
         expectedString = "let $SRCPATH = './src/main/java:./src/main/res:"+androidHome+"/sources/android-19/'"
 
-        vim_android_gradle.setupEnvironmentSourcePaths()
+        vim_grand_paths.setupEnvironmentSourcePaths()
 
         self.assertEquals(expectedString, self.vim.commandInput[-2])
         self.assertEquals("silent! call javacomplete#SetSourcePath($SRCPATH)", self.vim.commandInput[-1])
