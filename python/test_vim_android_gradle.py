@@ -21,7 +21,8 @@ class TestAndroidGradle (unittest.TestCase):
         vim_android_gradle.setupEnvironmentClassPaths()
 
         self.assertEquals(expectedString, self.vim.commandInput[0])
-        self.assertEquals("silent! call javacomplete#SetClassPath($CLASSPATH)", self.vim.commandInput[1])
+        self.assertEquals("setlocal path=./src/main/java,./src/main/res,./build/intermediates/classes/debug,/path/a,/path/b,"+androidHome+"/platforms/android-19/android.jar", self.vim.commandInput[1])
+        self.assertEquals("silent! call javacomplete#SetClassPath($CLASSPATH)", self.vim.commandInput[2])
 
         #vim.command("silent! call javacomplete#SetClassPath($CLASSPATH)")
     

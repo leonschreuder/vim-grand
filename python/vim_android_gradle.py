@@ -16,6 +16,10 @@ def setupEnvironmentClassPaths():
     # Setting $CLASSPATH variable (used by Syntastic)
     vim.command("let $CLASSPATH = '" + ':'.join(resolvedClassPaths) + "'")
 
+    # TODO
+    # Realy don't know what this is used for. Is it for syntastic?
+    vim.command("setlocal path=" + ','.join(resolvedClassPaths))
+
     # Adding Paths to javacomplete
     vim.command("silent! call javacomplete#SetClassPath($CLASSPATH)")
 
