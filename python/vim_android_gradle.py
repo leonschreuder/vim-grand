@@ -4,12 +4,13 @@ import vim
 import os
 import sys
 
+# Look for modules in the project folder (not just cwd)
 current_script_dir = vim.eval('expand("<sfile>:p:h")')
 sys.path.append(current_script_dir)
 
 from paths_resolver import PathsResolver
 
-def setEnvirinmentClassPaths():
+def setupEnvironmentClassPaths():
     resolvedClassPaths = PathsResolver().getAllClassPaths()
 
     # Setting $CLASSPATH variable (used by Syntastic)
@@ -18,10 +19,18 @@ def setEnvirinmentClassPaths():
     # Adding Paths to javacomplete
     vim.command("silent! call javacomplete#SetClassPath($CLASSPATH)")
 
+def setupEnvironmentSourcePaths():
+    resolvedSourcePaths = PathsResolver().getAllSourcePaths()
 
-setEnvirinmentClassPaths()
+    # Setting $SRCPATH variable (used by Syntastic)
+    vim.command("let $SRCPATH = '" + ':'.join(resolvedSourcePaths) + "'")
+
+    # Adding Paths to javacomplete
+    vim.command("silent! call javacomplete#SetSourcePath($SRCPATH)")
 
 
-#resolvedSourcePaths = PathsResolver().getAllSourcePaths()
+setupEnvironmentClassPaths()
+setupEnvironmentSourcePaths()
+
 
 
