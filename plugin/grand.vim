@@ -19,3 +19,7 @@ function! GrandCtags()
 	execute "pyfile " . s:python_folder_path . "vim_grand_ctags.py"
 endfunction
 
+command! GrandBuild call GrandBuild()
+function! GrandBuild()
+	execute "pyfile " . s:python_folder_path . "?"
+endfunction
