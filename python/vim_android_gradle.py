@@ -4,14 +4,9 @@ import vim
 import os
 import sys
 
-# Look for modules in the project folder (not just cwd)
-# TODO: Doesn't work inside function
-#current_script_dir = vim.eval('expand("<sfile>:p:h")')
-
+# Add current scriptdir to import sources
 current_script_dir = vim.eval('s:python_folder_path')
 sys.path.append(current_script_dir)
-
-
 
 from paths_resolver import PathsResolver
 
@@ -26,8 +21,7 @@ def setClassPathVariable(paths):
     vim.command("let $CLASSPATH = '" + ':'.join(paths) + "'")
 
 def setLocalPathVariable(paths):
-    # TODO
-    # Realy don't know what this is used for. Is it for syntastic?
+    # TODO don't realy know what this is used for. Syntastic? So test it out...
     vim.command("setlocal path=" + ','.join(paths))
 
 def addClasspathToJavacomplete():

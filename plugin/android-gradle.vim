@@ -4,15 +4,16 @@ if !has('python')
 endif
 
 
+" Get local path for the script, so we can import other files
+let l:script_folder_path = escape( expand( '<sfile>:p:h' ), '\' )
+let s:python_folder_path = l:script_folder_path . '/../python/'
+
 function! AndroidGradle()
 	execute "pyfile " . s:python_folder_path . "vim_android_gradle.py"
 endfunction
 
+
 " We no longer need the stuff below. (right?)
-
-let s:script_folder_path = escape( expand( '<sfile>:p:h' ), '\' )
-let s:python_folder_path = s:script_folder_path . '/../python/'
-
 function! AndroidGradleOld()
 python << EOF
 import vim
@@ -46,6 +47,11 @@ vim.command("silent! call javacomplete#SetSourcePath($SRCPATH)")
 EOF
 endfunction
 
+
+
+function! AndroidUpdateTags()
+	execute "pyfile " . s:python_folder_path . "vim_android_upgrade_tags.py"
+endfunction
 
 
 function! AndroidUpdateTags()
