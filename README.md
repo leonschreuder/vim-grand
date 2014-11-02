@@ -1,5 +1,5 @@
-# Vim-GrAnd - Vim plugin for developing Gradle based Android projects.
+# Vim-Grand - a GRadle ANDroid plugin
 
-This is a Vim plugin for Android development using Gradle as a build system. It will be based on the excellent hsanson/vim-android plugin, except that it will be written mostly in python, is unit tested, and is meant fo gradle only.
+This is a Vim plugin for Android development using Gradle as a build system. It is based on the excellent hsanson/vim-android plugin, except that it is be written mostly in python, is unit tested (when possible/sane), and is meant for gradle only.
 
-There is not much here yet as it is very much a work in progress. Maybe the development branch already has something interesting.
+Getting all paths for syntastic is in place, as well as generating the (exurbitant) tags file.
