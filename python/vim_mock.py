@@ -9,4 +9,6 @@ class VimMock():
         self.commandInput += [commandInput]
 
     def eval(self, evalInput):
+        if (evalInput == 's:python_folder_path'):
+            return '/current_script_dir'
         self.evalInput += [evalInput]
