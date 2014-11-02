@@ -5,8 +5,8 @@ endif
 
 
 " Get local path for the script, so we can import other files
-let l:script_folder_path = escape( expand( '<sfile>:p:h' ), '\' )
-let s:python_folder_path = l:script_folder_path . '/../python/'
+let s:script_folder_path = escape( expand( '<sfile>:p:h' ), '\' )
+let s:python_folder_path = s:script_folder_path . '/../python/'
 
 
 command! GrandPaths call GrandPaths()
@@ -14,6 +14,7 @@ function! GrandPaths()
 	execute "pyfile " . s:python_folder_path . "vim_grand_paths.py"
 endfunction
 
+command! GrandCtags call GrandCtags()
 function! GrandCtags()
 	execute "pyfile " . s:python_folder_path . "vim_grand_ctags.py"
 endfunction

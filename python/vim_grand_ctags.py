@@ -8,6 +8,6 @@ import sys
 current_script_dir = vim.eval('s:python_folder_path')
 sys.path.append(current_script_dir)
 
-from TagsHandler import TagsHandler
+from tags_handler import TagsHandler
 
 TagsHandler().generateTagsFile()
