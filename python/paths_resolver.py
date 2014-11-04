@@ -3,6 +3,7 @@
 import re
 import os
 import sys
+import glob
 
 class PathsResolver:
     def __init__(self):
@@ -98,4 +99,18 @@ class PathsResolver:
                     foundJars.append(os.path.join(root, file))
                     print(os.path.join(root, file))
         return foundJars
+
+    def getLatestApkFile(self):
+        foundFiles = []
+        for root, dirs, files in os.walk("./build/"):
+            for file in files:
+                if file.endswith(".apk"):
+                    foundFiles.append(os.path.join(root, file))
+
+        #for file in foundFiles:
+            #print "file: ", file, ' - ', os.path.getctime(file)
+
+        #TODO cannot test this becouse the test-file timestamps are identical
+        latestFile = max(foundFiles, key=os.path.getmtime)
+        return latestFile
 

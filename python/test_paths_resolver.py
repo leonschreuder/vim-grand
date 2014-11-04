@@ -81,6 +81,39 @@ class TestClassPath (unittest.TestCase):
         self.assertEquals('./build/intermediates/exploded-arr/fakeJar.jar', result[0])
         self.assertEquals('./build/intermediates/exploded-arr/some_project/fakeJar2.jar', result[1])
 
+    def testGetLatestApkFile(self):
+        testFile = './build/apk/some.apk'
+        self.createTestFile(testFile)
+
+        result = PathsResolver().getLatestApkFile()
+
+        self.assertEquals('./build/apk/some.apk', result)
+
+        self.removeTestFile(testFile)
+
+
+    def createTestFile(self, filePath):
+        basedir = os.path.dirname(filePath)
+        print "basedir: " + basedir
+        if not os.path.exists(basedir):
+            os.makedirs(basedir)
+
+        open(filePath, 'w').close()
+
+    def removeTestFile(self, filePath):
+        os.remove(filePath)
+
+        basedir = os.path.dirname(filePath)
+        if not os.listdir(basedir):
+            os.rmdir(basedir)
+
+        #TODO: Delete all created sub-dirs
+
+
+
+
+
+
 
 
 
