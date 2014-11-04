@@ -22,6 +22,7 @@ class PathsResolver:
         classPathsAndJars.extend(self.getGeneratedProjectClassPaths())
         classPathsAndJars.extend(self.getGradleClassPathsFromFile())
         classPathsAndJars.append(self.getAndroidSdkJar())
+        classPathsAndJars.extend(self.getExplodedAarClasses())
         return classPathsAndJars
 
     def getAllSourcePaths(self):
@@ -88,4 +89,13 @@ class PathsResolver:
             version = matchObj.group(1)
             return version
         return None
+
+    def getExplodedAarClasses(self):
+        foundJars = []
+        for root, dirs, files in os.walk("./"):
+            for file in files:
+                if file.endswith(".jar"):
+                    foundJars.append(os.path.join(root, file))
+                    print(os.path.join(root, file))
+        return foundJars
 

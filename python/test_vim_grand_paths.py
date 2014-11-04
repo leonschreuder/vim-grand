@@ -7,6 +7,7 @@ import os
 sys.modules['vim'] = VimMock()
 
 import vim_grand_paths
+from paths_resolver import PathsResolver
 
 class TestAndroidGradle (unittest.TestCase):
 
@@ -15,13 +16,13 @@ class TestAndroidGradle (unittest.TestCase):
 
 
     def testSetupEnvirinmentClassPaths(self):
-        androidHome = os.environ.get('ANDROID_HOME')
-        expectedString = "let $CLASSPATH = './src/main/java:./src/main/res:./build/intermediates/classes/debug:/path/a:/path/b:"+androidHome+"/platforms/android-19/android.jar'"
+        paths = PathsResolver().getAllClassPaths()
 
         vim_grand_paths.setupEnvironmentClassPaths()
 
-        self.assertEquals(expectedString, self.vim.commandInput[0])
-        self.assertEquals("setlocal path=./src/main/java,./src/main/res,./build/intermediates/classes/debug,/path/a,/path/b,"+androidHome+"/platforms/android-19/android.jar", self.vim.commandInput[1])
+        # Note: this is of cource the reverse of the production code, but I didn't want to mock out the PathReslover
+        self.assertEquals("let $CLASSPATH = '"+":".join(paths)+"'", self.vim.commandInput[0])
+        self.assertEquals("setlocal path="+",".join(paths), self.vim.commandInput[1])
         self.assertEquals("silent! call javacomplete#SetClassPath($CLASSPATH)", self.vim.commandInput[2])
     
     

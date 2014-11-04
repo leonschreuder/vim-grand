@@ -12,7 +12,7 @@ class TestClassPath (unittest.TestCase):
 
     def testGetAllClassPaths(self):
         result = PathsResolver().getAllClassPaths()
-        self.assertEquals(2+1+2+1, len(result))
+        self.assertEquals(2+1+2+1+2, len(result))
 
     def testGetAllSourcePaths(self):
         result = PathsResolver().getAllSourcePaths()
@@ -20,6 +20,8 @@ class TestClassPath (unittest.TestCase):
         self.assertEquals(2+1, len(result))
         #result = PathsResolver().getAllSourcePaths()
         #self.assertEquals(500, len(result))
+
+
 
     def testGetProjectSourcePaths(self):
         result = PathsResolver().getProjectSourcePaths()
@@ -34,6 +36,7 @@ class TestClassPath (unittest.TestCase):
         self.assertEqual('./build/intermediates/classes/debug', result[0])
 
 
+
     def testGetPathsFromFile(self):
         result = PathsResolver().getGradleClassPathsFromFile()
 
@@ -41,11 +44,13 @@ class TestClassPath (unittest.TestCase):
         self.assertEquals(result[0], '/path/a')
         self.assertEquals(result[1], '/path/b')
 
+
     def testGetAndroidSdkJar(self):
         result = PathsResolver().getAndroidSdkJar()
 
         androidHome = os.environ.get('ANDROID_HOME')
         self.assertEqual(androidHome+'/platforms/android-19/android.jar', result)
+
 
     def testGetAndroidSdkSourcePath(self):
         result = PathsResolver().getAndroidSdkSourcePath()
@@ -53,19 +58,32 @@ class TestClassPath (unittest.TestCase):
         androidHome = os.environ.get('ANDROID_HOME')
         self.assertEqual(androidHome + '/sources/android-19/', result)
 
+
     def testGetAndroidVersionFromBuildGradle(self):
         result = PathsResolver().getAndroidVersionFromBuildGradle()
         self.assertEquals('19', result, 'should have loaded the android version');
+
 
     def testGetAndroidVersionFromLine(self):
         result = PathsResolver().getAndroidVersionFromLine("   compileSdkVersion 19");
         self.assertEqual('19', result, 'should have found the android version on the line');
         #TODO message for incorrect build.gradle?
 
+
     def testGetLibsLibraries(self):
         # classpath.vim gets built sources from "/build/bundles/debug/classes.jar"
         # Is this an option as opposed to vim.gradle file? (look into project)
         None #TODO
+
+    def testGetExplodedAarClasses(self):
+        result = PathsResolver().getExplodedAarClasses()
+
+        self.assertEquals('./build/intermediates/exploded-arr/fakeJar.jar', result[0])
+        self.assertEquals('./build/intermediates/exploded-arr/some_project/fakeJar2.jar', result[1])
+
+
+
+
 
  
 if __name__ == '__main__':

@@ -13,6 +13,8 @@ from paths_resolver import PathsResolver
 def setupEnvironmentClassPaths():
     resolvedClassPaths = PathsResolver().getAllClassPaths()
 
+    print 'resolved paths: ', resolvedClassPaths
+
     setClassPathVariable(resolvedClassPaths) # used by Syntastic?
     setLocalPathVariable(resolvedClassPaths)
     addClasspathToJavacomplete()
