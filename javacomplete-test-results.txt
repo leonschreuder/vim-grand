@@ -32,3 +32,47 @@ javacomplete#SetSourcePath('./src/main/java:./src/main/res')
 # Finishes quickly. Nice result.
 ## Conclusion: adding android sources to the javacomplete sourcepath fucks it up
 
+
+Note: Syntastic uses the $CLASSPATH en $SRCPATH vars
+
+# Shougo supplies this method for android classes:
+call javacomplete#AddAndroidClassPath()
+
+
+Plugin-TODO: 
+- remove androidClassPath from retrieved sources.
+- add call to javacomplete#AddAndroidClassPath()
+
+
+==================================================
+
+
+Fresh install of vimscripts/javacomplete
+hangs on autocompletion
+
+
+echo javacomplete#GetClassPath()
+echo javacomplete#GetSourcePath()
+
+call javacomplete#SetClassPath('')
+call javacomplete#SetSourcePath('')
+# No effect still hangs
+
+call javacomplete#SetClassPath('')
+call javacomplete#SetSourcePath('./src/main/java')
+# No effect still hangs
+
+call javacomplete#SetClassPath('./src/main/java')
+call javacomplete#SetSourcePath('./src/main/java')
+
+let $CLASSPATH = ''
+let $SRCPATH = ''
+
+
+# The tags file was the problem. It doesn't read it well.
+In function "s:GetClassInfoFromSource("  in javacomplete.vim I have commented out the following lines:
+>  if len(tagfiles()) > 0
+>	 let ci = s:DoGetClassInfoFromTags(a:class)
+>  endif
+This skipps the tags file completely.
+
