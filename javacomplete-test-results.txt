@@ -76,3 +76,11 @@ In function "s:GetClassInfoFromSource("  in javacomplete.vim I have commented ou
 >  endif
 This skipps the tags file completely.
 
+# It seems like hsanson/vim-android calls the tags-file '.tags' in stead of the
+default 'tags' and then adds the path to the current window only through:
+>  execute 'silent! setlocal ' . 'tags+=' . '.tags'
+This apperantly bypasses the tags file scanning in javacomplete
+
+Tried it out, it worked.
+It also workes with 'set' in stead of 'setlocal'
+

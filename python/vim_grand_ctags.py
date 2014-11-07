@@ -11,3 +11,6 @@ sys.path.append(current_script_dir)
 from tags_handler import TagsHandler
 
 TagsHandler().generateTagsFile()
+
+#TODO: Doesn't work ether :(
+vim.command('silent! set tags+='+'.tags')
