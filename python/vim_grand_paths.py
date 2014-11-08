@@ -16,8 +16,8 @@ def setupEnvironmentClassPaths():
     print 'resolved paths: ', resolvedClassPaths
 
     setClassPathVariable(resolvedClassPaths) # used by Syntastic?
-    setLocalPathVariable(resolvedClassPaths)
-    addClasspathToJavacomplete()
+    #setLocalPathVariable(resolvedClassPaths)
+    #addClasspathToJavacomplete()
 
 def setClassPathVariable(paths):
     vim.command("let $CLASSPATH = '" + ':'.join(paths) + "'")
