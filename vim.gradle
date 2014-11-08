@@ -1,0 +1,54 @@
+// outputs all gradle's library paths into a file so we can use them in vim.
+// Usage: 
+// #1: Copy into your project-directory
+// #2: On the command line run: gradle outputPaths
+
+import groovy.transform.Field
+
+@Field HashSet<String> classpathFiles = new HashSet<String>()
+@Field String finalFileContents = ""
+
+task outputPaths << {
+	println "Adding gradle library listing to ./gradle-sources"
+
+	addProjectAndSubProjectJarsToList()
+    println classpathFiles.join('\n')
+	generateFileContentsFromList()
+	generateClassPathFile()
+}
+
+def addProjectAndSubProjectJarsToList() {
+	addJarsToClassPathFilesList(rootProject)
+	for (proj in getChildProjects()) {
+		addJarsToClassPathFilesList(proj.value)
+	}
+}
+
+def addJarsToClassPathFilesList(proj) {
+	addProjectConfigsToList(proj)
+	addProjectSourceSetsToList(proj)
+}
+
+def addProjectConfigsToList(proj) {
+	for (conf in proj.configurations) {
+		for (jar in conf) {
+            classpathFiles += jar
+		}
+	}
+}
+def addProjectSourceSetsToList(proj) {
+	for (srcSet in proj.sourceSets) {
+		for (dir in srcSet.java.srcDirs) {
+			classpathFiles += dir.absolutePath
+		}
+	}
+}
+
+def generateFileContentsFromList() {
+	def paths = classpathFiles.join(':')
+	finalFileContents = paths
+}
+
+def generateClassPathFile() {
+	new File(rootProject.projectDir.absolutePath + "/gradle-sources").text = finalFileContents
+}
