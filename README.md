@@ -17,14 +17,14 @@ Since people are already cloning the repo, here's the setup I'm testing/developi
 
 ##How I got it to work
 Notice the 'I' in the title? I'm actively developing (still pre-Alpha), but maybe this will work for you two. 
-1.	Setup an Android project with Robolectric.
-	I'd advise [deckard-gradle](https://github.com/robolectric/deckard-gradle) as a starting point.
-2.	From the vim-grand project folder copy the `vim.gradle` file into your Android project.
-3.	Add the following line to your build.gradle. Right after `apply plugin: 'android'` would be a good location.
-	`apply from: 'vim.gradle'`
-4.	From the project root run `gradle outputPaths`. This should generate a 'gradle-sources' file in the root containing all the paths to the jars gradle uses.
-5.	Now open vim, in the root and run `GrandPaths`. This adds the paths to syntastic and javacomplete.
-6.	Run `GrandCtags` to generate a tags file. (`./.ctags`)
+1. Setup an Android project with Robolectric.
+   I'd advise [deckard-gradle](https://github.com/robolectric/deckard-gradle) as a starting point.
+2. From the vim-grand project folder copy the `vim.gradle` file into your Android project.
+3. Add the following line to your build.gradle. Right after `apply plugin: 'android'` would be a good location.
+   `apply from: 'vim.gradle'`
+4. From the project root run `gradle outputPaths`. This should generate a 'gradle-sources' file in the root containing all the paths to the jars gradle uses.
+5. Now open vim, in the root and run `GrandPaths`. This adds the paths to syntastic and javacomplete.
+6. Run `GrandCtags` to generate a tags file. (`./.ctags`)
 It's not quite elegant yet, I know, but I'm working on it, and it's going to be awesome.
 
 Issues and pull-requests are welcome.
