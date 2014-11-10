@@ -12,5 +12,4 @@ from tags_handler import TagsHandler
 
 TagsHandler().generateTagsFile()
 
-#TODO: Doesn't work ether :(
 vim.command('silent! set tags+='+'.tags')

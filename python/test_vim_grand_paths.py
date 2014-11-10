@@ -22,8 +22,9 @@ class TestAndroidGradle (unittest.TestCase):
 
         # Note: this is of cource the reverse of the production code, but I didn't want to mock out the PathReslover
         self.assertEquals("let $CLASSPATH = '"+":".join(paths)+"'", self.vim.commandInput[0])
-        self.assertEquals("setlocal path="+",".join(paths), self.vim.commandInput[1])
-        self.assertEquals("silent! call javacomplete#SetClassPath($CLASSPATH)", self.vim.commandInput[2])
+
+        #self.assertEquals("setlocal path="+",".join(paths), self.vim.commandInput[1])
+        #self.assertEquals("silent! call javacomplete#SetClassPath($CLASSPATH)", self.vim.commandInput[2])
     
     
     def testSetupEnvirinmentSourcePaths(self):
