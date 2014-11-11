@@ -41,6 +41,7 @@ class TagsHandler:
 
     def executeCommandAsyncly(self, commandArray):
         print " ".join(commandArray)
+        # FIXME: Add check to see if one is already running. Simultanius calls corrupt tags file.
         Popen(commandArray)
 
 
