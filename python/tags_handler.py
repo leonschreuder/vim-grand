@@ -4,7 +4,8 @@ import sys
 import os
 
 #from subprocess import call
-from subprocess import Popen
+import subprocess
+#from subprocess import Popen
 from paths_resolver import PathsResolver
 
 class TagsHandler:
@@ -42,7 +43,7 @@ class TagsHandler:
     def executeCommandAsyncly(self, commandArray):
         print " ".join(commandArray)
         # FIXME: Add check to see if one is already running. Simultanius calls corrupt tags file.
-        Popen(commandArray)
+        subprocess.Popen(commandArray)
 
 
     def which(self, program):
