@@ -10,6 +10,7 @@ from paths_resolver import PathsResolver
 
 class TagsHandler:
     def __init__(self):
+        self.process = None
         sys.path.append(os.getcwd())
 
     def generateTagsFile(self):
@@ -43,7 +44,8 @@ class TagsHandler:
     def executeCommandAsyncly(self, commandArray):
         print " ".join(commandArray)
         # FIXME: Add check to see if one is already running. Simultanius calls corrupt tags file.
-        subprocess.Popen(commandArray)
+        if (self.process != None and self.process.poll() != None):
+            self.process = subprocess.Popen(commandArray)
 
 
     def which(self, program):
