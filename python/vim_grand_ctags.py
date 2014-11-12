@@ -10,6 +10,9 @@ sys.path.append(current_script_dir)
 
 from tags_handler import TagsHandler
 
+print '----', sys.modules['tags_handler']
+#print '----', sys.modules['TagsHandler']
+
 TagsHandler().generateTagsFile()
 
 vim.command('silent! set tags+='+'.tags')
