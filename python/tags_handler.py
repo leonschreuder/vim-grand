@@ -3,6 +3,7 @@
 import sys
 import os
 
+
 #from subprocess import call
 import subprocess
 #from subprocess import Popen
@@ -10,8 +11,8 @@ from paths_resolver import PathsResolver
 
 class TagsHandler:
     def __init__(self):
-        self.process = None
-        sys.path.append(os.getcwd())
+        if (sys != None):
+            sys.path.append(os.getcwd())
 
     def generateTagsFile(self):
         if (self.which('ctags') != None):
@@ -43,9 +44,42 @@ class TagsHandler:
 
     def executeCommandAsyncly(self, commandArray):
         print " ".join(commandArray)
-        # FIXME: Add check to see if one is already running. Simultanius calls corrupt tags file.
-        if (self.process != None and self.process.poll() != None):
-            self.process = subprocess.Popen(commandArray)
+
+        # TODO This is qite messy. Clean it up
+
+        if not os.path.isfile('.tags'):
+            # No tags file? CREATE IT!
+            print 'creating new tags file'
+            subprocess.Popen(commandArray)
+        else:
+            # There is a tags file? Um... Let's see if it's valid first...
+            if self.isValidTagsFile():
+                # Check, go on adding stuff
+                print 'appending to tags file'
+                commandArray.insert(3, '-a')
+                subprocess.Popen(commandArray)
+            else:
+                # INVALID. Delete the file and start over. 
+                # this can happen when you've tryed regenerating tags before the last ctags task had finished
+                os.remove('.tags')
+                print 'creating new tags file'
+                subprocess.Popen(commandArray)
+
+
+
+    def isValidTagsFile(self):
+        with open('.tags', 'U') as f:
+            lines = f.readlines(6)
+
+            if (lines[0].startswith('!_TAG_FILE_FORMAT')
+                and lines[1].startswith('!_TAG_FILE_SORTED')
+                and lines[2].startswith('!_TAG_PROGRAM_AUTHOR')
+                and lines[3].startswith('!_TAG_PROGRAM_NAME')
+                and lines[4].startswith('!_TAG_PROGRAM_URL')
+                and lines[5].startswith('!_TAG_PROGRAM_VERSION')):
+                return True
+            else:
+                return False
 
 
     def which(self, program):
