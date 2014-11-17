@@ -36,7 +36,7 @@ class PathsResolver:
 
         sourcePaths = []
         sourcePaths.extend(self.getProjectSourcePaths())
-        sourcePaths.append(self.getAndroidSdkSourcePath()) #TODO This fucks up javacomplete. Why?
+        sourcePaths.append(self.getAndroidSdkSourcePath()) #TODO This messes up javacomplete. Why?
         return sourcePaths
 
 
