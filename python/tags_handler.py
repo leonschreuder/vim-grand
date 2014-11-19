@@ -2,10 +2,12 @@
 
 import sys
 import os
+import time
 
 
 #from subprocess import call
 import subprocess
+import threading
 #from subprocess import Popen
 from paths_resolver import PathsResolver
 
@@ -42,29 +44,25 @@ class TagsHandler:
         return finalCommandArray
 
 
+    def executeCommand(self, commandArray):
+        print "generating tags file"
+        subprocess.call(commandArray)
+        print "tag file generated"
+
     def executeCommandAsyncly(self, commandArray):
-        print " ".join(commandArray)
+        # This runs the tags file generation in a different thread.
+        # If it's already running, nothing happens.
 
-        # TODO This is qite messy. Clean it up
 
-        if not os.path.isfile('.tags'):
-            # No tags file? CREATE IT!
-            print 'creating new tags file'
-            subprocess.Popen(commandArray)
-        else:
-            # There is a tags file? Um... Let's see if it's valid first...
-            if self.isValidTagsFile():
-                # Check, go on adding stuff
-                print 'appending to tags file'
-                commandArray.insert(3, '-a')
-                subprocess.Popen(commandArray)
-            else:
-                # INVALID. Delete the file and start over. 
-                # this can happen when you've tryed regenerating tags before the last ctags task had finished
-                os.remove('.tags')
-                print 'creating new tags file'
-                subprocess.Popen(commandArray)
+        tagsGenerationThread = threading.Thread(name='tagsGenerationThread', target=self.executeCommand, args=(commandArray,))
+        
+        alreadyRunning = False
+        for thread in threading.enumerate():
+            if thread.name == 'tagsGenerationThread':
+                alreadyRunning = True
 
+        if not alreadyRunning:
+            tagsGenerationThread.start();
 
 
     def isValidTagsFile(self):
