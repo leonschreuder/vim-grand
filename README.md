@@ -23,7 +23,7 @@ Vim plugins I'm targeting:
 - [Tim Pope's Dispatch](https://github.com/tpope/vim-dispatch) for async building.
 
 ##How I got it to work
-Notice the 'I' in the title? I'm actively developing (still pre-Alpha), but maybe this will work for you two.
+Notice the 'I' in the title? I'm actively developing (still pre-Alpha), but maybe this will work for you two. (Since this guide has gotten rather long, I'll make a wiki / demo-setup-project soon).
 
 1. Setup an Android project with Robolectric.
 I use [deckard-gradle](https://github.com/robolectric/deckard-gradle) as a starting point. But you will need to update the classpaths to use version 0.13.+ of both the android and the robolectric plugin.
