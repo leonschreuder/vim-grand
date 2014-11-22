@@ -8,6 +8,8 @@ from paths_resolver import PathsResolver
 class TestClassPath (unittest.TestCase):
     def setUp(self):
         self.longMessage = True
+        os.environ['ANDROID_HOME'] = '~/android-test-sdk'
+        #os.environ.get('ANDROID_HOME')
         
 
     def testGetAllClassPaths(self):

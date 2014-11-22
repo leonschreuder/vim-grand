@@ -13,6 +13,8 @@ class TestAndroidGradle (unittest.TestCase):
 
     def setUp(self):
         self.vim = sys.modules['vim']
+        #os.environ['ANDROID_HOME'] = '~/android-test-sdk'
+        #os.putenv('ANDROID_HOME', '~/android-test-sdk')
 
 
     def testSetupEnvirinmentClassPaths(self):
