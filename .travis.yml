@@ -7,5 +7,5 @@ python:
 #install: PLEASE CHANGE ME
 # command to run tests, e.g. python setup.py test
 script:
-cd python
-python -m unittest discover
+- cd python
+- python -m unittest discover
