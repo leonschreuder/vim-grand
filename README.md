@@ -1,4 +1,5 @@
 # Vim-Grand - a Gradle Android plugin
+[![Build Status](https://travis-ci.org/meonlol/vim-grand.svg?branch=develop)](https://travis-ci.org/meonlol/vim-grand)
 
 WORK IN PROGRESS!
 
