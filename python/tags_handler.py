@@ -9,7 +9,7 @@ import time
 import subprocess
 import threading
 #from subprocess import Popen
-from paths_resolver import PathsResolver
+from find_paths.paths_resolver import PathsResolver
 
 class TagsHandler:
     def __init__(self):
@@ -26,6 +26,8 @@ class TagsHandler:
         #TODO: Into help. If ctags doesn't create a file, make sure it is exurbitant-ctags
         # To check the version type 'man ctags' and at the top it should say Exurbitant Ctags (on *nix)
 
+    def testResult(self):
+        return PathsResolver().getAllSourcePaths();
 
     def getCtagsCommand(self):
         finalCommandArray = []
