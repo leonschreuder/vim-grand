@@ -9,15 +9,11 @@ class PathsResolver:
     def __init__(self):
         sys.path.append(os.getcwd())
 
+    def getAndroidHome(self):
+        return os.environ.get('ANDROID_HOME')
 
     def getAllClassPaths(self):
         classPathsAndJars = []
-        # x addProjectClassPath > '.bin/classes'
-        # x addGradleSDKJar > 'platforms/android-19/android.jar'
-        # - addGradleClassPath >
-            # - /build/bundles/debug/classes.jar   ??
-            # - /libs/*.jar
-        # - addPropertiesClassPath > paths specified in project.properties (only non gradle?)
 
         classPathsAndJars.extend(self.getProjectSourcePaths()) # Does syntastic need this?
         classPathsAndJars.extend(self.getGeneratedProjectClassPaths())
@@ -27,13 +23,6 @@ class PathsResolver:
         return classPathsAndJars
 
     def getAllSourcePaths(self):
-        # 'paths' sourcePaths
-        #addProjectClassPath > None
-        #addGradleSDKJar > 'sources/android-19/'
-        #addGradleClassPath >
-            # ./src (if available)
-        #addPropertiesClassPath > paths specified in project.properties (only non gradle?)
-
         sourcePaths = []
         sourcePaths.extend(self.getProjectSourcePaths())
         sourcePaths.append(self.getAndroidSdkSourcePath()) #TODO This messes up javacomplete. Why?
@@ -43,7 +32,6 @@ class PathsResolver:
     def getProjectSourcePaths(self):
         projectClassPath = './src/main/java'
         projectResPath = './src/main/res'
-        #return ':'.join([projectClassPath, generatedSources])
         return [projectClassPath, projectResPath]
 
     def getGeneratedProjectClassPaths(self):
@@ -55,24 +43,24 @@ class PathsResolver:
         list = []
 
         filename = 'gradle-sources'
-        print os.getcwd()
 
         if (os.path.isfile(filename)):
             with open(filename, 'U') as f:
                 for line in f:
                     list.append(line.rstrip())
-        #return ':'.join(list)
         return list
 
     def getAndroidSdkJar(self):
         androidHome = os.environ.get('ANDROID_HOME')
         currentPlatformDir = 'android-' + self.getAndroidVersionFromBuildGradle()
+
         sdkJarPath = androidHome +os.sep+ 'platforms' +os.sep+ currentPlatformDir +os.sep+ 'android.jar'
         return sdkJarPath
 
     def getAndroidSdkSourcePath(self):
         androidHome = os.environ.get('ANDROID_HOME')
         currentPlatformDir = 'android-' + self.getAndroidVersionFromBuildGradle()
+
         sdkSourcePath = androidHome +os.sep+ 'sources' +os.sep+ currentPlatformDir +os.sep
         return sdkSourcePath
 
@@ -97,7 +85,7 @@ class PathsResolver:
             for file in files:
                 if file.endswith(".jar"):
                     foundJars.append(os.path.join(root, file))
-                    print(os.path.join(root, file))
+                    #print(os.path.join(root, file))
         return foundJars
 
     def getLatestApkFile(self):
@@ -106,9 +94,6 @@ class PathsResolver:
             for file in files:
                 if file.endswith(".apk"):
                     foundFiles.append(os.path.join(root, file))
-
-        #for file in foundFiles:
-            #print "file: ", file, ' - ', os.path.getctime(file)
 
         #TODO cannot test this becouse the test-file timestamps are identical
         latestFile = max(foundFiles, key=os.path.getmtime)
