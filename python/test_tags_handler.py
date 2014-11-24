@@ -25,6 +25,7 @@ class TestTagsHandler (unittest.TestCase):
     def testGetResult(self, MockPathsResolver):
         MockPathsResolver.getAllSourcePaths.return_value = ['path']
         
+        #MockPathsResolver.getAllSourcePaths.assert_called_with()
         self.assertEquals('path', TagsHandler().testResult())
 
 
