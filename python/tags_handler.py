@@ -26,8 +26,6 @@ class TagsHandler:
         #TODO: Into help. If ctags doesn't create a file, make sure it is exurbitant-ctags
         # To check the version type 'man ctags' and at the top it should say Exurbitant Ctags (on *nix)
 
-    def testResult(self):
-        return PathsResolver().getAllSourcePaths();
 
     def getCtagsCommand(self):
         finalCommandArray = []
@@ -42,14 +40,11 @@ class TagsHandler:
         sourcePaths = PathsResolver().getAllSourcePaths();
         finalCommandArray += sourcePaths
 
-        #print " ".join(finalCommandArray)
         return finalCommandArray
 
 
     def executeCommand(self, commandArray):
-        print "generating tags file"
         subprocess.call(commandArray)
-        print "tag file generated"
 
     def executeCommandAsyncly(self, commandArray):
         # This runs the tags file generation in a different thread.
@@ -69,18 +64,31 @@ class TagsHandler:
 
     def isValidTagsFile(self):
         with open('.tags', 'U') as f:
-            lines = f.readlines(6)
+            return self.fileIsTagsFile(f)
+            #lines = f.readlines(6)
 
-            if (lines[0].startswith('!_TAG_FILE_FORMAT')
-                and lines[1].startswith('!_TAG_FILE_SORTED')
-                and lines[2].startswith('!_TAG_PROGRAM_AUTHOR')
-                and lines[3].startswith('!_TAG_PROGRAM_NAME')
-                and lines[4].startswith('!_TAG_PROGRAM_URL')
-                and lines[5].startswith('!_TAG_PROGRAM_VERSION')):
-                return True
-            else:
-                return False
+            #if (lines[0].startswith('!_TAG_FILE_FORMAT')
+                #and lines[1].startswith('!_TAG_FILE_SORTED')
+                #and lines[2].startswith('!_TAG_PROGRAM_AUTHOR')
+                #and lines[3].startswith('!_TAG_PROGRAM_NAME')
+                #and lines[4].startswith('!_TAG_PROGRAM_URL')
+                #and lines[5].startswith('!_TAG_PROGRAM_VERSION')):
+                #return True
+            #else:
+                #return False
 
+    def fileIsTagsFile(self, file):
+        lines = file.readlines()
+
+        if (lines[0].startswith('!_TAG_FILE_FORMAT')
+            and lines[1].startswith('!_TAG_FILE_SORTED')
+            and lines[2].startswith('!_TAG_PROGRAM_AUTHOR')
+            and lines[3].startswith('!_TAG_PROGRAM_NAME')
+            and lines[4].startswith('!_TAG_PROGRAM_URL')
+            and lines[5].startswith('!_TAG_PROGRAM_VERSION')):
+            return True
+        else:
+            return False
 
     def which(self, program):
         # method copied from http://stackoverflow.com/a/377028
