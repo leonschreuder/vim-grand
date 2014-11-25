@@ -6,6 +6,9 @@ import os
 
 class Adb:
     def getDevices(self):
-        androidHome = os.environ.get('ANDROID_HOME')
-        #returncode = subprocess.Popen([androidHome+"/platform-tools/adb"])
+        returncode = subprocess.Popen([self.getAdb(), 'devices'])
         return returncode
+
+    def getAdb(self):
+        androidHome = os.environ.get('ANDROID_HOME')
+        return androidHome +os.sep+ "platform-tools" +os.sep+ "adb"
