@@ -36,25 +36,13 @@ class TestTagsHandler (unittest.TestCase):
         self.assertEquals(command, result)
 
 
-    #TODO: Test some other way.
-    #@patch('__builtin__.open', mock_open(read_data='bibble'))
-    #def testIsValidTagsFile(self):
     @patch('__builtin__.open')
     def testIsValidTagsFile(self, mockopen):
-        pass
-        #mock_open(mock=None, read_data=tagsStartString)
-        #mock_open(read_data=tagsStartString)
-        #instance = mockopen.return_value
-        #instance.readlines.return_value = StringIO(tagsStartString)
-        #mockopen.return_value = StringIO(tagsStartString)
-
-        #with open('.tags','w') as f:
-            #f.write(tagsStartString)
 
         result = TagsHandler().isValidTagsFile();
 
         self.assertTrue(result)
-        #os.remove('.tags')
+        mockopen.assert_called_with('.tags', 'U')
 
     def testFileIsTagsFile(self):
         file = StringIO(tagsStartString)

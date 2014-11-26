@@ -65,17 +65,7 @@ class TagsHandler:
     def isValidTagsFile(self):
         with open('.tags', 'U') as f:
             return self.fileIsTagsFile(f)
-            #lines = f.readlines(6)
 
-            #if (lines[0].startswith('!_TAG_FILE_FORMAT')
-                #and lines[1].startswith('!_TAG_FILE_SORTED')
-                #and lines[2].startswith('!_TAG_PROGRAM_AUTHOR')
-                #and lines[3].startswith('!_TAG_PROGRAM_NAME')
-                #and lines[4].startswith('!_TAG_PROGRAM_URL')
-                #and lines[5].startswith('!_TAG_PROGRAM_VERSION')):
-                #return True
-            #else:
-                #return False
 
     def fileIsTagsFile(self, file):
         lines = file.readlines()
@@ -89,6 +79,7 @@ class TagsHandler:
             return True
         else:
             return False
+
 
     def which(self, program):
         # method copied from http://stackoverflow.com/a/377028
