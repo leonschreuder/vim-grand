@@ -39,6 +39,17 @@ class TestAdb (unittest.TestCase):
 
         Adb().installLatestApk()
 
-        #TODO: Test actual sheel adb command
+        #TODO: Test actual shell adb command
         mock_subprocess.Popen.assert_called_with(['TEST_ANDROID_HOME/platform-tools/adb', 'install', '-r', 'test.apk'])
+
+    @patch('talk_to_adb.adb.subprocess')
+    @patch('talk_to_adb.adb.PathsResolver')
+    def testUninstall(self, MockPathsResolver, mock_subprocess):
+        instance = MockPathsResolver.return_value
+        #TODO: implement getPackageName() in PathsResolver
+        #instance.getPackageName.return_value = 'com.example.app'
+
+        Adb().uninstallApp()
         
+        #TODO: Test actual shell adb command
+        mock_subprocess.Popen.assert_called_with(['TEST_ANDROID_HOME/platform-tools/adb', 'uninstall', 'com.example.app'])
