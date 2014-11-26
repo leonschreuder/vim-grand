@@ -1,13 +1,12 @@
 #! /usr/bin/env python
 
 import unittest
-#import os
 
 from tags_handler import TagsHandler
 from find_paths.paths_resolver import PathsResolver
 from mock import patch
 from mock import mock_open
-#import __builtin__
+
 
 tagsStartString = '''!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
 !_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
@@ -24,7 +23,7 @@ class TestTagsHandler (unittest.TestCase):
         handler = TagsHandler()
         self.assertTrue(handler != None)
 
-    @patch('tags_handler.PathsResolver')
+    @patch('generate_tags.tags_handler.PathsResolver')
     def testGetCtagsCommand(self, MockPathsResolver):
         instance = MockPathsResolver.return_value
         instance.getAllSourcePaths.return_value = ['path']
@@ -51,8 +50,4 @@ class TestTagsHandler (unittest.TestCase):
 
         self.assertTrue(result)
 
-'''
-https://docs.python.org/3/library/unittest.mock.html#the-patchers
-https://docs.python.org/3/library/unittest.mock.html#where-to-patch
-http://www.toptal.com/python/an-introduction-to-mocking-in-python
-'''
+
