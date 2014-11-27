@@ -8,7 +8,7 @@ import sys
 current_script_dir = vim.eval('s:python_folder_path')
 sys.path.append(current_script_dir)
 
-from paths_resolver import PathsResolver
+from find_paths.paths_resolver import PathsResolver
 
 def setupEnvironmentClassPaths():
     resolvedClassPaths = PathsResolver().getAllClassPaths()

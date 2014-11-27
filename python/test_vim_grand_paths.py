@@ -9,7 +9,7 @@ from mock import MagicMock
 sys.modules['vim'] = VimMock()
 
 import vim_grand_paths
-from paths_resolver import PathsResolver
+from find_paths.paths_resolver import PathsResolver
 
 class TestAndroidGradle (unittest.TestCase):
 
@@ -19,7 +19,7 @@ class TestAndroidGradle (unittest.TestCase):
         #os.putenv('ANDROID_HOME', '~/android-test-sdk')
 
 
-    @patch(vim_grand_paths.PathsResolver)
+    #@patch(find_paths.vim_grand_paths.PathsResolver)
     #def testSetupEnvirinmentClassPaths(self, MockPathsResolver):
     def testSetupEnvirinmentClassPaths(self):
         None
