@@ -9,3 +9,4 @@ install: pip install mock
 script:
 - cd python
 - python -m unittest discover
+env: ANDROID_HOME=TEST_ANDROID_HOME
