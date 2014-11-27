@@ -13,9 +13,9 @@ from find_paths.paths_resolver import PathsResolver
 def setupEnvironmentClassPaths():
     resolvedClassPaths = PathsResolver().getAllClassPaths()
 
-    print 'resolved paths: ', resolvedClassPaths
+    #print 'resolved paths: ', resolvedClassPaths
 
-    #setClassPathVariable(resolvedClassPaths) # used by Syntastic?
+    setClassPathVariable(resolvedClassPaths) # used by Syntastic?
 
     #Don't readly know what this is used for.
     #setLocalPathVariable(resolvedClassPaths)
