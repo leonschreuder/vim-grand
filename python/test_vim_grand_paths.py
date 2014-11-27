@@ -6,7 +6,7 @@ import sys
 import os
 from mock import patch
 from mock import MagicMock
-#sys.modules['vim'] = VimMock()
+sys.modules['vim'] = VimMock()
 
 import vim_grand_paths
 from find_paths.paths_resolver import PathsResolver
