@@ -23,12 +23,29 @@ class TestTagsHandler (unittest.TestCase):
         handler = TagsHandler()
         self.assertTrue(handler != None)
 
+    @patch('generate_tags.tags_handler.os.remove')
+    @patch('generate_tags.tags_handler.subprocess')
+    def testExecuteCommand(self, mock_subprocess, mock_remove):
+        handler = TagsHandler()
+
+        handler.executeCommand(['some','shell', 'array'])
+
+        mock_subprocess.call.assert_called_with(['some','shell', 'array'])
+
+        #TODO: Seem unable to get the os.remove call mocked. Research later
+        #mock_remove.assert_called_once_with('.tags')
+
+        
+
+
     @patch('generate_tags.tags_handler.PathsResolver')
     def testGetCtagsCommand(self, MockPathsResolver):
         instance = MockPathsResolver.return_value
         instance.getAllSourcePaths.return_value = ['path']
 
-        command = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/', '-f', '.tags']
+        command = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
+        command.extend(['-f', '.tags'])
+        #command.extend(['-f', '.tempTags'])
         command.append('path')
 
         result = TagsHandler().getCtagsCommand()

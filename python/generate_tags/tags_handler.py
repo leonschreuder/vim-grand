@@ -5,6 +5,8 @@ import os
 import time
 
 
+#from os import remove
+from os import rename
 #from subprocess import call
 import subprocess
 import threading
@@ -35,6 +37,7 @@ class TagsHandler:
         finalCommandArray += ctagsShellCommand
 
         ctagsTargetFile = '.tags' #TODO make tag file name/location dynamic
+        #ctagsTargetFile = '.tempTags' # using temp file when updating
         finalCommandArray += ['-f', ctagsTargetFile]
 
         sourcePaths = PathsResolver().getAllSourcePaths();
@@ -45,6 +48,8 @@ class TagsHandler:
 
     def executeCommand(self, commandArray):
         subprocess.call(commandArray)
+        #os.remove('.tags')
+        #os.rename('.tempTags', '.tags')
 
     def executeCommandAsyncly(self, commandArray):
         # This runs the tags file generation in a different thread.
@@ -62,11 +67,13 @@ class TagsHandler:
             tagsGenerationThread.start();
 
 
+    #Not Used. Kept as good testing example
     def isValidTagsFile(self):
         with open('.tags', 'U') as f:
             return self.fileIsTagsFile(f)
 
 
+    #Not Used. Kept as good testing example
     def fileIsTagsFile(self, file):
         lines = file.readlines()
 
