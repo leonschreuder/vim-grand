@@ -5,8 +5,6 @@ import os
 import time
 
 
-#from os import remove
-from os import rename
 #from subprocess import call
 import subprocess
 import threading
@@ -36,8 +34,8 @@ class TagsHandler:
         ctagsShellCommand = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
         finalCommandArray += ctagsShellCommand
 
-        ctagsTargetFile = '.tags' #TODO make tag file name/location dynamic
-        #ctagsTargetFile = '.tempTags' # using temp file when updating
+        #ctagsTargetFile = '.tags' #TODO make tag file name/location dynamic
+        ctagsTargetFile = '.tempTags' # using temp file when updating
         finalCommandArray += ['-f', ctagsTargetFile]
 
         sourcePaths = PathsResolver().getAllSourcePaths();
@@ -47,9 +45,17 @@ class TagsHandler:
 
 
     def executeCommand(self, commandArray):
+        # This generates the tags file into a temp file first and when it's
+        # done, it overwrites the actual tags file. I will need to imporve the
+        # performance of the tags generation also, but for now this allows
+        # jumping to tags while it is generating
         subprocess.call(commandArray)
-        #os.remove('.tags')
-        #os.rename('.tempTags', '.tags')
+        try:
+            os.remove('.tags')
+        except OSError:
+            pass
+        os.rename('.tempTags', '.tags')
+
 
     def executeCommandAsyncly(self, commandArray):
         # This runs the tags file generation in a different thread.
