@@ -4,11 +4,19 @@ import vim
 import os
 import sys
 
-# Add current scriptdir to import sources
-current_script_dir = vim.eval('s:python_folder_path')
-sys.path.append(current_script_dir)
 
 from find_paths.paths_resolver import PathsResolver
+
+def executeCommand():
+    addCurrentScriptdirToImportSources()
+
+    setupEnvironmentClassPaths()
+    setupEnvironmentSourcePaths()
+
+def addCurrentScriptdirToImportSources():
+    # Add current scriptdir to import sources
+    current_script_dir = vim.eval('s:python_folder_path')
+    sys.path.append(current_script_dir)
 
 def setupEnvironmentClassPaths():
     resolvedClassPaths = PathsResolver().getAllClassPaths()
@@ -21,7 +29,7 @@ def setupEnvironmentClassPaths():
     #setLocalPathVariable(resolvedClassPaths)
 
     #Javacomplete seems to already use the $CLASSPATH direcly
-    #addClasspathToJavacomplete() 
+    addClasspathToJavacomplete() 
 
 def setClassPathVariable(paths):
     vim.command("let $CLASSPATH = '" + ':'.join(paths) + "'")
@@ -48,8 +56,6 @@ def addSourcepathToJavacomplete():
     vim.command("silent! call javacomplete#SetSourcePath($SRCPATH)")
 
 
-setupEnvironmentClassPaths()
-setupEnvironmentSourcePaths()
 
 
 
