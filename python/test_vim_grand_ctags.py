@@ -1,23 +1,26 @@
 #! /usr/bin/env python
 
 import unittest
-import mock_tags_handler
-from vim_mock import VimMock
 import sys
 import os
 from mock import patch
 
+from vim_mock import VimMock
 sys.modules['vim'] = VimMock()
 
-sys.modules['tags_handler'] = mock_tags_handler
+import vim_grand_ctags
 
 class TestGrandCtags (unittest.TestCase):
 
-    def setUp(self):
-        self.vim = sys.modules['vim']
+    #@unittest.skip("Failing for no good reason")
+    @patch('vim_grand_ctags.vim')
+    @patch('vim_grand_ctags.TagsHandler.generateTagsFile')
+    def testVimGrandCtagsFile(self, mock_generateTagsFile, mock_vim):
+        print "should work"
 
-    def testVimGrandCtagsFile(self):
-        execfile('vim_grand_ctags.py')
-        self.assertTrue( '/current_script_dir' in sys.path)
+        vim_grand_ctags.generateTagsAndAddToVim()
+
+        mock_generateTagsFile.assert_called_with() #Doesn't work, but why not?
+        mock_vim.command.assert_called_once_with('silent! set tags+='+'.tags')
 
 

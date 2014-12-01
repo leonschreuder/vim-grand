@@ -10,6 +10,11 @@ sys.path.append(current_script_dir)
 
 from generate_tags.tags_handler import TagsHandler
 
-TagsHandler().generateTagsFile()
 
-vim.command('silent! set tags+='+'.tags')
+
+def generateTagsAndAddToVim():
+    TagsHandler().generateTagsFile()
+
+    vim.command('silent! set tags+='+'.tags')
+
+#generateTagsAndAddToVim()
