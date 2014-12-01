@@ -14,9 +14,9 @@ function! GrandPaths()
 	execute "pyfile " . s:python_folder_path . "vim_grand_paths.py"
 endfunction
 
-command! GrandCtags call GrandCtags()
-function! GrandCtags()
-	execute "pyfile " . s:python_folder_path . "vim_grand_ctags.py"
+command! GrandTags call GrandTags()
+function! GrandTags()
+	execute "pyfile " . s:python_folder_path . "vim_grand_tags.py"
 endfunction
 
 command! GrandBuild call GrandBuild()

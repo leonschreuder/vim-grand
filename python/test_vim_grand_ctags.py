@@ -8,17 +8,16 @@ from mock import patch
 from vim_mock import VimMock
 sys.modules['vim'] = VimMock()
 
-import vim_grand_ctags
+import vim_grand_tags
 
-class TestGrandCtags (unittest.TestCase):
+class TestGrandTags (unittest.TestCase):
 
     #@unittest.skip("Failing for no good reason")
-    @patch('vim_grand_ctags.vim')
-    @patch('vim_grand_ctags.TagsHandler.generateTagsFile')
+    @patch('vim_grand_tags.vim')
+    @patch('vim_grand_tags.TagsHandler.generateTagsFile')
     def testVimGrandCtagsFile(self, mock_generateTagsFile, mock_vim):
-        print "should work"
 
-        vim_grand_ctags.generateTagsAndAddToVim()
+        vim_grand_tags.executeCommand()
 
         mock_generateTagsFile.assert_called_with() #Doesn't work, but why not?
         mock_vim.command.assert_called_once_with('silent! set tags+='+'.tags')

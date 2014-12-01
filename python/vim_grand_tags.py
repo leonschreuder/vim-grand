@@ -10,6 +10,8 @@ sys.path.append(current_script_dir)
 
 from generate_tags.tags_handler import TagsHandler
 
+def executeCommand():
+    generateTagsAndAddToVim()
 
 
 def generateTagsAndAddToVim():
@@ -17,4 +19,3 @@ def generateTagsAndAddToVim():
 
     vim.command('silent! set tags+='+'.tags')
 
-#generateTagsAndAddToVim()
