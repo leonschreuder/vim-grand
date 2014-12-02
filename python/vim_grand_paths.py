@@ -4,58 +4,69 @@ import vim
 import os
 import sys
 
-
 from find_paths.paths_resolver import PathsResolver
 
-def executeCommand():
-    addCurrentScriptdirToImportSources()
+#Class is started up below
+class VimGrandPaths():
 
-    setupEnvironmentClassPaths()
-    setupEnvironmentSourcePaths()
+    def executeCommand(self):
+        self.addCurrentScriptdirToImportSources()
 
-def addCurrentScriptdirToImportSources():
-    # Add current scriptdir to import sources
-    current_script_dir = vim.eval('s:python_folder_path')
-    sys.path.append(current_script_dir)
+        self.setupEnvironmentClassPaths()
+        self.setupEnvironmentSourcePaths()
 
-def setupEnvironmentClassPaths():
-    resolvedClassPaths = PathsResolver().getAllClassPaths()
+    def setupJavacomplete(self):
+        resolvedClassPaths = PathsResolver().getAllClassPaths()
 
-    #print 'resolved paths: ', resolvedClassPaths
+        vim.command("silent! call javacomplete#SetClassPath('" + ':'.join(resolvedClassPaths) + "')")
 
-    setClassPathVariable(resolvedClassPaths) # used by Syntastic?
+    def addCurrentScriptdirToImportSources(self):
+        # Add current scriptdir to import sources
+        current_script_dir = vim.eval('s:python_folder_path')
+        sys.path.append(current_script_dir)
 
-    #Don't readly know what this is used for.
-    #setLocalPathVariable(resolvedClassPaths)
+    def setupEnvironmentClassPaths(self):
+        resolvedClassPaths = PathsResolver().getAllClassPaths()
 
-    #Javacomplete seems to already use the $CLASSPATH direcly
-    #addClasspathToJavacomplete() 
+        #print 'resolved paths: ', resolvedClassPaths
 
-def setClassPathVariable(paths):
-    vim.command("let $CLASSPATH = '" + ':'.join(paths) + "'")
+        self.setClassPathVariable(resolvedClassPaths) # used by Syntastic?
 
-def setLocalPathVariable(paths):
-    # TODO don't realy know what this is used for. Syntastic? So test it out...
-    vim.command("setlocal path=" + ','.join(paths))
+        #Don't readly know what this is used for.
+        #setLocalPathVariable(resolvedClassPaths)
 
-def addClasspathToJavacomplete():
-    vim.command("silent! call javacomplete#SetClassPath($CLASSPATH)")
+        #Javacomplete seems to already use the $CLASSPATH direcly
+        #addClasspathToJavacomplete() 
 
+    def setClassPathVariable(self, paths):
+        vim.command("let $CLASSPATH = '" + ':'.join(paths) + "'")
 
+    def setLocalPathVariable(self, paths):
+        # TODO don't realy know what this is used for. Syntastic? So test it out...
+        vim.command("setlocal path=" + ','.join(paths))
 
-def setupEnvironmentSourcePaths():
-    resolvedSourcePaths = PathsResolver().getAllSourcePaths()
-
-    setSourcePathVariable(resolvedSourcePaths) # used by Syntastic?
-    addSourcepathToJavacomplete()
-
-def setSourcePathVariable(paths):
-    vim.command("let $SRCPATH = '" + ':'.join(paths) + "'")
-
-def addSourcepathToJavacomplete():
-    vim.command("silent! call javacomplete#SetSourcePath($SRCPATH)")
+    def addClasspathToJavacomplete(self):
+        vim.command("silent! call javacomplete#SetClassPath($CLASSPATH)")
 
 
 
+    def setupEnvironmentSourcePaths(self):
+        resolvedSourcePaths = PathsResolver().getAllSourcePaths()
 
+        self.setSourcePathVariable(resolvedSourcePaths) # used by Syntastic?
+        self.addSourcepathToJavacomplete()
+
+    def setSourcePathVariable(self, paths):
+        vim.command("let $SRCPATH = '" + ':'.join(paths) + "'")
+
+    def addSourcepathToJavacomplete(self):
+        vim.command("silent! call javacomplete#SetSourcePath($SRCPATH)")
+
+
+# As the entire file is executed from VimScript this call fires up python to
+# take over without any VimScript interaction. This is not very clean, but
+# removes the need for untested python-code or VimScripting and relieves the
+# need to jump through strange illogical hoops in the unit Tests just to make
+# sure it all works.
+VimGrandPaths().executeCommand()
 

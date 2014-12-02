@@ -4,11 +4,13 @@ import unittest
 import sys
 import os
 from mock import patch
+from mock import MagicMock
 
-from vim_mock import VimMock
-sys.modules['vim'] = VimMock()
+# We don't actually use this mock, but otherwise python can't find the vim
+# module at all because it is only available when run from vim
+sys.modules['vim'] = MagicMock() 
 
-import vim_grand_paths
+from vim_grand_paths import VimGrandPaths
 
 class TestAndroidGradle (unittest.TestCase):
 
@@ -17,7 +19,7 @@ class TestAndroidGradle (unittest.TestCase):
     def testSetupEnvirinmentClassPaths(self, MockPathsResolver, mock_vim):
         MockPathsResolver.return_value.getAllClassPaths.return_value = ['path1','path2']
 
-        vim_grand_paths.setupEnvironmentClassPaths()
+        VimGrandPaths().setupEnvironmentClassPaths()
 
         mock_vim.command.assert_called_with("let $CLASSPATH = 'path1:path2'")
     
@@ -29,8 +31,18 @@ class TestAndroidGradle (unittest.TestCase):
 
         expectedString = "let $SRCPATH = 'path1:path2'"
 
-        vim_grand_paths.setupEnvironmentSourcePaths()
+        VimGrandPaths().setupEnvironmentSourcePaths()
 
         self.assertEqual(2, mock_vim.command.call_count)
         mock_vim.command.assert_any_call("let $SRCPATH = 'path1:path2'")
         mock_vim.command.assert_any_call("silent! call javacomplete#SetSourcePath($SRCPATH)")
+
+    @patch('vim_grand_paths.vim')
+    @patch('vim_grand_paths.PathsResolver')
+    def testSetupJavacomplete(self, MockPathsResolver, mock_vim):
+        MockPathsResolver.return_value.getAllClassPaths.return_value = ['path1','path2']
+
+        VimGrandPaths().setupJavacomplete()
+
+        mock_vim.command.assert_called_once_with("silent! call javacomplete#SetClassPath('path1:path2')")
+
