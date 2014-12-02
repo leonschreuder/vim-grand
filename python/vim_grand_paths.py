@@ -29,7 +29,7 @@ def setupEnvironmentClassPaths():
     #setLocalPathVariable(resolvedClassPaths)
 
     #Javacomplete seems to already use the $CLASSPATH direcly
-    addClasspathToJavacomplete() 
+    #addClasspathToJavacomplete() 
 
 def setClassPathVariable(paths):
     vim.command("let $CLASSPATH = '" + ':'.join(paths) + "'")
