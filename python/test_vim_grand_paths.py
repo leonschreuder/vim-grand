@@ -40,9 +40,24 @@ class TestAndroidGradle (unittest.TestCase):
     @patch('vim_grand_paths.vim')
     @patch('vim_grand_paths.PathsResolver')
     def testSetupJavacomplete(self, MockPathsResolver, mock_vim):
-        MockPathsResolver.return_value.getAllClassPaths.return_value = ['path1','path2']
+        instance = MockPathsResolver.return_value
+        instance.getProjectSourcePaths.return_value = ['src/test','src/main']
+        instance.getAndroidSdkJar.return_value = 'AndroidSdkJar'
 
         VimGrandPaths().setupJavacomplete()
 
-        mock_vim.command.assert_called_once_with("silent! call javacomplete#SetClassPath('path1:path2')")
+        mock_vim.command.assert_any_call("silent! call javacomplete#SetClassPath('AndroidSdkJar')")
+        mock_vim.command.assert_any_call("silent! call javacomplete#SetSourcePath(src/test:src/main)")
+
+    @patch('vim_grand_paths.vim')
+    @patch('vim_grand_paths.PathsResolver')
+    def testSetupSyntastic(self, MockPathsResolver, mock_vim):
+        instance = MockPathsResolver.return_value
+        instance.getAllClassPaths.return_value = ['path1','path2']
+        #instance.getAllSourcePaths.return_value = ['source1','source2']
+
+        VimGrandPaths().setupSyntastic()
+
+        mock_vim.command.assert_called_once_with("let $CLASSPATH = 'path1:path2'")
+
 

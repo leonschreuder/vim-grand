@@ -12,19 +12,37 @@ class VimGrandPaths():
     def executeCommand(self):
         self.addCurrentScriptdirToImportSources()
 
-        self.setupEnvironmentClassPaths()
-        self.setupEnvironmentSourcePaths()
-
-    def setupJavacomplete(self):
-        resolvedClassPaths = PathsResolver().getAllClassPaths()
-
-        vim.command("silent! call javacomplete#SetClassPath('" + ':'.join(resolvedClassPaths) + "')")
+        self.setupJavacomplete()
+        self.setupSyntastic()
 
     def addCurrentScriptdirToImportSources(self):
         # Add current scriptdir to import sources
         current_script_dir = vim.eval('s:python_folder_path')
         sys.path.append(current_script_dir)
 
+    def setupJavacomplete(self):
+        resolver = PathsResolver()
+
+        jarsString = resolver.getAndroidSdkJar()
+        sourcesString = ':'.join(resolver.getProjectSourcePaths())
+
+        vim.command("silent! call javacomplete#SetClassPath('" + jarsString + "')")
+        vim.command("silent! call javacomplete#SetSourcePath(" + sourcesString + ")")
+
+    def setupSyntastic(self):
+        resolvedClassPaths = PathsResolver().getAllClassPaths()
+        vim.command("let $CLASSPATH = '" + ':'.join(resolvedClassPaths) + "'")
+        #vim.command("let $SRCPATH = '" + ':'.join(paths) + "'")
+
+
+    #DELETE ME
+    def oldExecuteCommand(self):
+        self.addCurrentScriptdirToImportSources()
+
+        self.setupEnvironmentClassPaths()
+        self.setupEnvironmentSourcePaths()
+
+    #DELETE ME
     def setupEnvironmentClassPaths(self):
         resolvedClassPaths = PathsResolver().getAllClassPaths()
 
@@ -38,27 +56,33 @@ class VimGrandPaths():
         #Javacomplete seems to already use the $CLASSPATH direcly
         #addClasspathToJavacomplete() 
 
+    #DELETE ME
     def setClassPathVariable(self, paths):
         vim.command("let $CLASSPATH = '" + ':'.join(paths) + "'")
 
+    #DELETE ME
     def setLocalPathVariable(self, paths):
         # TODO don't realy know what this is used for. Syntastic? So test it out...
         vim.command("setlocal path=" + ','.join(paths))
 
+    #DELETE ME
     def addClasspathToJavacomplete(self):
         vim.command("silent! call javacomplete#SetClassPath($CLASSPATH)")
 
 
 
+    #DELETE ME
     def setupEnvironmentSourcePaths(self):
         resolvedSourcePaths = PathsResolver().getAllSourcePaths()
 
         self.setSourcePathVariable(resolvedSourcePaths) # used by Syntastic?
         self.addSourcepathToJavacomplete()
 
+    #DELETE ME
     def setSourcePathVariable(self, paths):
         vim.command("let $SRCPATH = '" + ':'.join(paths) + "'")
 
+    #DELETE ME
     def addSourcepathToJavacomplete(self):
         vim.command("silent! call javacomplete#SetSourcePath($SRCPATH)")
 
