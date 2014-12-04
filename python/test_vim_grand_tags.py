@@ -4,11 +4,13 @@ import unittest
 import sys
 import os
 from mock import patch
+from mock import MagicMock
 
-from vim_mock import VimMock
-sys.modules['vim'] = VimMock()
+# We don't actually use this mock, but otherwise python can't find the vim
+# module at all because it is only available when run from vim
+sys.modules['vim'] = MagicMock() 
 
-import vim_grand_tags
+from vim_grand_tags import VimGrandTags
 
 class TestGrandTags (unittest.TestCase):
 
@@ -17,9 +19,9 @@ class TestGrandTags (unittest.TestCase):
     @patch('vim_grand_tags.TagsHandler.generateTagsFile')
     def testVimGrandCtagsFile(self, mock_generateTagsFile, mock_vim):
 
-        vim_grand_tags.executeCommand()
+        VimGrandTags().executeCommand()
 
-        mock_generateTagsFile.assert_called_with() #Doesn't work, but why not?
+        mock_generateTagsFile.assert_called_with()
         mock_vim.command.assert_called_once_with('silent! set tags+='+'.tags')
 
 

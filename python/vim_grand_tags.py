@@ -10,12 +10,21 @@ sys.path.append(current_script_dir)
 
 from generate_tags.tags_handler import TagsHandler
 
-def executeCommand():
-    generateTagsAndAddToVim()
+class VimGrandTags():
+
+    def executeCommand(self):
+        self.generateTagsAndAddToVim()
 
 
-def generateTagsAndAddToVim():
-    TagsHandler().generateTagsFile()
+    def generateTagsAndAddToVim(self):
+        TagsHandler().generateTagsFile()
 
-    vim.command('silent! set tags+='+'.tags')
+        vim.command('silent! set tags+='+'.tags')
 
+
+# As the entire file is executed from VimScript this call fires up python to
+# take over without any VimScript interaction. This is not very clean, but
+# removes the need for untested python-code or VimScripting and relieves the
+# need to jump through strange illogical hoops in the unit Tests just to make
+# sure it all works.
+VimGrandTags().executeCommand()

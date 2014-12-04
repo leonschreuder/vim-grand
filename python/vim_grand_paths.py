@@ -4,6 +4,9 @@ import vim
 import os
 import sys
 
+current_script_dir = vim.eval('s:python_folder_path')
+sys.path.append(current_script_dir)
+
 from find_paths.paths_resolver import PathsResolver
 
 #Class is started up below
@@ -93,4 +96,5 @@ class VimGrandPaths():
 # need to jump through strange illogical hoops in the unit Tests just to make
 # sure it all works.
 VimGrandPaths().executeCommand()
+
 
