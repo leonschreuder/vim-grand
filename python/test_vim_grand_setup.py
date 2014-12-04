@@ -10,12 +10,12 @@ from mock import MagicMock
 # module at all because it is only available when run from vim
 sys.modules['vim'] = MagicMock() 
 
-from vim_grand_paths import VimGrandPaths
+from vim_grand_setup import VimGrandPaths
 
 class TestAndroidGradle (unittest.TestCase):
 
-    @patch('vim_grand_paths.vim')
-    @patch('vim_grand_paths.PathsResolver')
+    @patch('vim_grand_setup.vim')
+    @patch('vim_grand_setup.PathsResolver')
     def testSetupEnvirinmentClassPaths(self, MockPathsResolver, mock_vim):
         MockPathsResolver.return_value.getAllClassPaths.return_value = ['path1','path2']
 
@@ -24,8 +24,8 @@ class TestAndroidGradle (unittest.TestCase):
         mock_vim.command.assert_called_with("let $CLASSPATH = 'path1:path2'")
     
 
-    @patch('vim_grand_paths.vim')
-    @patch('vim_grand_paths.PathsResolver')
+    @patch('vim_grand_setup.vim')
+    @patch('vim_grand_setup.PathsResolver')
     def testSetupEnvirinmentSourcePaths(self, MockPathsResolver, mock_vim):
         MockPathsResolver.return_value.getAllSourcePaths.return_value = ['path1','path2']
 
@@ -37,8 +37,8 @@ class TestAndroidGradle (unittest.TestCase):
         mock_vim.command.assert_any_call("let $SRCPATH = 'path1:path2'")
         mock_vim.command.assert_any_call("silent! call javacomplete#SetSourcePath($SRCPATH)")
 
-    @patch('vim_grand_paths.vim')
-    @patch('vim_grand_paths.PathsResolver')
+    @patch('vim_grand_setup.vim')
+    @patch('vim_grand_setup.PathsResolver')
     def testSetupJavacomplete(self, MockPathsResolver, mock_vim):
         instance = MockPathsResolver.return_value
         instance.getProjectSourcePaths.return_value = ['src/test','src/main']
@@ -49,8 +49,8 @@ class TestAndroidGradle (unittest.TestCase):
         mock_vim.command.assert_any_call("silent! call javacomplete#SetClassPath('AndroidSdkJar')")
         mock_vim.command.assert_any_call("silent! call javacomplete#SetSourcePath(src/test:src/main)")
 
-    @patch('vim_grand_paths.vim')
-    @patch('vim_grand_paths.PathsResolver')
+    @patch('vim_grand_setup.vim')
+    @patch('vim_grand_setup.PathsResolver')
     def testSetupSyntastic(self, MockPathsResolver, mock_vim):
         instance = MockPathsResolver.return_value
         instance.getAllClassPaths.return_value = ['path1','path2']

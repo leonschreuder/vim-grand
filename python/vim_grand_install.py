@@ -12,18 +12,11 @@ sys.path.append(current_script_dir)
 
 
 
-# TODO This is ugly. How about a nice proxy?
-from generate_tags.tags_handler import TagsHandler
-
-class VimGrandTags():
+class VimGrandInstall():
 
     def executeCommand(self):
-        self.generateTagsAndAddToVim()
+        vim.command('Dispatch gradle installDebug -q')
 
-    def generateTagsAndAddToVim(self):
-        TagsHandler().generateTagsFile()
-
-        vim.command('silent! set tags+='+'.tags')
 
 
 
@@ -39,4 +32,4 @@ def isNotTest():
 
 
 if isNotTest():
-    VimGrandTags().executeCommand();
+    VimGrandInstall().executeCommand();

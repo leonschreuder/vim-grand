@@ -15,10 +15,11 @@ endfunction
 
 
 " The commands
+command! Grand echo "this is only a stub for autocompletion, please supply the rest of the command"
 
-command! GrandPaths call GrandPaths()
-function! GrandPaths()
-	call s:startPyfile("vim_grand_paths.py")
+command! GrandSetup call GrandSetup()
+function! GrandSetup()
+	call s:startPyfile("vim_grand_setup.py")
 endfunction
 
 command! GrandTags call GrandTags()
@@ -26,9 +27,9 @@ function! GrandTags()
 	call s:startPyfile("vim_grand_tags.py")
 endfunction
 
-"command! GrandBuild call GrandBuild()
-"function! GrandBuild()
-	"call s:startPyfile("")
-"endfunction
+command! GrandInstall call GrandInstall()
+function! GrandInstall()
+	call s:startPyfile("vim_grand_install.py")
+endfunction
 
 
