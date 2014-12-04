@@ -4,17 +4,27 @@ import vim
 import os
 import sys
 
-# Add current scriptdir to import sources
+
+# Add current scriptdir to import sources. Then we can import as if the code was
+# run from inside the script dir.
 current_script_dir = vim.eval('s:python_folder_path')
 sys.path.append(current_script_dir)
+
 
 from generate_tags.tags_handler import TagsHandler
 
 class VimGrandTags():
 
+    def __init__(self):
+        if self.isNotTest():
+            self.executeCommand()
+
+    def isNotTest(self):
+        return isinstance(vim.current.window.height, (int, long))
+
+
     def executeCommand(self):
         self.generateTagsAndAddToVim()
-
 
     def generateTagsAndAddToVim(self):
         TagsHandler().generateTagsFile()
@@ -22,9 +32,12 @@ class VimGrandTags():
         vim.command('silent! set tags+='+'.tags')
 
 
-# As the entire file is executed from VimScript this call fires up python to
-# take over without any VimScript interaction. This is not very clean, but
-# removes the need for untested python-code or VimScripting and relieves the
-# need to jump through strange illogical hoops in the unit Tests just to make
-# sure it all works.
-VimGrandTags().executeCommand()
+
+
+"""
+As the entire file is run from VimScript, this fires up the class.
+Because of the way python imports classes, and me wanting to use 'pyfile' for
+less vimscript, we need the code in __init__ to stop the tests from running all
+the code before we've had a chance to mock it all out.
+"""
+VimGrandTags()
