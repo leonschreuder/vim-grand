@@ -4,24 +4,18 @@ import vim
 import os
 import sys
 
-
-# Add current scriptdir to import sources. Then we can import as if the code was
+# FIRST THING
+# Adds current scriptdir to import sources. Then we can import as if the code was
 # run from inside the script dir.
 current_script_dir = vim.eval('s:python_folder_path')
 sys.path.append(current_script_dir)
 
 
+
+
 from generate_tags.tags_handler import TagsHandler
 
 class VimGrandTags():
-
-    def __init__(self):
-        if self.isNotTest():
-            self.executeCommand()
-
-    def isNotTest(self):
-        return isinstance(vim.current.window.height, (int, long))
-
 
     def executeCommand(self):
         self.generateTagsAndAddToVim()
@@ -40,4 +34,9 @@ Because of the way python imports classes, and me wanting to use 'pyfile' for
 less vimscript, we need the code in __init__ to stop the tests from running all
 the code before we've had a chance to mock it all out.
 """
-VimGrandTags()
+def isNotTest():
+    return isinstance(vim.current.window.height, (int, long))
+
+
+if isNotTest():
+    VimGrandTags().executeCommand();
