@@ -12,10 +12,27 @@ sys.path.append(current_script_dir)
 
 
 
+# This file has more than one responsibility: setting up the python
+# communication, and verifying/executing the command. Put all the
+# gradle/dispatch commands into a seperate class
 class VimGrandInstall():
 
     def executeCommand(self):
+        if self.hasDispatchInstalled():
+            self.installUsingDispatch()
+
+    def hasDispatchInstalled(self):
+        return vim.eval("exists(':Dispatch')")
+
+    def installUsingDispatch(self):
         vim.command('Dispatch gradle installDebug -q')
+
+    def installUsingVanillaBang(self):
+        vim.command('! gradle installDebug -q')
+
+
+
+
 
 
 

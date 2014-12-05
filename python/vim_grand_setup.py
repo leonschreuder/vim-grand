@@ -13,15 +13,9 @@ from find_paths.paths_resolver import PathsResolver
 class VimGrandPaths():
 
     def executeCommand(self):
-        self.addCurrentScriptdirToImportSources()
 
         self.setupJavacomplete()
         self.setupSyntastic()
-
-    def addCurrentScriptdirToImportSources(self):
-        # Add current scriptdir to import sources
-        current_script_dir = vim.eval('s:python_folder_path')
-        sys.path.append(current_script_dir)
 
     def setupJavacomplete(self):
         resolver = PathsResolver()
