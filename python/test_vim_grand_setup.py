@@ -13,29 +13,8 @@ sys.modules['vim'] = MagicMock()
 from vim_grand_setup import VimGrandPaths
 
 class TestAndroidGradle (unittest.TestCase):
-
-    @patch('vim_grand_setup.vim')
-    @patch('vim_grand_setup.PathsResolver')
-    def testSetupEnvirinmentClassPaths(self, MockPathsResolver, mock_vim):
-        MockPathsResolver.return_value.getAllClassPaths.return_value = ['path1','path2']
-
-        VimGrandPaths().setupEnvironmentClassPaths()
-
-        mock_vim.command.assert_called_with("let $CLASSPATH = 'path1:path2'")
     
 
-    @patch('vim_grand_setup.vim')
-    @patch('vim_grand_setup.PathsResolver')
-    def testSetupEnvirinmentSourcePaths(self, MockPathsResolver, mock_vim):
-        MockPathsResolver.return_value.getAllSourcePaths.return_value = ['path1','path2']
-
-        expectedString = "let $SRCPATH = 'path1:path2'"
-
-        VimGrandPaths().setupEnvironmentSourcePaths()
-
-        self.assertEqual(2, mock_vim.command.call_count)
-        mock_vim.command.assert_any_call("let $SRCPATH = 'path1:path2'")
-        mock_vim.command.assert_any_call("silent! call javacomplete#SetSourcePath($SRCPATH)")
 
     @patch('vim_grand_setup.vim')
     @patch('vim_grand_setup.PathsResolver')
@@ -47,7 +26,8 @@ class TestAndroidGradle (unittest.TestCase):
         VimGrandPaths().setupJavacomplete()
 
         mock_vim.command.assert_any_call("silent! call javacomplete#SetClassPath('AndroidSdkJar')")
-        mock_vim.command.assert_any_call("silent! call javacomplete#SetSourcePath(src/test:src/main)")
+        mock_vim.command.assert_any_call("silent! call javacomplete#SetSourcePath(src/test:src/main:AndroidSdkJar)")
+
 
     @patch('vim_grand_setup.vim')
     @patch('vim_grand_setup.PathsResolver')
