@@ -5,7 +5,7 @@ endif
 
 
 " Get local path for the script, so we can import other files
-let s:script_folder_path = escape( expand( '<sfile>:p:h' ), '\' )
+let s:script_folder_path = escape( expand( '<sfile>:p:h' ), '\' ) . '/'
 let s:python_folder_path = s:script_folder_path . '/../python/'
 
 " Start the python file in the scriptdir
@@ -32,4 +32,8 @@ function! GrandInstall()
 	call s:startPyfile("vim_grand_install.py")
 endfunction
 
+
+function! RunFile()
+	execute "pyfile ". s:script_folder_path . "grand.py"
+endfunction
 
