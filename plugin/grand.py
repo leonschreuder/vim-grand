@@ -19,7 +19,7 @@ SetupCommands().execute()
 
 #command! GrandSetup call GrandSetup()
 #function! GrandSetup()
-	#call s:startPyfile("vim_grand_setup.py")
+	#call s:startPyfile("grand_setup.py")
 #endfunction
 
 #command! GrandTags call GrandTags()

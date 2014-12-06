@@ -24,6 +24,6 @@ class SetupCommandsTest (unittest.TestCase):
     @patch('setup_commands.vim')
     def testAddCommandGrandSetup(self, vim_mock):
 
-        SetupComand().AddCommandGrandSetup()
+        SetupCommands().addCommandGrandSetup()
 
-        vim_mock.command.assert_called_with('command! GrandSetup :python SetupCommands().AddCommandGrandSetup()')
+        vim_mock.command.assert_called_with('command! GrandSetup :python GrandSetup().executeCommand()')

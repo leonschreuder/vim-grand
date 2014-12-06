@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 
-
 import vim
 
 class SetupCommands():
@@ -11,13 +10,14 @@ class SetupCommands():
     def displayEmptyCommand(self):
         print  'this is only a stub for autocompletion, please supply the rest of the command'
 
+    def addCommandGrandSetup(self):
+        self.setupCommandCalling('GrandSetup', 'GrandSetup().executeCommand()')
 
-#command! Grand echo "this is only a stub for autocompletion, please supply the rest of the command"
+    def setupCommandCalling(self, commandNameAsString, pythonMethodAsString):
+        vim.command('command! ' + commandNameAsString + ' :python ' + pythonMethodAsString)
 
-#command! GrandSetup call GrandSetup()
-#function! GrandSetup()
-	#call s:startPyfile("vim_grand_setup.py")
-#endfunction
+
+
 
 #command! GrandTags call GrandTags()
 #function! GrandTags()
