@@ -9,8 +9,6 @@ print "current_script_dir", current_script_dir
 sys.path.append(current_script_dir)
 
 
-print "grand.py called"
-
 from setup_commands import SetupCommands
 
 SetupCommands().execute()

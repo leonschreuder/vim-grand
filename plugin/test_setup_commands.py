@@ -19,11 +19,42 @@ class SetupCommandsTest (unittest.TestCase):
     def testExecute(self, vim_mock):
         SetupCommands().execute()
 
-        vim_mock.command.assert_called_with('command! Grand :python SetupCommands().displayEmptyCommand()')
+        expectedCommand = 'command! Grand :python SetupCommands().displayEmptyCommand()'
+        vim_mock.command.assert_called_with(expectedCommand)
 
     @patch('setup_commands.vim')
     def testAddCommandGrandSetup(self, vim_mock):
 
         SetupCommands().addCommandGrandSetup()
 
-        vim_mock.command.assert_called_with('command! GrandSetup :python GrandSetup().executeCommand()')
+        expectedCommand = 'command! GrandSetup :python GrandSetup().executeCommand()'
+        vim_mock.command.assert_called_with(expectedCommand)
+
+    @patch('setup_commands.vim')
+    def testAddCommandGrandSetup(self, vim_mock):
+
+        SetupCommands().addCommandGrandTags()
+
+        expectedCommand = 'command! GrandTags :python GrandTags().executeCommand()'
+        vim_mock.command.assert_called_with(expectedCommand)
+
+
+    @patch('setup_commands.vim')
+    def testAddCommandGrandInstall(self, vim_mock):
+
+        SetupCommands().addCommandGrandInstall()
+
+        expectedCommand = 'command! GrandInstall :python GrandInstall().executeCommand()'
+        vim_mock.command.assert_called_with(expectedCommand)
+
+    @patch('setup_commands.vim')
+    def testSetupCommandCalling(self, vim_mock):
+
+        SetupCommands().setupCommandCalling('CommandName')
+
+        expectedCommand1 = ':python from command_name import CommandName'
+        expectedCommand2 = 'command! CommandName :python CommandName().executeCommand()'
+        vim_mock.command.assert_any_call(expectedCommand1)
+        vim_mock.command.assert_any_call(expectedCommand2)
+
+

@@ -10,15 +10,15 @@ from mock import MagicMock
 # module at all because it is only available when run from vim
 sys.modules['vim'] = MagicMock() 
 
-from vim_grand_tags import VimGrandTags
+from grand_tags import GrandTags
 
 class TestGrandTags (unittest.TestCase):
 
-    @patch('vim_grand_tags.vim')
-    @patch('vim_grand_tags.TagsHandler.generateTagsFile')
+    @patch('grand_tags.vim')
+    @patch('grand_tags.TagsHandler.generateTagsFile')
     def testVimGrandCtagsFile(self, mock_generateTagsFile, mock_vim):
 
-        VimGrandTags().executeCommand()
+        GrandTags().executeCommand()
 
         mock_generateTagsFile.assert_called_with()
         mock_vim.command.assert_called_once_with('silent! set tags+='+'.tags')
