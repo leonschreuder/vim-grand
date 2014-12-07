@@ -12,7 +12,13 @@ from mock import MagicMock
 sys.modules['vim'] = MagicMock() 
 
 from setup_commands import SetupCommands
-
+"""
+This class sets up all the vim commands:
+    Grand
+    GrandSetup
+    GrandInstall
+    GrandTags
+"""
 class SetupCommandsTest (unittest.TestCase):
 
     @patch('setup_commands.vim')

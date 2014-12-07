@@ -3,6 +3,20 @@
 import vim
 import re
 
+"""
+This class sets up all the vim commands:
+    :Grand
+        Does nothing other than allow you to type "Gr<tab>" and choose among
+        the other commands
+    :GrandSetup
+        TODO: checks the environment (like if you have set up android, gradle,
+        ctags, etc. correctly)
+        Imports paths for Syntastic and javacomplete
+    :GrandInstall
+        Runs "gradle installDebug -q" on the commandline
+    :GrandTags
+        Generates a tags file for the project
+"""
 class SetupCommands():
 
     def execute(self):
