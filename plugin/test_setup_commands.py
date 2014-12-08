@@ -3,22 +3,14 @@
 import unittest
 
 import sys
-import os
 from mock import patch
 from mock import MagicMock
 
 # We don't actually use this mock, but otherwise python can't find the vim
 # module at all because it is only available when run from vim
-sys.modules['vim'] = MagicMock() 
+sys.modules['vim'] = MagicMock()
 
 from setup_commands import SetupCommands
-"""
-This class sets up all the vim commands:
-    Grand
-    GrandSetup
-    GrandInstall
-    GrandTags
-"""
 class SetupCommandsTest (unittest.TestCase):
 
     @patch('setup_commands.vim')
@@ -37,7 +29,7 @@ class SetupCommandsTest (unittest.TestCase):
         vim_mock.command.assert_called_with(expectedCommand)
 
     @patch('setup_commands.vim')
-    def testAddCommandGrandSetup(self, vim_mock):
+    def testAddCommandGrandTags(self, vim_mock):
 
         SetupCommands().addCommandGrandTags()
 

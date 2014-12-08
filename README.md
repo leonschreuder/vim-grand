@@ -1,30 +1,40 @@
 # Vim-Grand - a Gradle Android plugin
 [![Build Status](https://travis-ci.org/meonlol/vim-grand.svg?branch=develop)](https://travis-ci.org/meonlol/vim-grand)
 
+This is a Vim plugin for Android development using Gradle as a build system, supporting Robolectric Unit Testing. It is based on the excellent [hsanson/vim-android](https://github.com/hsanson/vim-android) plugin, except that it is be written mostly in python, is unit tested, and is meant for Gradle only. If you'd like to use ant/maven, or don't need unit-testing, maybe his plugin will do the trick.
+
 WORK IN PROGRESS!
-
-This is a Vim plugin for Android development using Gradle as a build system, supporting Robolectric Unit Testing. It is based on the excellent [hsanson/vim-android](https://github.com/hsanson/vim-android) plugin, except that it is be written mostly in python, is unit tested (when possible/sane), and is meant for Gradle only. If you'd like to use ant/maven, or don't need unit-testing, maybe his plugin will do the trick.
-
-It is still very much a work in progress, but the following is there:
-- Setting paths for Syntastic and javacomplete with the `GrandPaths` command.
-- Generating the (exurbitant) ctags file with the `GrandCtags` command.
-
-##Setup
-Since people are already looking at the repo, and they might want to know if they can already use it, here's the setup I'm testing/developing with and might work for you two (I assume you know how to install the plugin with pathogen/vundle, and have already done so).
-
-Systems I test on:
+I'm actively developing this plugin, it's still in Alpha, but please do try it out and let me know what you think. And if you find a bug or are missing an important feature, please [let me know](https://github.com/meonlol/vim-grand/issues) or add it in a fork and submit a pull-request.
+Systems I develop on:
 - Mac osX 10.6 and 10.9.
 - Vim 7.4 (latest version)
 - Exuberant Ctags 5.8
 - Python 2.7.8 (latest version)
 
-Vim plugins I'm targeting:
-- [Javacomplete](https://github.com/vim-scripts/javacomplete) for code completion.
-- [Syntastic](https://github.com/scrooloose/syntastic) for syntax checking.
-- [Tim Pope's Dispatch](https://github.com/tpope/vim-dispatch) for async building.
+TODO:
 
-##How I got it to work
-Notice the 'I' in the title? I'm actively developing (still pre-Alpha), but maybe this will work for you two. (Since this guide has gotten rather long, I'll make a wiki / demo-setup-project soon).
+- Split the gradle plugin part into another project. It's doesn't really have anything to do with vim-grand functionality, plus that way maybe it can be published to maven.
+- Test environment for:
+	- ctags
+	- gradle (gradlew / system gradle)
+
+##Features
+
+- Setting up the Syntastic and javacomplete paths with the `:GrandSetup` command.
+- (Asyncly-) generating the (exurbitant) ctags file with the `:GrandTags` command.
+- Installing to connected devices with the `:GrandInstall` command.
+
+
+##requirements
+
+- [Syntastic](https://github.com/scrooloose/syntastic) for syntax checking.
+- [Javacomplete](https://github.com/vim-scripts/javacomplete) for code completion.
+
+Advised
+- [Tim Pope's Dispatch](https://github.com/tpope/vim-dispatch) for using the gradle commands asyncly.
+
+
+##Installation
 
 1. Setup an Android project with Robolectric.
 I use [deckard-gradle](https://github.com/robolectric/deckard-gradle) as a starting point. But you will need to update the classpaths to use version 0.13.+ of both the android and the robolectric plugin.
