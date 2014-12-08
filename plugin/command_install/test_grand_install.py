@@ -10,11 +10,11 @@ from mock import MagicMock
 # module at all because it is only available when run from vim
 sys.modules['vim'] = MagicMock() 
 
-from grand_install import GrandInstall
+from command_install.grand_install import GrandInstall
 
 class TestGrandInstall (unittest.TestCase):
 
-    @patch('grand_install.vim')
+    @patch('command_install.grand_install.vim')
     def testVimGrandCtagsFile(self, mock_vim):
 
         GrandInstall().executeCommand();
@@ -22,7 +22,7 @@ class TestGrandInstall (unittest.TestCase):
         mock_vim.eval.assert_any_call("exists(':Dispatch')")
         mock_vim.command.assert_any_call('Dispatch gradle installDebug -q')
 
-    @patch('grand_install.vim')
+    @patch('command_install.grand_install.vim')
     def testHasDispatchInstalld(self, mock_vim):
 
         GrandInstall().hasDispatchInstalled();
@@ -30,7 +30,7 @@ class TestGrandInstall (unittest.TestCase):
         mock_vim.eval.assert_called_with("exists(':Dispatch')")
 
 
-    @patch('grand_install.vim')
+    @patch('command_install.grand_install.vim')
     def testInstallUsingDispatch(self, mock_vim):
 
         GrandInstall().installUsingDispatch();
@@ -38,7 +38,7 @@ class TestGrandInstall (unittest.TestCase):
         mock_vim.command.assert_called_with('Dispatch gradle installDebug -q')
 
 
-    @patch('grand_install.vim')
+    @patch('command_install.grand_install.vim')
     def testInstallUsingVanillaShell(self, mock_vim):
 
         GrandInstall().installUsingVanillaBang()

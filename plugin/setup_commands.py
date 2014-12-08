@@ -42,13 +42,19 @@ class SetupCommands():
 
 
     def setupCommandCalling(self, commandNameAsString):
-        fileName = self.convertCamelToSnake(commandNameAsString)
+        file_name = self.convertCamelToSnake(commandNameAsString)
+        dir_name = self.dirname_from_commandname(commandNameAsString)
 
         #We need to explicitly import the class we want to call in vim itself apperantly
-        vim.command(':python from ' + fileName + ' import ' + commandNameAsString)
+        vim.command(':python from '+ dir_name + '.' + file_name + ' import ' + commandNameAsString)
         #Add the command that calls executeCommand() on the specified class
         vim.command('command! ' + commandNameAsString + ' :python ' + commandNameAsString + '().executeCommand()')
 
     def convertCamelToSnake(self, name):
         s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
         return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
+    def dirname_from_commandname(self, name):
+        dir_name = re.sub('Grand([A-Z][a-z]+)', r'command_\1', name)
+        return dir_name.lower()
+

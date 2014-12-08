@@ -48,10 +48,10 @@ class SetupCommandsTest (unittest.TestCase):
     @patch('setup_commands.vim')
     def testSetupCommandCalling(self, vim_mock):
 
-        SetupCommands().setupCommandCalling('CommandName')
+        SetupCommands().setupCommandCalling('GrandTest')
 
-        expectedCommand1 = ':python from command_name import CommandName'
-        expectedCommand2 = 'command! CommandName :python CommandName().executeCommand()'
+        expectedCommand1 = ':python from command_test.grand_test import GrandTest'
+        expectedCommand2 = 'command! GrandTest :python GrandTest().executeCommand()'
         vim_mock.command.assert_any_call(expectedCommand1)
         vim_mock.command.assert_any_call(expectedCommand2)
 

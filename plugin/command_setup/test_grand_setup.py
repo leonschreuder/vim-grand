@@ -10,13 +10,13 @@ from mock import MagicMock
 # module at all because it is only available when run from vim
 sys.modules['vim'] = MagicMock() 
 
-from grand_setup import GrandSetup
+from command_setup.grand_setup import GrandSetup
 
 class TestGrandSetup (unittest.TestCase):
 
 
-    @patch('grand_setup.vim')
-    @patch('grand_setup.PathsResolver')
+    @patch('command_setup.grand_setup.vim')
+    @patch('command_setup.grand_setup.PathsResolver')
     def testSetupJavacomplete(self, MockPathsResolver, mock_vim):
         instance = MockPathsResolver.return_value
         instance.getProjectSourcePaths.return_value = ['src/test','src/main']
@@ -28,8 +28,8 @@ class TestGrandSetup (unittest.TestCase):
         mock_vim.command.assert_any_call("silent! call javacomplete#SetSourcePath(src/test:src/main:AndroidSdkJar)")
 
 
-    @patch('grand_setup.vim')
-    @patch('grand_setup.PathsResolver')
+    @patch('command_setup.grand_setup.vim')
+    @patch('command_setup.grand_setup.PathsResolver')
     def testSetupSyntastic(self, MockPathsResolver, mock_vim):
         instance = MockPathsResolver.return_value
         instance.getAllClassPaths.return_value = ['path1','path2']
