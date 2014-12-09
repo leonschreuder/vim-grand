@@ -16,6 +16,8 @@ This class sets up all the vim commands:
         Runs "gradle installDebug -q" on the commandline
     :GrandTags
         Generates a tags file for the project
+    :GrandDetect
+        Checks if project is an Android Gradle project and sets the g:isAndroidProject variable
 """
 class SetupCommands():
 
@@ -23,6 +25,7 @@ class SetupCommands():
         self.addCommandGrandSetup()
         self.addCommandGrandTags()
         self.addCommandGrandInstall()
+        self.addCommandGrandDetect()
 
         vim.command('command! Grand :python SetupCommands().displayEmptyCommand()')
 
@@ -39,7 +42,9 @@ class SetupCommands():
 
     def addCommandGrandInstall(self):
         self.setupCommandCalling('GrandInstall')
-
+    
+    def addCommandGrandDetect(self):
+        self.setupCommandCalling('GrandDetect')
 
     def setupCommandCalling(self, commandNameAsString):
         file_name = self.convertCamelToSnake(commandNameAsString)
