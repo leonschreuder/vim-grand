@@ -7,6 +7,6 @@ python:
 install: pip install mock
 # command to run tests, e.g. python setup.py test
 script:
-- cd python
+- cd plugin
 - python -m unittest discover
 env: ANDROID_HOME=TEST_ANDROID_HOME
