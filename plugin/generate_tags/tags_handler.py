@@ -23,8 +23,10 @@ class TagsHandler:
             self.executeCommandAsyncly(shellIndependantCommandArray)
         else:
             print 'ctags executable not found. To use this command, please install it.'
-        #TODO: Into help. If ctags doesn't create a file, make sure it is exurbitant-ctags
-        # To check the version type 'man ctags' and at the top it should say Exurbitant Ctags (on *nix)
+
+        #TODO: Into help. If ctags doesn't create a file, make sure it is
+        # exurbitant-ctags To check the version type 'man ctags' and at the top
+        # it should say Exurbitant Ctags (on *nix)
 
 
     def getCtagsCommand(self):
@@ -50,11 +52,16 @@ class TagsHandler:
         # performance of the tags generation also, but for now this allows
         # jumping to tags while it is generating
         subprocess.call(commandArray)
+        self.replaceTagsWithTempTags()
+
+
+    def replaceTagsWithTempTags(self):
         try:
             os.remove('.tags')
         except OSError:
             pass
         os.rename('.tempTags', '.tags')
+
 
 
     def executeCommandAsyncly(self, commandArray):

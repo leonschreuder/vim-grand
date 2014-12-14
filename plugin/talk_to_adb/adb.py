@@ -19,11 +19,3 @@ class Adb:
         apkFile = PathsResolver().getLatestApkFile()
         returncode = subprocess.Popen([self.getAdb(), 'install', '-r', apkFile])
 
-    def uninstallApp(self):
-        #TODO: Implement
-        #packageName = PathsResolver().getPackageName()
-        packageName = 'com.example.app'
-
-        returncode = subprocess.Popen([self.getAdb(), 'uninstall', packageName])
-
-    #TODO gradle install????
