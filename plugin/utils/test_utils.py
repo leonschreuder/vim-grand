@@ -2,16 +2,30 @@
 
 import unittest
 import os
+import sys
+import stat
 
 from mock import patch
 from utils import Utils
 
 class TestUtils (unittest.TestCase):
 
-    @patch('utils.utils.os')
-    def test_is_exe(self, mock_os):
+    def setUp(self):
+        open('build/test_executable.sh', 'a', 755).close()
+        os.chmod('build/test_executable.sh', 755)
 
-        Utils().is_exe('path')
+    def tearDown(self):
+        os.remove('build/test_executable.sh')
 
-        mock_os.path.isfile.assert_called_with('path')
-        mock_os.access.assert_called_with('path', mock_os.X_OK)
+
+    def test_is_exe2(self):
+
+        result = Utils().is_exe('build/test_executable.sh')
+
+        self.assertTrue(result)
+
+    def test_which(self):
+
+        result = Utils().which('build/test_executable.sh')
+
+        self.assertEquals('build/test_executable.sh', result)
