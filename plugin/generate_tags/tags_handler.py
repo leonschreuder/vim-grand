@@ -7,7 +7,7 @@ import subprocess
 import threading
 
 from find_paths.paths_resolver import PathsResolver
-from utils.utils import Utils
+from utils.sys_helper import SysHelper
 
 
 #TODO: Into help. If ctags doesn't create a file, make sure it is
@@ -21,7 +21,7 @@ class TagsHandler:
             sys.path.append(os.getcwd())
 
     def generateTagsFile(self):
-        #if (Utils().which('ctags') != None):
+        #if (SysHelper().which('ctags') != None):
         if self.hasCtags():
             shellIndependantCommandArray = self.getCtagsCommand()
             self.executeCommandAsyncly(shellIndependantCommandArray)
@@ -29,7 +29,7 @@ class TagsHandler:
             print 'ctags executable not found. To use this command, please install it.'
 
     def hasCtags(self):
-        return Utils().which('ctags') != None
+        return SysHelper().which('ctags') != None
 
     def getCtagsCommand(self):
         finalCommandArray = []
