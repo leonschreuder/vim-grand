@@ -2,14 +2,18 @@
 
 import sys
 import os
-import time
 
-
-#from subprocess import call
 import subprocess
 import threading
-#from subprocess import Popen
+
 from find_paths.paths_resolver import PathsResolver
+from utils.utils import Utils
+
+
+#TODO: Into help. If ctags doesn't create a file, make sure it is
+# exurbitant-ctags To check the version type 'man ctags' and at the top
+# it should say Exurbitant Ctags (on *nix)
+
 
 class TagsHandler:
     def __init__(self):
@@ -17,17 +21,15 @@ class TagsHandler:
             sys.path.append(os.getcwd())
 
     def generateTagsFile(self):
-        if (self.which('ctags') != None):
-            #NOTE wouldn't a Popen(['ctags','--version']) be more to the point?
+        #if (Utils().which('ctags') != None):
+        if self.hasCtags():
             shellIndependantCommandArray = self.getCtagsCommand()
             self.executeCommandAsyncly(shellIndependantCommandArray)
         else:
             print 'ctags executable not found. To use this command, please install it.'
 
-        #TODO: Into help. If ctags doesn't create a file, make sure it is
-        # exurbitant-ctags To check the version type 'man ctags' and at the top
-        # it should say Exurbitant Ctags (on *nix)
-
+    def hasCtags(self):
+        return Utils().which('ctags') != None
 
     def getCtagsCommand(self):
         finalCommandArray = []
@@ -36,8 +38,8 @@ class TagsHandler:
         ctagsShellCommand = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
         finalCommandArray += ctagsShellCommand
 
-        #ctagsTargetFile = '.tags' #TODO make tag file name/location dynamic
-        ctagsTargetFile = '.tempTags' # using temp file when updating
+        #TODO make tag file name/location dynamic
+        ctagsTargetFile = '.tempTags'
         finalCommandArray += ['-f', ctagsTargetFile]
 
         sourcePaths = PathsResolver().getAllSourcePaths();
@@ -46,28 +48,11 @@ class TagsHandler:
         return finalCommandArray
 
 
-    def executeCommand(self, commandArray):
-        # This generates the tags file into a temp file first and when it's
-        # done, it overwrites the actual tags file. I will need to imporve the
-        # performance of the tags generation also, but for now this allows
-        # jumping to tags while it is generating
-        subprocess.call(commandArray)
-        self.replaceTagsWithTempTags()
-
-
-    def replaceTagsWithTempTags(self):
-        try:
-            os.remove('.tags')
-        except OSError:
-            pass
-        os.rename('.tempTags', '.tags')
-
-
-
+    """
+    This runs the tags file generation in a different thread.
+    If it's already running, nothing happens.
+    """
     def executeCommandAsyncly(self, commandArray):
-        # This runs the tags file generation in a different thread.
-        # If it's already running, nothing happens.
-
 
         tagsGenerationThread = threading.Thread(name='tagsGenerationThread', target=self.executeCommand, args=(commandArray,))
         
@@ -80,44 +65,24 @@ class TagsHandler:
             tagsGenerationThread.start();
 
 
-    #Not Used. Kept as good testing example
-    def isValidTagsFile(self):
-        with open('.tags', 'U') as f:
-            return self.fileIsTagsFile(f)
+    """
+    This generates the tags file into a temp file first and when it's done, it
+    overwrites the actual tags file. I will need to imporve the performance of
+    the tags generation also, but for now this allows jumping to tags while it
+    is generating
+    """
+    def executeCommand(self, commandArray):
+        subprocess.call(commandArray)
+        self.replaceTagsWithTempTags()
 
 
-    #Not Used. Kept as good testing example
-    def fileIsTagsFile(self, file):
-        lines = file.readlines()
-
-        if (lines[0].startswith('!_TAG_FILE_FORMAT')
-            and lines[1].startswith('!_TAG_FILE_SORTED')
-            and lines[2].startswith('!_TAG_PROGRAM_AUTHOR')
-            and lines[3].startswith('!_TAG_PROGRAM_NAME')
-            and lines[4].startswith('!_TAG_PROGRAM_URL')
-            and lines[5].startswith('!_TAG_PROGRAM_VERSION')):
-            return True
-        else:
-            return False
+    def replaceTagsWithTempTags(self):
+        try:
+            os.remove('.tags')
+        except OSError:
+            pass
+        os.rename('.tempTags', '.tags')
 
 
-    def which(self, program):
-        # method copied from http://stackoverflow.com/a/377028
-        import os
-        def is_exe(fpath):
-            return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
-
-        fpath, fname = os.path.split(program)
-        if fpath:
-            if is_exe(program):
-                return program
-        else:
-            for path in os.environ["PATH"].split(os.pathsep):
-                path = path.strip('"')
-                exe_file = os.path.join(path, program)
-                if is_exe(exe_file):
-                    return exe_file
-
-        return None
 
 

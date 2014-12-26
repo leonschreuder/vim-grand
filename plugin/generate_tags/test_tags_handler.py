@@ -8,14 +8,6 @@ from mock import patch
 from mock import mock_open
 
 
-tagsStartString = '''!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
-!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
-!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
-!_TAG_PROGRAM_NAME	Exuberant Ctags	//
-!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
-!_TAG_PROGRAM_VERSION	5.8	//
-'''
-
 from StringIO import StringIO
 
 class TestTagsHandler (unittest.TestCase):
@@ -44,7 +36,6 @@ class TestTagsHandler (unittest.TestCase):
         instance.getAllSourcePaths.return_value = ['path']
 
         command = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
-        #command.extend(['-f', '.tags'])
         command.extend(['-f', '.tempTags'])
         command.append('path')
 
@@ -52,19 +43,5 @@ class TestTagsHandler (unittest.TestCase):
         self.assertEquals(command, result)
 
 
-    @patch('__builtin__.open')
-    def testIsValidTagsFile(self, mockopen):
-
-        result = TagsHandler().isValidTagsFile();
-
-        self.assertTrue(result)
-        mockopen.assert_called_with('.tags', 'U')
-
-    def testFileIsTagsFile(self):
-        file = StringIO(tagsStartString)
-
-        result = TagsHandler().fileIsTagsFile(file)
-
-        self.assertTrue(result)
 
 
