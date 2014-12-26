@@ -38,4 +38,19 @@ class TestGrandSetup (unittest.TestCase):
 
         mock_vim.command.assert_called_once_with("let $CLASSPATH = 'path1:path2'")
 
+    @patch('command_setup.grand_setup.SysHelper')
+    def testIsGradleProject(self, mock_sys_helper):
+        mockedMethod = mock_sys_helper.return_value.fileExistsInCwd
 
+        GrandSetup().isGradleProject()
+
+        mockedMethod.assert_called_with('build.gradle')
+
+
+    @patch('command_setup.grand_setup.SysHelper')
+    def testIsAndroidProject(self, mock_sys_helper):
+        mockedMethod = mock_sys_helper.return_value.fileExistsInCwd
+
+        GrandSetup().isAndroidProject()
+
+        mockedMethod.assert_called_with('AndroidManifest.xml')

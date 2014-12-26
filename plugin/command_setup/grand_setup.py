@@ -5,12 +5,16 @@ import os
 import sys
 
 from find_paths.paths_resolver import PathsResolver
+from utils.sys_helper import SysHelper
 
 class GrandSetup():
 
     def executeCommand(self):
-        self.setupJavacomplete()
-        self.setupSyntastic()
+        if self.isGradleProject() and self.isAndroidProject():
+            self.setupJavacomplete()
+            self.setupSyntastic()
+        else:
+            print 'No gradle and/or android project detected. Is cwd set correctly?'
 
     def setupJavacomplete(self):
         resolver = PathsResolver()
@@ -29,4 +33,10 @@ class GrandSetup():
         resolvedClassPaths = PathsResolver().getAllClassPaths()
         vim.command("let $CLASSPATH = '" + ':'.join(resolvedClassPaths) + "'")
         #vim.command("let $SRCPATH = '" + ':'.join(paths) + "'")
+
+    def isGradleProject(self):
+        return SysHelper().fileExistsInCwd("build.gradle")
+
+    def isAndroidProject(self):
+        return SysHelper().fileExistsInCwd("AndroidManifest.xml")
 
