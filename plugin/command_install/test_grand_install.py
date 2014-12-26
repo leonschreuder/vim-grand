@@ -15,15 +15,24 @@ from command_install.grand_install import GrandInstall
 class TestGrandInstall (unittest.TestCase):
 
     @patch('command_install.grand_install.vim')
-    def testVimGrandCtagsFile(self, mock_vim):
+    def testVimGrandCtagsFileWithDispatch(self, mock_vim):
 
         GrandInstall().executeCommand();
 
         mock_vim.eval.assert_any_call("exists(':Dispatch')")
-        mock_vim.command.assert_any_call('Dispatch gradle installDebug -q')
+        mock_vim.command.assert_called_with('Dispatch gradle installDebug -q')
 
     @patch('command_install.grand_install.vim')
-    def testHasDispatchInstalld(self, mock_vim):
+    def testVimGrandCtagsFileWithBang(self, mock_vim):
+        mock_vim.eval.return_value = False
+
+        GrandInstall().executeCommand();
+
+        mock_vim.eval.assert_any_call("exists(':Dispatch')")
+        mock_vim.command.assert_called_with('! gradle installDebug -q')
+
+    @patch('command_install.grand_install.vim')
+    def testHasDispatchInstalled(self, mock_vim):
 
         GrandInstall().hasDispatchInstalled();
 

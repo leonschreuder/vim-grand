@@ -10,6 +10,8 @@ class GrandInstall():
     def executeCommand(self):
         if self.hasDispatchInstalled():
             self.installUsingDispatch()
+        else:
+            self.installUsingVanillaBang()
 
     def hasDispatchInstalled(self):
         return vim.eval("exists(':Dispatch')")
