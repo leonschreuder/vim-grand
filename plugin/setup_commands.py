@@ -9,26 +9,30 @@ This class sets up all the vim commands:
         Does nothing other than allow you to type "Gr<tab>" and choose among
         the other commands
     :GrandSetup
-        TODO: checks the environment (like if you have set up android, gradle,
-        ctags, etc. correctly)
-        Imports paths for Syntastic and javacomplete
+        If the cwd is a Andorid Gradle project, it sets up the plugin
     :GrandInstall
         Runs "gradle installDebug -q" on the commandline
     :GrandTags
         Generates a tags file for the project
-    :GrandDetect
-        Checks if project is an Android Gradle project and sets the g:isAndroidProject variable
 """
 class SetupCommands():
 
+    """
+    Main entry point.
+    Because we want the commands only if it's actually an android project we
+    only initialize the GrandSetup command at the beginning. GrandSetup adds
+    the other commands when necessary.
+    """
     def execute(self):
         self.addCommandGrandSetup()
+
+
+    def addAllCommands(self):
         self.addCommandGrandTags()
         self.addCommandGrandInstall()
         self.addCommandGrandDetect()
 
         vim.command('command! Grand :python SetupCommands().displayEmptyCommand()')
-
 
     def displayEmptyCommand(self):
         print  'this is only a stub for autocompletion, please supply the rest of the command'

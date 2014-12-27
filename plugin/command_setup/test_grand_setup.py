@@ -14,6 +14,19 @@ from command_setup.grand_setup import GrandSetup
 
 class TestGrandSetup (unittest.TestCase):
 
+    @patch('command_setup.grand_setup.SetupCommands')
+    @patch('command_setup.grand_setup.SysHelper')
+    @patch('command_setup.grand_setup.vim')
+    @patch('command_setup.grand_setup.PathsResolver')
+    def testExecuteCommand(self, MockPathsResolver, mock_vim, MockSysHelper, MockSetupCommands):
+        MockSysHelper.return_value.fileExistsInCwd.return_value = True
+        instance = MockPathsResolver.return_value
+        instance.getAllClassPaths.return_value = ['path1','path2']
+
+        GrandSetup().executeCommand()
+
+        mock_vim.command.assert_any_call("let $CLASSPATH = 'path1:path2'")
+        MockSetupCommands.return_value.addAllCommands.assert_called_with()
 
     @patch('command_setup.grand_setup.vim')
     @patch('command_setup.grand_setup.PathsResolver')

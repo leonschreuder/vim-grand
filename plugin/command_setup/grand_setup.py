@@ -6,11 +6,13 @@ import sys
 
 from find_paths.paths_resolver import PathsResolver
 from utils.sys_helper import SysHelper
+from setup_commands import SetupCommands
 
 class GrandSetup():
 
     def executeCommand(self):
         if self.isGradleProject() and self.isAndroidProject():
+            SetupCommands().addAllCommands()
             self.setupJavacomplete()
             self.setupSyntastic()
         else:
@@ -24,7 +26,7 @@ class GrandSetup():
         sourcePaths.append(jarsString);
         sourcesString = ':'.join(sourcePaths)
 
-        print sourcesString
+        #print sourcesString
 
         vim.command("silent! call javacomplete#SetClassPath('" + jarsString + "')")
         vim.command("silent! call javacomplete#SetSourcePath(" + sourcesString + ")")

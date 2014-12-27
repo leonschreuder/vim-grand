@@ -14,10 +14,17 @@ from setup_commands import SetupCommands
 class SetupCommandsTest (unittest.TestCase):
 
     @patch('setup_commands.vim')
+    def testAddAllCommands(self, vim_mock):
+        SetupCommands().addAllCommands()
+
+        expectedCommand = 'command! Grand :python SetupCommands().displayEmptyCommand()'
+        vim_mock.command.assert_called_with(expectedCommand)
+
+    @patch('setup_commands.vim')
     def testExecute(self, vim_mock):
         SetupCommands().execute()
 
-        expectedCommand = 'command! Grand :python SetupCommands().displayEmptyCommand()'
+        expectedCommand = 'command! GrandSetup :python GrandSetup().executeCommand()'
         vim_mock.command.assert_called_with(expectedCommand)
 
     @patch('setup_commands.vim')
