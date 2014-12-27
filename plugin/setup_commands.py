@@ -30,7 +30,6 @@ class SetupCommands():
     def addAllCommands(self):
         self.addCommandGrandTags()
         self.addCommandGrandInstall()
-        self.addCommandGrandDetect()
 
         vim.command('command! Grand :python SetupCommands().displayEmptyCommand()')
 
@@ -46,9 +45,6 @@ class SetupCommands():
 
     def addCommandGrandInstall(self):
         self.setupCommandCalling('GrandInstall')
-    
-    def addCommandGrandDetect(self):
-        self.setupCommandCalling('GrandDetect')
 
     def setupCommandCalling(self, commandNameAsString):
         file_name = self.convertCamelToSnake(commandNameAsString)
