@@ -3,11 +3,13 @@
 import vim
 import os
 import sys
-
+from talk_to_adb.adb import Adb
 
 class GrandInstall():
 
     def executeCommand(self):
+        #self.installThroughAdb()
+
         if self.hasDispatchInstalled():
             self.installUsingDispatch()
         else:
@@ -21,3 +23,6 @@ class GrandInstall():
 
     def installUsingVanillaBang(self):
         vim.command('! gradle installDebug -q')
+
+    def installThroughAdb(self):
+        Adb().installLatestApk()
