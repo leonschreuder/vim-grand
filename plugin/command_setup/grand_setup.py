@@ -9,6 +9,8 @@ from utils.sys_helper import SysHelper
 from setup_commands import SetupCommands
 
 class GrandSetup():
+    def __init__(self):
+        self.pathsResolver = PathsResolver()
 
     def executeCommand(self):
         if self.isGradleProject() and self.isAndroidProject():
@@ -19,20 +21,22 @@ class GrandSetup():
             print 'No gradle and/or android project detected. Is cwd set correctly?'
 
     def setupJavacomplete(self):
-        resolver = PathsResolver()
+        #resolver = PathsResolver()
 
-        jarsString = resolver.getAndroidSdkJar()
-        sourcePaths = resolver.getProjectSourcePaths();
-        sourcePaths.append(jarsString);
+        jarsPaths = []
+        jarsPaths.append(self.pathsResolver.getAndroidSdkJar())
+        jarsPaths.extend(self.pathsResolver.getExplodedAarClasses())
+        jarsString = ':'.join(jarsPaths)
+
+        sourcePaths = self.pathsResolver.getProjectSourcePaths()
+        sourcePaths.append(self.pathsResolver.getAndroidSdkJar())
         sourcesString = ':'.join(sourcePaths)
 
-        #print sourcesString
-
         vim.command("silent! call javacomplete#SetClassPath('" + jarsString + "')")
-        vim.command("silent! call javacomplete#SetSourcePath(" + sourcesString + ")")
+        vim.command("silent! call javacomplete#SetSourcePath('" + sourcesString + "')")
 
     def setupSyntastic(self):
-        resolvedClassPaths = PathsResolver().getAllClassPaths()
+        resolvedClassPaths = self.pathsResolver.getAllClassPaths()
         vim.command("let $CLASSPATH = '" + ':'.join(resolvedClassPaths) + "'")
         #vim.command("let $SRCPATH = '" + ':'.join(paths) + "'")
 

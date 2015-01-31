@@ -17,28 +17,25 @@ class TestGrandSetup (unittest.TestCase):
     @patch('command_setup.grand_setup.SetupCommands')
     @patch('command_setup.grand_setup.SysHelper')
     @patch('command_setup.grand_setup.vim')
-    @patch('command_setup.grand_setup.PathsResolver')
-    def testExecuteCommand(self, MockPathsResolver, mock_vim, MockSysHelper, MockSetupCommands):
+    def testExecuteCommand(self, mock_vim, MockSysHelper, MockSetupCommands):
         MockSysHelper.return_value.fileExistsInCwd.return_value = True
-        instance = MockPathsResolver.return_value
-        instance.getAllClassPaths.return_value = ['path1','path2']
-
-        GrandSetup().executeCommand()
+        gradSetup = GrandSetup()
+        gradSetup.pathsResolver = MockPathsResolver()
+        
+        gradSetup.executeCommand()
 
         mock_vim.command.assert_any_call("let $CLASSPATH = 'path1:path2'")
         MockSetupCommands.return_value.addAllCommands.assert_called_with()
 
     @patch('command_setup.grand_setup.vim')
-    @patch('command_setup.grand_setup.PathsResolver')
-    def testSetupJavacomplete(self, MockPathsResolver, mock_vim):
-        instance = MockPathsResolver.return_value
-        instance.getProjectSourcePaths.return_value = ['src/test','src/main']
-        instance.getAndroidSdkJar.return_value = 'AndroidSdkJar'
+    def testSetupJavacomplete(self, mock_vim):
+        gradSetup = GrandSetup()
+        gradSetup.pathsResolver = MockPathsResolver()
 
-        GrandSetup().setupJavacomplete()
+        gradSetup.setupJavacomplete()
 
-        mock_vim.command.assert_any_call("silent! call javacomplete#SetClassPath('AndroidSdkJar')")
-        mock_vim.command.assert_any_call("silent! call javacomplete#SetSourcePath(src/test:src/main:AndroidSdkJar)")
+        mock_vim.command.assert_any_call("silent! call javacomplete#SetClassPath('AndroidSdkJar:src/test:src/main')")
+        mock_vim.command.assert_any_call("silent! call javacomplete#SetSourcePath('src/test:src/main:AndroidSdkJar')")
 
 
     @patch('command_setup.grand_setup.vim')
@@ -67,3 +64,15 @@ class TestGrandSetup (unittest.TestCase):
         GrandSetup().isAndroidProject()
 
         mockedMethod.assert_called_with('AndroidManifest.xml')
+
+
+class MockPathsResolver():
+    def getAllClassPaths(self):
+        return ['path1','path2']
+    def getExplodedAarClasses(self):
+        return ['src/test','src/main']
+    def getAndroidSdkJar(self):
+        return 'AndroidSdkJar'
+    def getProjectSourcePaths(self):
+        return ['src/test','src/main']
+
