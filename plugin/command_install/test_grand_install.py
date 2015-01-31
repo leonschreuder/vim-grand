@@ -14,22 +14,30 @@ from command_install.grand_install import GrandInstall
 
 class TestGrandInstall (unittest.TestCase):
 
-    @patch('command_install.grand_install.vim')
-    def testVimGrandCtagsFileWithDispatch(self, mock_vim):
+    @patch('command_install.grand_install.Adb')
+    def testVimGrandInstallsLatest(self, mock_adb):
 
         GrandInstall().executeCommand();
 
-        mock_vim.eval.assert_any_call("exists(':Dispatch')")
-        mock_vim.command.assert_called_with('Dispatch gradle installDebug -q')
+        #mock_adb.return_value.installLatestApk.assert_called_with()
 
-    @patch('command_install.grand_install.vim')
-    def testVimGrandCtagsFileWithBang(self, mock_vim):
-        mock_vim.eval.return_value = False
 
-        GrandInstall().executeCommand();
+    #@patch('command_install.grand_install.vim')
+    #def testVimGrandCtagsFileWithDispatch(self, mock_vim):
 
-        mock_vim.eval.assert_any_call("exists(':Dispatch')")
-        mock_vim.command.assert_called_with('! gradle installDebug -q')
+        #GrandInstall().executeCommand();
+
+        #mock_vim.eval.assert_any_call("exists(':Dispatch')")
+        #mock_vim.command.assert_called_with('Dispatch gradle installDebug -q')
+
+    #@patch('command_install.grand_install.vim')
+    #def testVimGrandCtagsFileWithBang(self, mock_vim):
+        #mock_vim.eval.return_value = False
+
+        #GrandInstall().executeCommand();
+
+        #mock_vim.eval.assert_any_call("exists(':Dispatch')")
+        #mock_vim.command.assert_called_with('! gradle installDebug -q')
 
     @patch('command_install.grand_install.vim')
     def testHasDispatchInstalled(self, mock_vim):
@@ -53,3 +61,11 @@ class TestGrandInstall (unittest.TestCase):
         GrandInstall().installUsingVanillaBang()
 
         mock_vim.command.assert_called_with('! gradle installDebug -q')
+
+    @patch('command_install.grand_install.Adb')
+    def testGetDevices(self, mock_adb):
+
+        GrandInstall().installThroughAdb()
+
+        mock_adb.return_value.installLatestApk.assert_called_with()
+        #mock_subprocess.Popen.assert_called_with(['TEST_ANDROID_HOME/platform-tools/adb', 'devices'])
