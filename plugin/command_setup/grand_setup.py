@@ -26,10 +26,8 @@ class GrandSetup():
         sourcePaths.append(jarsString);
         sourcesString = ':'.join(sourcePaths)
 
-        #print sourcesString
-
         vim.command("silent! call javacomplete#SetClassPath('" + jarsString + "')")
-        vim.command("silent! call javacomplete#SetSourcePath(" + sourcesString + ")")
+        vim.command("silent! call javacomplete#SetSourcePath('" + sourcesString + "')")
 
     def setupSyntastic(self):
         resolvedClassPaths = PathsResolver().getAllClassPaths()

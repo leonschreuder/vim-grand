@@ -38,7 +38,7 @@ class TestGrandSetup (unittest.TestCase):
         GrandSetup().setupJavacomplete()
 
         mock_vim.command.assert_any_call("silent! call javacomplete#SetClassPath('AndroidSdkJar')")
-        mock_vim.command.assert_any_call("silent! call javacomplete#SetSourcePath(src/test:src/main:AndroidSdkJar)")
+        mock_vim.command.assert_any_call("silent! call javacomplete#SetSourcePath('src/test:src/main:AndroidSdkJar')")
 
 
     @patch('command_setup.grand_setup.vim')
