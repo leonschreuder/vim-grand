@@ -21,15 +21,18 @@ class GrandSetup():
             print 'No gradle and/or android project detected. Is cwd set correctly?'
 
     def setupJavacomplete(self):
-        #resolver = PathsResolver()
-
         jarsPaths = []
         jarsPaths.append(self.pathsResolver.getAndroidSdkJar())
         jarsPaths.extend(self.pathsResolver.getExplodedAarClasses())
-        jarsString = ':'.join(jarsPaths)
+        jarsPaths.extend(self.pathsResolver.getGeneratedProjectClassPaths())
+        jarsPaths.extend(self.pathsResolver.getGradleClassPathsFromFile())
 
         sourcePaths = self.pathsResolver.getProjectSourcePaths()
         sourcePaths.append(self.pathsResolver.getAndroidSdkJar())
+        sourcePaths.extend(self.pathsResolver.getGradleClassPathsFromFile())
+
+
+        jarsString = ':'.join(jarsPaths)
         sourcesString = ':'.join(sourcePaths)
 
         vim.command("silent! call javacomplete#SetClassPath('" + jarsString + "')")
