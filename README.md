@@ -60,7 +60,7 @@ your platform.
    I use [deckard-gradle](https://github.com/robolectric/deckard-gradle) as a
    starting point.
 
-2. Copy `grand.gradle` to your project \
+2. Copy `grand.gradle` to your project  
    This is a gradle plugin that poops out all the paths to the libraries gradle
    uses in your project (including your custom ones). Copy the `grand.gradle`
    file from the vim-grand project folder into the root of your Android
