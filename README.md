@@ -1,128 +1,165 @@
-# Vim-Grand - a Gradle Android plugin
 [![Build Status](https://travis-ci.org/meonlol/vim-grand.svg?branch=develop)](https://travis-ci.org/meonlol/vim-grand)
 
-This is a Vim plugin for Android development using Gradle as a build system, supporting Robolectric Unit Testing. It is based on the excellent [hsanson/vim-android](https://github.com/hsanson/vim-android) plugin, except that it is be written mostly in python, is unit tested, and is meant for Gradle only. If you'd like to use ant/maven, or don't need unit-testing, maybe his plugin will do the trick.
+### ALPHA STATUS
 
-WORK IN PROGRESS!
-I'm actively developing this plugin, it's still in Alpha, but please do try it out and let me know what you think. And if you find a bug or are missing an important feature, please [let me know](https://github.com/meonlol/vim-grand/issues) or add it in a fork and submit a pull-request.
-Systems I develop on:
+It's working and looks pretty stable to me (I use it at work every day), but
+you will need to do some manual setup and don't expect a completely
+frustration-free experience yet either. But hey, you are trying to use vim for
+android development, so you must be extremely awesome and so I know you can
+take it!
+
+# Vim-Grand - a Gradle Android plugin for the vim editor
+
+This is a Vim plugin for Android development using Gradle as a build system,
+supporting Robolectric Unit Testing. It is based on the excellent
+[hsanson/vim-android](https://github.com/hsanson/vim-android) plugin, except
+that it is be written mostly in python, is unit tested, and is meant for Gradle
+only. If you'd like to use ant/maven, or don't need unit-testing, maybe his
+plugin will do the trick.
+
+
+## Setup
+
+This is the setup I have tested with. Please let me know if it's working on
+your platform.
+
 - Mac osX 10.6 and 10.9.
-- Vim 7.4 (latest version)
+- Vim 7.4 (latest version) but since most of the difficult stuff happens in
+  python, vim is probably not going to be to picky.
 - Exuberant Ctags 5.8
-- Python 2.7.8 (latest version)
-
-TODO:
-
-- Split the gradle plugin part into another project. It's doesn't really have anything to do with vim-grand functionality, plus that way maybe it can be published to maven.
-- Test environment for:
-	- ctags
-	- gradle (gradlew / system gradle)
-
-##Features
-
-- Setting up the Syntastic and javacomplete paths with the `:GrandSetup` command.
-- (Asyncly-) generating the (exurbitant) ctags file with the `:GrandTags` command.
-- Installing to connected devices with the `:GrandInstall` command.
+- Python 2.7.8 (latest version) Note: python 3 untested (will probably fail
+  miserably)
 
 
-##requirements
+## Features
+
+- Setting up Syntastic and javacomplete when you `:GrandSetup`.
+- Generates a tags file in the background with the `:GrandTags` command.
+- Installing to connected devices with the `:GrandInstall` command (you'll have
+  to manually start the app, will probably fix that one soon).
+
+(Got ideas? [Tell me!](https://github.com/meonlol/vim-grand/issues))
+
+## Requirements
 
 - [Syntastic](https://github.com/scrooloose/syntastic) for syntax checking.
 - [Javacomplete](https://github.com/vim-scripts/javacomplete) for code completion.
+- python (see setup)
+- Exuberant Ctags (see setup)
 
-Advised
-- [Tim Pope's Dispatch](https://github.com/tpope/vim-dispatch) for using the gradle commands asyncly.
+### Advised:
+
+- [Tim Pope's Dispatch](https://github.com/tpope/vim-dispatch) vim-grand will
+  run the appropriate commands through it, so vim doesn't get blocked.
 
 
 ##Installation
 
-1. Setup an Android project with Robolectric.
-I use [deckard-gradle](https://github.com/robolectric/deckard-gradle) as a starting point. But you will need to update the classpaths to use version 0.13.+ of both the android and the robolectric plugin.
-2. From the vim-grand project folder copy the `grand.gradle` file into your Android project.
-3. Add the following line to your build.gradle. Right after `apply plugin: 'android'` would be a good location.
+1. Setup an Android project with Robolectric. \
+   I use [deckard-gradle](https://github.com/robolectric/deckard-gradle) as a
+   starting point.
+2. Copy `grand.gradle` to your project \
+   This is a gradle plugin that poops out all the paths to the libraries gradle
+   uses in your project (including your custom ones). Copy the `grand.gradle`
+   file from the vim-grand project folder into the root of your Android
+   project.
+3. Let gradle know about `grand.gradle` \
+   To do this, add the following line to your build.gradle. Right after `apply
+   plugin: 'android'` would be a good location. \
    `apply from: 'grand.gradle'`
-4. From the project root run `gradle outputPaths`. This uses the vim.gradle script to generate a 'gradle-sources' file in the root, containing all the paths to the jars gradle uses.
-5. Now open vim, in the project root and run `GrandPaths`. This imports the paths to syntastic and javacomplete.
-6. Run `GrandCtags` to generate a tags file. (`./.ctags`)
+4. Generate paths file. \
+   From the project root run `gradle outputPaths` or `.\gradlew outputPaths`.
+   This uses the vim.gradle script to generate a 'gradle-sources' file in the
+   root, containing all the paths to the jars gradle uses.
+5. Remove useless paths from `gradle-sources` file. \
+   This one sucks I know. Sadly, gradle regurgitates all paths it can think of,
+   including stuff you will never ever need autocompletion for. And all those
+   extra paths will make javacomplete EXTREMELY slow blocking vim entirely!
+   You'll have to experiment with it to see which ones you will and which you
+   won't need. It's best to start with nothing, adding more paths only
+   when you need them. (hint: remember CTRL-C for when you added to much)
+6. Enjoy
+   Open vim in the project root and run `GrandPaths`. This imports the paths to
+   syntastic and javacomplete, and sets up all the commands. Or you can just
+   open a java file, it does the same thing.
 
-It's not quite elegant yet, I know, but I'm working on it, and it's going to be awesome.
 
-##When it's working
-If this setup is also working in your project, you might want to make it easy to use. First, you probably want to keep your tags file up to date. Use this autocommand to generate the tags file every time you save your *.java file:
+## Additional setup for a pleasant experience
+
+These tweaks and mappings will make you happy.
+
+### Update tags on save
+
 ```VimL
 "Run GrandCtags command every time you save a java file
 autocmd BufWritePost *.java silent! GrandCtags
 ```
 
-I run my tests through vim-dispatch, so they don't block vim. The following mapping runs the tests with `<leader>ua` and displays the result in the quickfix window as soon as gradle is done.
+The `GrandCtags` command runs in the background and doesn't allow multiple
+simultaneous runs. So you can just call `GrandCtags` every time you save
+without making a mess of the tags file and keeping things up to date.
+
+### 'gradle test' mapping
+
 ```VimL
 "Use vim-dispatch to run gradleTest
 autocmd FileType java nnoremap <leader>ua :w<bar>Dispatch gradle test -q<CR>
 ```
-To format the results more clearly in the Quickfix Window, you will need to add this to the `robolectric {}` task in your build.gradle.
-```Groovy
-    // Output and format the test results for vim-grand
-    afterTest { descriptor, result ->
-        //This part prints the class name with short result notation
-        def resultChar = ''
-        switch (result.resultType) {
-            case TestResult.ResultType.SUCCESS:
-                resultChar = '+'
-                break
-            case TestResult.ResultType.FAILURE:
-                resultChar = '-'
-                break
-            default:
-                resultChar = '?'
-                break
-        }
-        println "$resultChar $descriptor.className > $descriptor.name"
 
+Runs `gradle test` with Dispatch when you press `<leader>u`. It displays the
+result in the quickfix window as soon as gradle is done.
 
-        //This prints a short stacktrace, ending with the assert description
-        if (result.resultType == TestResult.ResultType.FAILURE) {
-            result.getException().each {
-                it.getStackTrace().each { el ->
-                    if (el.getFileName() && !(el.getClassName() =~
-                            /^(java.lang|java.util|junit.framework|org.gradle|org.junit|sun.reflect)/)) {
+### Output formatting
 
-                        println el.getFileName() + ":" + el.getLineNumber() + ":"
-                    }
-                }
-                println it.toString()
-            }
-        }
-    }
+The build result gradle returns is a little messy (huge understatement). Just
+add the code from [this
+gist](https://gist.github.com/meonlol/c5e84ca21a768fd76a7d) to your
+build.gradle, and it will improve to an acceptable level and look like this:
+
+```
+|| (0.229ms)	+ com.example.project.SmellyActivityTest > init_shouldLoadModel
+|| (0.179ms)	- com.example.project.SmellyActivityTest > init_shouldLoadDataToViews
+|| CategoryActivityTest.java:52:
+|| RobolectricTestRunner.java:236:
+|| RobolectricTestRunner.java:158:
+|| org.junit.ComparisonFailure: expected:<some_cat[egory]> but was:<some_cat[]>
+|| (0.207ms)	+ com.example.project.SmellyActivityTest > finishesWithResult
+|| 
+|| 9 tests completed, 1 failed
 ```
 
-Don't want to run all the tests every time? The robolectric plugin hasn't got anything built in yet, so use this:
-```Groovy
-    // Add test classes on the command line. Examples:
-    //     gradle test -Dclasses=SomeClassTest          // runs test/java/com/bla/SomeClassTest.java
-    //     gradle test -Dclasses=*ActivityTest          // runs all classes who's name ends in ActivityTest.java
-    //     gradle test || gradle test -DClasses=all     // both notations include all classes
-	def suppliedClasses = System.getProperty('classes', 'all')
-	if (suppliedClasses == 'all') {
-        println "target: all"
-		include '**/*Test.class'
-	} else {
-        def targetClass = '**/'+suppliedClasses +'.class'
-        println "target: " + targetClass
-		include targetClass
-	}
-```
-Now this mapping will come in handy. It will run the test class in the current buffer. 
+What do you mean "why don't you make a vim compiler?". I ain't nobody got time
+for that! Why don't YOU build one for me if you need one. It doesn't annoy me
+enough to be honest, maybe if you guys ask nicely.
+
+### Running one test
+
+Don't want to run all the tests every time? The robolectric plugin does not
+support anything fancy like that, just add [this little
+gist](https://gist.github.com/meonlol/3f222f8687073c46cd64) to your
+build.gradle under `robolectric {}`, to fix it yourself.
+
+You can now call `gradle test -q
+-Dclasses=MyAwesomeTestClassInSomeRandomPackage` from the commandline.
+
+Since nobody will want to do that, this mapping will come in real handy. It
+will run the test class in the current buffer.
+
 ```VimL
 "This runs the robolectric test in the current buffer
 autocmd FileType java nnoremap <leader>uc :w<bar>Dispatch gradle test -q -Dclasses=%:t:r<CR>
 ```
 
+## Contributing
 
+Please do! You know the drill. Just
+[issue](https://github.com/meonlol/vim-grand/issues) and
+[pull](https://github.com/meonlol/vim-grand/pulls).
 
-Issues and pull-requests are welcome.
+By the way, the javacomplete classes could still use some tweaking. Hint, Hint.
+Wink, wink. \**Points to you, points to class*\*.
 
-
-##License
+## License
 
 Copyright (c) Leon Moll.  Distributed under the same terms as Vim itself.
 See `:help license`.

@@ -27,10 +27,10 @@ class GrandSetup():
         jarsPaths.extend(self.pathsResolver.getGeneratedProjectClassPaths())
         jarsPaths.extend(self.pathsResolver.getGradleClassPathsFromFile())
 
-        sourcePaths = self.pathsResolver.getProjectSourcePaths()
-        sourcePaths.append(self.pathsResolver.getAndroidSdkJar())
+        sourcePaths = []
+        sourcePaths.append(self.pathsResolver.getAndroidSdkSourcePath())
+        sourcePaths.extend(self.pathsResolver.getProjectSourcePaths())
         sourcePaths.extend(self.pathsResolver.getGradleClassPathsFromFile())
-
 
         jarsString = ':'.join(jarsPaths)
         sourcesString = ':'.join(sourcePaths)
