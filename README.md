@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/meonlol/vim-grand.svg?branch=develop)](https://travis-ci.org/meonlol/vim-grand)
 
-### ALPHA STATUS
+### ALPHA STATUS!
 
 It's working and looks pretty stable to me (I use it at work every day), but
 you will need to do some manual setup and don't expect a completely
@@ -55,32 +55,30 @@ your platform.
 
 ##Installation
 
-1. Setup an Android project with Robolectric.
-
+1. Setup an Android project with Robolectric.  
    I use [deckard-gradle](https://github.com/robolectric/deckard-gradle) as a
    starting point.
-
 2. Copy `grand.gradle` to your project  
    This is a gradle plugin that poops out all the paths to the libraries gradle
    uses in your project (including your custom ones). Copy the `grand.gradle`
    file from the vim-grand project folder into the root of your Android
    project.
-3. Let gradle know about `grand.gradle` \
+3. Let gradle know about `grand.gradle`  
    To do this, add the following line to your build.gradle. Right after `apply
-   plugin: 'android'` would be a good location. \
+   plugin: 'android'` would be a good location.  
    `apply from: 'grand.gradle'`
-4. Generate paths file. \
+4. Generate paths file.  
    From the project root run `gradle outputPaths` or `.\gradlew outputPaths`.
    This uses the vim.gradle script to generate a 'gradle-sources' file in the
    root, containing all the paths to the jars gradle uses.
-5. Remove useless paths from `gradle-sources` file. \
+5. Remove useless paths from `gradle-sources` file.  
    This one sucks I know. Sadly, gradle regurgitates all paths it can think of,
    including stuff you will never ever need autocompletion for. And all those
    extra paths will make javacomplete EXTREMELY slow blocking vim entirely!
    You'll have to experiment with it to see which ones you will and which you
    won't need. It's best to start with nothing, adding more paths only
    when you need them. (hint: remember CTRL-C for when you added to much)
-6. Enjoy
+6. Enjoy  
    Open vim in the project root and run `GrandPaths`. This imports the paths to
    syntastic and javacomplete, and sets up all the commands. Or you can just
    open a java file, it does the same thing.
@@ -158,8 +156,8 @@ Please do! You know the drill. Just
 [issue](https://github.com/meonlol/vim-grand/issues) and
 [pull](https://github.com/meonlol/vim-grand/pulls).
 
-By the way, the javacomplete classes could still use some tweaking. Hint, Hint.
-Wink, wink. \**Points to you, points to class*\*.
+By the way, the javacomplete paths importing could still use some tryout and
+tweaking. Hint, Hint. Wink, wink. \**Points to you, points to class*\*.
 
 ## License
 
