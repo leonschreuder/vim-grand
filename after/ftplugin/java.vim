@@ -1,5 +1,6 @@
 if !exists('g:GrandAlreadySetUp')
 
+
 	"TODO: Test/optimize the compiler
 	"silent! execute("compiler android")
 

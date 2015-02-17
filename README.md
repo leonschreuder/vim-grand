@@ -55,9 +55,11 @@ your platform.
 
 ##Installation
 
-1. Setup an Android project with Robolectric. \
+1. Setup an Android project with Robolectric.
+
    I use [deckard-gradle](https://github.com/robolectric/deckard-gradle) as a
    starting point.
+
 2. Copy `grand.gradle` to your project \
    This is a gradle plugin that poops out all the paths to the libraries gradle
    uses in your project (including your custom ones). Copy the `grand.gradle`
