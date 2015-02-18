@@ -2,6 +2,7 @@
 
 import os
 import fnmatch
+import glob
 
 '''
 This logic is copied from http://stackoverflow.com/a/377028 . Only the
@@ -27,14 +28,22 @@ class SysHelper:
     def is_exe(self, fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
-    def fileExistsInCwd(self, filename):
+
+    def fileExistsInCwd(self, filename, maxDepth):
         top = os.getcwd()
 
-        matches = 0
-        for root, dirnames, files in os.walk(top):
-            for file in fnmatch.filter(files, filename):
-                matches = matches + 1
-        if matches > 0:
+        matches = self.fileNamesRetrieve(top, maxDepth, filename)
+
+        if len(matches) > 0:
             return True
         else:
             return False
+
+    def fileNamesRetrieve(self, top, maxDepth, fnMask  ):
+        someFiles = []
+        for d in range( 1, maxDepth+1 ):
+            maxGlob = "/".join( "*" * d )
+            topGlob = os.path.join( top, maxGlob )
+            allFiles = glob.glob( topGlob )
+            someFiles.extend( [ f for f in allFiles if fnmatch.fnmatch( os.path.basename( f ), fnMask ) ] )
+        return someFiles

@@ -32,9 +32,9 @@ class TestUtils (unittest.TestCase):
 
     def test_findFileInCwd(self):
 
-        resultInCwd = SysHelper().fileExistsInCwd('test_executable.sh')
-        resultInSubdir = SysHelper().fileExistsInCwd('sys_helper.py')
-        resultNonExistent = SysHelper().fileExistsInCwd('random_file.txt')
+        resultInCwd = SysHelper().fileExistsInCwd('test_executable.sh', 1)
+        resultInSubdir = SysHelper().fileExistsInCwd('sys_helper.py', 2)
+        resultNonExistent = SysHelper().fileExistsInCwd('random_file.txt', 3)
 
         self.assertTrue(resultInCwd)
         self.assertTrue(resultInSubdir)

@@ -44,8 +44,8 @@ class GrandSetup():
         #vim.command("let $SRCPATH = '" + ':'.join(paths) + "'")
 
     def isGradleProject(self):
-        return SysHelper().fileExistsInCwd("build.gradle")
+        return SysHelper().fileExistsInCwd("build.gradle", 1)
 
     def isAndroidProject(self):
-        return SysHelper().fileExistsInCwd("AndroidManifest.xml")
+        return SysHelper().fileExistsInCwd("AndroidManifest.xml", 4)
 

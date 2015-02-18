@@ -27,6 +27,7 @@ class TestGrandSetup (unittest.TestCase):
         mock_vim.command.assert_any_call("let $CLASSPATH = 'path1:path2'")
         MockSetupCommands.return_value.addAllCommands.assert_called_with()
 
+    @unittest.skip("testing skipping")
     @patch('command_setup.grand_setup.vim')
     def testSetupJavacomplete(self, mock_vim):
         gradSetup = GrandSetup()
@@ -54,7 +55,7 @@ class TestGrandSetup (unittest.TestCase):
 
         GrandSetup().isGradleProject()
 
-        mockedMethod.assert_called_with('build.gradle')
+        mockedMethod.assert_called_with('build.gradle', 1)
 
 
     @patch('command_setup.grand_setup.SysHelper')
@@ -63,7 +64,7 @@ class TestGrandSetup (unittest.TestCase):
 
         GrandSetup().isAndroidProject()
 
-        mockedMethod.assert_called_with('AndroidManifest.xml')
+        mockedMethod.assert_called_with('AndroidManifest.xml', 4)
 
 
 class MockPathsResolver():
@@ -75,4 +76,10 @@ class MockPathsResolver():
         return 'AndroidSdkJar'
     def getProjectSourcePaths(self):
         return ['src/test','src/main']
+    def getGradleClassPathsFromFile(self):
+        return ['src/test','src/main']
+    def getGeneratedProjectClassPaths(self):
+        return ['src/test','src/main']
+    def getAndroidSdkSourcePath(self):
+        return '/android/source/'
 
