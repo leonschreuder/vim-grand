@@ -47,7 +47,16 @@ class TestPathResolver < Test::Unit::TestCase
 		File.delete("gradle-sources")
 	end
 
-	def test_getAndroidVersionFromBuildGradle
+	def test_getAndroidSdkJar()
+		buildTestBuildFile()
+
+		result = @pathResolver.getAndroidSdkJar()
+
+		assert_equal(result, @android_home_value+"/platforms/android-19/android.jar")
+	end
+
+
+	def test_getAndroidVersionFromBuildGradle_shouldReturnVersionNumber
 		buildTestBuildFile()
 
 		result = @pathResolver.getAndroidVersionFromBuildGradle()
@@ -75,11 +84,6 @@ class TestPathResolver < Test::Unit::TestCase
 		}
 	end
 
-
-    #def testGetAndroidSdkJar(self):
-        #result = PathsResolver().getAndroidSdkJar()
-
-        #self.assertEqual(ANDROID_HOME+'/platforms/android-19/android.jar', result)
 
 
     #def testGetAndroidSdkSourcePath(self):

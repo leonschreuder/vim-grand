@@ -1,23 +1,23 @@
 
 class PathResolver
 
-	def getAndroidHome
+	def getAndroidHome()
 		return ENV['ANDROID_HOME']
 	end
 
-	def getProjectSourcePaths
+	def getProjectSourcePaths()
         projectClassPath = './src/main/java'
         projectResPath = './src/main/res'
         return [projectClassPath, projectResPath]
 	end
 
-	def getGeneratedProjectClassPaths
+	def getGeneratedProjectClassPaths()
         generatedDebugClasses =  './build/intermediates/classes/debug'
         return [generatedDebugClasses]
 	end
 
 
-	def getGradleClassPathsFromFile
+	def getGradleClassPathsFromFile()
 		list = []
 
 		filename = 'gradle-sources'
@@ -32,28 +32,20 @@ class PathResolver
 	end
 
 
-	def getAndroidSdkJar
+	def getAndroidSdkJar()
+		currentPlatformDir = 'android-' + getAndroidVersionFromBuildGradle()
 
-        #currentPlatformDir = 'android-' + self.getAndroidVersionFromBuildGradle()
+		sdkJarPath = File.join(getAndroidHome(), 'platforms', currentPlatformDir, 'android.jar')
 
-        #sdkJarPath = androidHome +os.sep+ 'platforms' +os.sep+ currentPlatformDir +os.sep+ 'android.jar'
-        #return sdkJarPath
+		return sdkJarPath
 	end
 
 
-    #def getAndroidSdkJar(self):
-        #androidHome = os.environ.get('ANDROID_HOME')
-        #currentPlatformDir = 'android-' + self.getAndroidVersionFromBuildGradle()
-
-        #sdkJarPath = androidHome +os.sep+ 'platforms' +os.sep+ currentPlatformDir +os.sep+ 'android.jar'
-        #return sdkJarPath
-
-
-	def getAndroidVersionFromBuildGradle
+	def getAndroidVersionFromBuildGradle()
 
 		File.open 'build.gradle' do |file|
 			file.find { |line|
-				match = line.match(/(?:compileSdkVersion\W*)(\d*)/)
+				match = line.match(/compileSdkVersion\W*(\d*)/)
 				if match
 					return match.captures[0]
 				end
@@ -61,12 +53,5 @@ class PathResolver
 		end
 
 	end
-
-    #def getAndroidVersionFromBuildGradle(self):
-        #with open('build.gradle', 'U') as f:
-            #for line in f:
-                #result = self.getAndroidVersionFromLine(line)
-                #if (result != None):
-                    #return result
 
 end
