@@ -47,15 +47,6 @@ class TestPathResolver < Test::Unit::TestCase
 		File.delete("gradle-sources")
 	end
 
-	def test_getAndroidSdkJar()
-		buildTestBuildFile()
-
-		result = @pathResolver.getAndroidSdkJar()
-
-		assert_equal(result, @android_home_value+"/platforms/android-19/android.jar")
-	end
-
-
 	def test_getAndroidVersionFromBuildGradle_shouldReturnVersionNumber
 		buildTestBuildFile()
 
@@ -66,7 +57,27 @@ class TestPathResolver < Test::Unit::TestCase
 		File.delete("build.gradle")
 	end
 
+	def test_getAndroidSdkJar()
+		buildTestBuildFile()
 
+		result = @pathResolver.getAndroidSdkJar()
+
+		assert_equal(result, @android_home_value+"/platforms/android-19/android.jar")
+	end
+
+
+	def testGetAndroidSdkSourcePath()
+		buildTestBuildFile()
+
+		result = @pathResolver.getAndroidSdkSourcePath()
+
+		assert_equal(@android_home_value+"/sources/android-19", result)
+        #self.assertEqual(ANDROID_HOME + '/sources/android-19/', result)
+	end
+
+
+	# Helpers
+	#------------------------------------------------------------
 	def buildTestSourcesFile
 		File.open("gradle-sources", 'w') {|f|
 			f.write("/path/a\n/path/b")

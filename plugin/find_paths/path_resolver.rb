@@ -40,6 +40,14 @@ class PathResolver
 		return sdkJarPath
 	end
 
+	def getAndroidSdkSourcePath()
+		currentPlatformDir = 'android-' + getAndroidVersionFromBuildGradle()
+
+		sdkSourcePath = File.join(getAndroidHome(), 'sources', currentPlatformDir)
+
+		return sdkSourcePath
+	end
+
 
 	def getAndroidVersionFromBuildGradle()
 
