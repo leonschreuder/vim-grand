@@ -48,7 +48,7 @@ class TestPathResolver < Test::Unit::TestCase
 	end
 
 	def test_getAndroidVersionFromBuildGradle_shouldReturnVersionNumber
-		buildTestBuildFile()
+		createTestBuildFile()
 
 		result = @pathResolver.getAndroidVersionFromBuildGradle()
 
@@ -57,8 +57,8 @@ class TestPathResolver < Test::Unit::TestCase
 		File.delete("build.gradle")
 	end
 
-	def test_getAndroidSdkJar()
-		buildTestBuildFile()
+	def test_getAndroidSdkJar_shouldGeneratePathToJar()
+		createTestBuildFile()
 
 		result = @pathResolver.getAndroidSdkJar()
 
@@ -66,8 +66,8 @@ class TestPathResolver < Test::Unit::TestCase
 	end
 
 
-	def testGetAndroidSdkSourcePath()
-		buildTestBuildFile()
+	def test_getAndroidSdkSourcePath_shouldGenerateCorrectPath()
+		createTestBuildFile()
 
 		result = @pathResolver.getAndroidSdkSourcePath()
 
@@ -75,6 +75,34 @@ class TestPathResolver < Test::Unit::TestCase
         #self.assertEqual(ANDROID_HOME + '/sources/android-19/', result)
 	end
 
+	def test_getExplodedAarClasses()
+
+		result = @pathResolver.getExplodedAarClasses()
+
+		assert_equal('./build/intermediates/exploded-arr/fakeJar.jar', result[0])
+		assert_equal('./build/intermediates/exploded-arr/some_project/fakeJar2.jar', result[1])
+	end
+
+	def test_getLatestApkFile()
+		testFile = './build/apk/some.apk'
+		creatEmptyTestFileWithPath(testFile)
+
+		result = @pathResolver.getLatestApkFile()
+
+        assert_equal('./build/apk/some.apk', result)
+
+		File.delete(testFile)
+	end
+
+    #def testGetLatestApkFile(self):
+        #testFile = './build/apk/some.apk'
+        #self.createTestFile(testFile)
+
+        #result = PathsResolver().getLatestApkFile()
+
+        #self.assertEquals('./build/apk/some.apk', result)
+
+        #self.removeTestFile(testFile)
 
 	# Helpers
 	#------------------------------------------------------------
@@ -84,7 +112,13 @@ class TestPathResolver < Test::Unit::TestCase
 		}
 	end
 
-	def buildTestBuildFile
+	def creatEmptyTestFileWithPath(path)
+		File.open(path, 'w') {|f|
+			f.write("")
+		}
+	end
+
+	def createTestBuildFile
 		File.open("build.gradle", "w") { |f|
 			f.write("    }\n" \
 					"    compileSdkVersion 19\n" \

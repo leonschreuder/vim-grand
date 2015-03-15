@@ -1,3 +1,4 @@
+require "find"
 
 class PathResolver
 
@@ -48,6 +49,17 @@ class PathResolver
 		return sdkSourcePath
 	end
 
+	def getExplodedAarClasses()
+		foundJars = []
+
+		Find.find("./build/") do |path|
+			foundJars << path if path =~ /.*\.jar$/
+		end
+
+		return foundJars
+	end
+
+
 
 	def getAndroidVersionFromBuildGradle()
 
@@ -60,6 +72,25 @@ class PathResolver
 			}
 		end
 
+	end
+
+	def getLatestApkFile()
+        foundFiles = []
+
+		Find.find("./build/") do |path|
+			foundFiles << path if path =~ /.*\.apk$/
+		end
+
+
+		foundFiles = foundFiles.sort_by{ |f|
+			File.mtime(f)
+		}.reverse
+
+		return foundFiles[0]
+
+        ##TODO cannot test this becouse the test-file timestamps are identical
+        #latestFile = max(foundFiles, key=os.path.getmtime)
+        #return latestFile
 	end
 
 end
