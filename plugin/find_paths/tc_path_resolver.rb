@@ -2,8 +2,6 @@
 require_relative "path_resolver"
 require "test/unit"
 
-require "FileUtils"
-
 class TestPathResolver < Test::Unit::TestCase
 
 	def setup
@@ -133,15 +131,35 @@ class TestPathResolver < Test::Unit::TestCase
 	end
 
 	def removeTestFilesAndDirs()
+		removeTestFiles()
+		removeTestDirs()
+	end
+
+	def removeTestFiles()
 		@testFiles.each do |file|
 			File.delete(file)
 		end
-		@testDirs.each do |dir|
-			dirStrings = dir.split(File::SEPARATOR)
-			dirStrings.reverse_each do |d|
-				p File.join(dirStrings) + d
+	end
+
+	def removeTestDirs()
+		# This removes all created (sub)dirs (now empty) in the specified path
+		@testDirs.each do |testDir|
+			folderArray = testDir.split(File::SEPARATOR)
+
+			indexes = (0 .. folderArray.length-1)
+			indexes.reverse_each do |i|
+				currentDir = File.join(folderArray[0,i+1])
+
+				rmdirWhenEmpty(currentDir)
 			end
-			FileUtils.remove_dir(dir)
+		end
+	end
+
+	def rmdirWhenEmpty(dir)
+		begin
+			Dir.rmdir(currentDir)
+		rescue
+			# Dir non empty. Just ignore.
 		end
 	end
 
