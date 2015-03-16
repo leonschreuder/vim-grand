@@ -60,9 +60,7 @@ class PathResolver
 	end
 
 
-
 	def getAndroidVersionFromBuildGradle()
-
 		File.open 'build.gradle' do |file|
 			file.find { |line|
 				match = line.match(/compileSdkVersion\W*(\d*)/)
@@ -71,7 +69,6 @@ class PathResolver
 				end
 			}
 		end
-
 	end
 
 	def getLatestApkFile()
@@ -87,10 +84,6 @@ class PathResolver
 		}.reverse
 
 		return foundFiles[0]
-
-        ##TODO cannot test this becouse the test-file timestamps are identical
-        #latestFile = max(foundFiles, key=os.path.getmtime)
-        #return latestFile
 	end
 
 end

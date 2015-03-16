@@ -2,11 +2,15 @@
 require_relative "path_resolver"
 require "test/unit"
 
+require "FileUtils"
+
 class TestPathResolver < Test::Unit::TestCase
 
 	def setup
 		@android_home_value = "stub/android/home"
 		@pathResolver = PathResolver.new()
+		@testFiles = []
+		@testDirs = []
 
 		ENV['ANDROID_HOME'] = @android_home_value
 	end
@@ -44,7 +48,7 @@ class TestPathResolver < Test::Unit::TestCase
         assert_equal('/path/a', result[0])
         assert_equal('/path/b', result[1])
 
-		File.delete("gradle-sources")
+		removeTestFilesAndDirs()
 	end
 
 	def test_getAndroidVersionFromBuildGradle_shouldReturnVersionNumber
@@ -54,7 +58,7 @@ class TestPathResolver < Test::Unit::TestCase
 
 		assert_equal('19', result)
 
-		File.delete("build.gradle")
+		removeTestFilesAndDirs()
 	end
 
 	def test_getAndroidSdkJar_shouldGeneratePathToJar()
@@ -63,6 +67,7 @@ class TestPathResolver < Test::Unit::TestCase
 		result = @pathResolver.getAndroidSdkJar()
 
 		assert_equal(result, @android_home_value+"/platforms/android-19/android.jar")
+		removeTestFilesAndDirs()
 	end
 
 
@@ -71,54 +76,77 @@ class TestPathResolver < Test::Unit::TestCase
 
 		result = @pathResolver.getAndroidSdkSourcePath()
 
-		assert_equal(@android_home_value+"/sources/android-19", result)
-        #self.assertEqual(ANDROID_HOME + '/sources/android-19/', result)
+		assert_equal(@android_home_value + "/sources/android-19", result)
+
+		removeTestFilesAndDirs()
 	end
 
 	def test_getExplodedAarClasses()
+		mkTestDirs('./build/intermediates/exploded-arr/some_project/')
+		testFile1 = './build/intermediates/exploded-arr/fakeJar.jar'
+		testFile2 = './build/intermediates/exploded-arr/some_project/fakeJar2.jar'
+		createTestFile(testFile1)
+		createTestFile(testFile2)
 
 		result = @pathResolver.getExplodedAarClasses()
 
-		assert_equal('./build/intermediates/exploded-arr/fakeJar.jar', result[0])
-		assert_equal('./build/intermediates/exploded-arr/some_project/fakeJar2.jar', result[1])
+		assert_equal(testFile1, result[0])
+		assert_equal(testFile2, result[1])
+		removeTestFilesAndDirs()
 	end
 
-	def test_getLatestApkFile()
-		testFile = './build/apk/some.apk'
-		creatEmptyTestFileWithPath(testFile)
+	def test_getLatestApkFile_shouldCooseLatest()
+		mkTestDirs('./build/apk/')
+		createTestFileInPast( './build/apk/someNew.apk', 30)
+		createTestFileInPast( './build/apk/someOld.apk', 60)
 
 		result = @pathResolver.getLatestApkFile()
 
-        assert_equal('./build/apk/some.apk', result)
+        assert_equal('./build/apk/someNew.apk', result)
 
-		File.delete(testFile)
+		removeTestFilesAndDirs()
 	end
 
-    #def testGetLatestApkFile(self):
-        #testFile = './build/apk/some.apk'
-        #self.createTestFile(testFile)
-
-        #result = PathsResolver().getLatestApkFile()
-
-        #self.assertEquals('./build/apk/some.apk', result)
-
-        #self.removeTestFile(testFile)
 
 	# Helpers
 	#------------------------------------------------------------
 	def buildTestSourcesFile
+		@testFiles.push('gradle-sources')
 		File.open("gradle-sources", 'w') {|f|
 			f.write("/path/a\n/path/b")
 		}
 	end
 
-	def creatEmptyTestFileWithPath(path)
-		File.open(path, 'w') {|f|
-			f.write("")
-		}
+	def createTestFileInPast(path, timeInPast)
+		@testFiles.push(path)
+		FileUtils.touch path, :mtime => Time.now - timeInPast
 	end
 
-	def createTestBuildFile
+	def createTestFile(path)
+		@testFiles.push(path)
+		FileUtils.touch path
+	end
+
+	def mkTestDirs(path)
+		@testDirs.push(path)
+		FileUtils.mkdir_p(path)
+	end
+
+	def removeTestFilesAndDirs()
+		@testFiles.each do |file|
+			File.delete(file)
+		end
+		@testDirs.each do |dir|
+			dirStrings = dir.split(File::SEPARATOR)
+			dirStrings.reverse_each do |d|
+				p File.join(dirStrings) + d
+			end
+			FileUtils.remove_dir(dir)
+		end
+	end
+
+	def createTestBuildFile()
+		@testFiles.push('build.gradle')
 		File.open("build.gradle", "w") { |f|
 			f.write("    }\n" \
 					"    compileSdkVersion 19\n" \
@@ -128,13 +156,6 @@ class TestPathResolver < Test::Unit::TestCase
 			)
 		}
 	end
-
-
-
-    #def testGetAndroidSdkSourcePath(self):
-        #result = PathsResolver().getAndroidSdkSourcePath()
-
-        #self.assertEqual(ANDROID_HOME + '/sources/android-19/', result)
 
 
 end
