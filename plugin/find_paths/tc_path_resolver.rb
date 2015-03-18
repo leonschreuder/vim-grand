@@ -2,6 +2,8 @@
 require_relative "path_resolver"
 require "test/unit"
 
+require "FileUtils"
+
 class TestPathResolver < Test::Unit::TestCase
 
 	def setup
@@ -11,6 +13,14 @@ class TestPathResolver < Test::Unit::TestCase
 		@testDirs = []
 
 		ENV['ANDROID_HOME'] = @android_home_value
+	end
+
+	def test_getAllSourcePaths()
+		createTestBuildFile()
+
+		result = @pathResolver.getAllSourcePaths()
+
+		assert_equal(2+1, result.length)
 	end
 
 
@@ -25,8 +35,8 @@ class TestPathResolver < Test::Unit::TestCase
 
 		result = @pathResolver.getProjectSourcePaths();
 
-        assert_equal('./src/main/java', result[0])
-        assert_equal('./src/main/res', result[1])
+		assert_equal('./src/main/java', result[0])
+		assert_equal('./src/main/res', result[1])
 	end
 
 	def test_getGeneratedProjectClassPaths_returnsPathsFromFile
@@ -43,8 +53,8 @@ class TestPathResolver < Test::Unit::TestCase
 		result = @pathResolver.getGradleClassPathsFromFile();
 
 		assert_equal(2, result.size)
-        assert_equal('/path/a', result[0])
-        assert_equal('/path/b', result[1])
+		assert_equal('/path/a', result[0])
+		assert_equal('/path/b', result[1])
 
 		removeTestFilesAndDirs()
 	end
@@ -100,7 +110,7 @@ class TestPathResolver < Test::Unit::TestCase
 
 		result = @pathResolver.getLatestApkFile()
 
-        assert_equal('./build/apk/someNew.apk', result)
+		assert_equal('./build/apk/someNew.apk', result)
 
 		removeTestFilesAndDirs()
 	end
@@ -166,11 +176,11 @@ class TestPathResolver < Test::Unit::TestCase
 	def createTestBuildFile()
 		@testFiles.push('build.gradle')
 		File.open("build.gradle", "w") { |f|
-			f.write("    }\n" \
-					"    compileSdkVersion 19\n" \
-					"    buildToolsVersion \"19.1.0\"\n" \
+			f.write("	 }\n" \
+					"	 compileSdkVersion 19\n" \
+					"	 buildToolsVersion \"19.1.0\"\n" \
 					"\n" \
-					"    defaultConfig {\n"
+					"	 defaultConfig {\n"
 			)
 		}
 	end

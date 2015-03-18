@@ -2,6 +2,17 @@
 
 class TagsHandler
 
+	def getCtagsCommand()
+		finalCommandArray = []
+
+		ctagsShellCommand = ['ctags', '--recurse', '--fields=+l', '--langdef=XML', '--langmap=Java:.java,XML:.xml', '--languages=Java,XML', '--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
+		finalCommandArray += ctagsShellCommand
+
+		ctagsTargetFile = '.tempTags'
+		finalCommandArray += ['-f', ctagsTargetFile]
+
+		return finalCommandArray
+	end
 
 end
 

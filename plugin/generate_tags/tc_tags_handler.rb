@@ -4,7 +4,14 @@ require "test/unit"
 
 class TestTagsHandler < Test::Unit::TestCase
 
-	def testGetCtagsCommand()
+	def test_getCtagsCommand_shouldGenerateCommandArray()
+
+		result = TagsHandler.new().getCtagsCommand()
+
+		expectedCommand = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
+        expectedCommand += ['-f', '.tempTags']
+
+		assert_equal(expectedCommand, result)
 
 	end
 

@@ -6,15 +6,23 @@ class PathResolver
 		return ENV['ANDROID_HOME']
 	end
 
+	def getAllSourcePaths()
+		sourcePaths = []
+		sourcePaths += getProjectSourcePaths()
+		sourcePaths.push(getAndroidSdkSourcePath())
+		return sourcePaths
+	end
+
+
 	def getProjectSourcePaths()
-        projectClassPath = './src/main/java'
-        projectResPath = './src/main/res'
-        return [projectClassPath, projectResPath]
+		projectClassPath = './src/main/java'
+		projectResPath = './src/main/res'
+		return [projectClassPath, projectResPath]
 	end
 
 	def getGeneratedProjectClassPaths()
-        generatedDebugClasses =  './build/intermediates/classes/debug'
-        return [generatedDebugClasses]
+		generatedDebugClasses =  './build/intermediates/classes/debug'
+		return [generatedDebugClasses]
 	end
 
 
@@ -72,7 +80,7 @@ class PathResolver
 	end
 
 	def getLatestApkFile()
-        foundFiles = []
+		foundFiles = []
 
 		Find.find("./build/") do |path|
 			foundFiles << path if path =~ /.*\.apk$/
