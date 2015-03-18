@@ -4,16 +4,45 @@ require "test/unit"
 
 class TestTagsHandler < Test::Unit::TestCase
 
-	def test_getCtagsCommand_shouldGenerateCommandArray()
+	def setup()
+		@testTools = TestTools.new()
 
-		result = TagsHandler.new().getCtagsCommand()
+		@android_home_value = "stub/android/home"
+		ENV['ANDROID_HOME'] = @android_home_value
+	end
+
+	def teardown()
+		@testTools.removeTestFilesAndDirs()
+	end
+
+	def test_isAlreadyRunning_shouldReturnFalseWhenIsNotRunning()
+
+		result = TagsHandler.new.isAlreadyRunning()
+
+		assert(result == false, "Should not be running")
+
+	end
+
+	def test_isAlreadyRunning_shouldReturnTrueWhenRunning()
+		@testTools.createTestFile(".tempTags")
+
+		result = TagsHandler.new.isAlreadyRunning()
+
+		assert(result, "Should be running")
+	end
+
+	def test_getCtagsCommand_shouldGenerateCommandArray()
+		@testTools.createTestBuildFile()
+
+		result = TagsHandler.new.getCtagsCommand()
 
 		expectedCommand = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
         expectedCommand += ['-f', '.tempTags']
+		expectedCommand += PathResolver.new.getAllSourcePaths()
 
 		assert_equal(expectedCommand, result)
-
 	end
+
 
 end
 
@@ -36,15 +65,3 @@ end
 
         
 
-
-    #@patch('generate_tags.tags_handler.PathsResolver')
-    #def testGetCtagsCommand(self, MockPathsResolver):
-        #instance = MockPathsResolver.return_value
-        #instance.getAllSourcePaths.return_value = ['path']
-
-        #command = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
-        #command.extend(['-f', '.tempTags'])
-        #command.append('path')
-
-        #result = TagsHandler().getCtagsCommand()
-        #self.assertEquals(command, result)

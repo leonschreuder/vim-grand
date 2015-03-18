@@ -1,33 +1,52 @@
 
-
 class TagsHandler
 
+
+	# Desk-checked, not unit-tested
+	def generateTagsFile()
+
+		if !isAlreadyRunning()
+			runCtagsCommand()
+		end
+	end
+
+	def isAlreadyRunning()
+		return File.exists?(".tempTags")
+	end
+
+	def runCtagsCommand()
+			command = getCtagsCommand()
+			executeCommandAsyncly(command)
+	end
+
 	def getCtagsCommand()
-		finalCommandArray = []
+		@finalCommandArray = []
 
+		addBasicTagsCommand()
+		addTagsTargetFile()
+		addTagsReadSources()
+
+		return @finalCommandArray
+	end
+
+	def addBasicTagsCommand()
 		ctagsShellCommand = ['ctags', '--recurse', '--fields=+l', '--langdef=XML', '--langmap=Java:.java,XML:.xml', '--languages=Java,XML', '--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
-		finalCommandArray += ctagsShellCommand
+		@finalCommandArray += ctagsShellCommand
+	end
 
+	def addTagsTargetFile()
 		ctagsTargetFile = '.tempTags'
-		finalCommandArray += ['-f', ctagsTargetFile]
+		@finalCommandArray += ['-f', ctagsTargetFile]
+	end
 
-		return finalCommandArray
+	def addTagsReadSources()
+		@finalCommandArray += PathResolver.new.getAllSourcePaths()
+	end
+
+
+	def executeCommandAsyncly(command)
+		pid = Kernel.spawn(*command)
+		Process.detach(pid)
 	end
 
 end
-
-    #def getCtagsCommand(self):
-        #finalCommandArray = []
-
-        ## NOTE that the \1 needed double escaping
-        #ctagsShellCommand = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
-        #finalCommandArray += ctagsShellCommand
-
-        ##TODO make tag file name/location dynamic
-        #ctagsTargetFile = '.tempTags'
-        #finalCommandArray += ['-f', ctagsTargetFile]
-
-        #sourcePaths = PathsResolver().getAllSourcePaths();
-        #finalCommandArray += sourcePaths
-
-        #return finalCommandArray
