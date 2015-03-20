@@ -1,11 +1,11 @@
 
 require_relative "path_resolver"
-require "test/unit"
+require "minitest/autorun"
 
-require "FileUtils"
+#require "FileUtils"
 require_relative "../utils/test_tools"
 
-class TestPathResolver < Test::Unit::TestCase
+class TestPathResolver < Minitest::Test
 
 	def setup
 		@testTools = TestTools.new()

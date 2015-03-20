@@ -81,7 +81,7 @@ class TestTools
 
 	def rmdirWhenEmpty(dir)
 		begin
-			Dir.rmdir(currentDir)
+			Dir.rmdir(dir)
 		rescue
 			# Dir non empty. Just ignore.
 		end
