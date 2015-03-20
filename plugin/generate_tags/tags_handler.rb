@@ -7,6 +7,7 @@ class TagsHandler
 
 		if !isAlreadyRunning()
 			runCtagsCommand()
+			replaceTagsWithTempTags()
 		end
 	end
 
@@ -15,8 +16,8 @@ class TagsHandler
 	end
 
 	def runCtagsCommand()
-			command = getCtagsCommand()
-			executeCommandAsyncly(command)
+		command = getCtagsCommand()
+		executeCommandAsyncly(command)
 	end
 
 	def getCtagsCommand()
@@ -43,10 +44,14 @@ class TagsHandler
 		@finalCommandArray += PathResolver.new.getAllSourcePaths()
 	end
 
-
 	def executeCommandAsyncly(command)
 		pid = Kernel.spawn(*command)
 		Process.detach(pid)
+	end
+
+	def replaceTagsWithTempTags()
+		File.delete(".tags")
+		File.rename(".tempTags", ".tags")
 	end
 
 end

@@ -6,6 +6,7 @@ class TestTools
 		@testDirs = []
 	end
 
+
 	def buildTestSourcesFile
 		@testFiles.push('gradle-sources')
 		File.open("gradle-sources", 'w') {|f|
@@ -21,6 +22,14 @@ class TestTools
 	def createTestFile(path)
 		@testFiles.push(path)
 		FileUtils.touch path
+	end
+
+	def createTestFileWithContent(path, content)
+		@testFiles.push(path)
+
+		File.open(path, 'w') {|f|
+			f.write(content)
+		}
 	end
 
 	def mkTestDirs(path)
@@ -48,7 +57,11 @@ class TestTools
 
 	def removeTestFiles()
 		@testFiles.each do |file|
-			File.delete(file)
+			begin
+				File.delete(file)
+			rescue
+				#File already gone
+			end
 		end
 	end
 

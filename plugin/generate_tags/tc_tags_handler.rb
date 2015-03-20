@@ -43,6 +43,16 @@ class TestTagsHandler < Test::Unit::TestCase
 		assert_equal(expectedCommand, result)
 	end
 
+	def test_replaceTagsWithTempTags_shouldReplaceFile()
+		@testTools.createTestFile(".tags")
+		@testTools.createTestFile(".tempTags")
+
+		TagsHandler.new.replaceTagsWithTempTags()
+
+		assert File.exists?(".tempTags") == false, ".tempTags should have been removed"
+		assert File.exists?(".tags") == true, ".tags should have been replaced with .tempTags"
+	end
+
 
 end
 
