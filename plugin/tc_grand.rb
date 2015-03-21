@@ -1,23 +1,7 @@
 require "minitest/autorun"
 
 require_relative "grand"
-
-# This is stub for the VIM module. As the VIM module is not defined when
-# running the tests, ruby will simply use this class in its place.
-class VIM
-	def self.reinit()
-			@commandInput = []
-	end
-
-	def self.command(someString)
-		@commandInput.push(someString)
-	end
-
-	def self.getCommand()
-		return @commandInput
-	end
-end
-
+require_relative "mock_vim"
 
 class TestGrand < Minitest::Test
 	def setup()

@@ -2,34 +2,12 @@ require "minitest/autorun"
 
 require_relative "gradle"
 require_relative "../utils/test_tools.rb"
-
-class VIM
-	#def self.reinit()
-		#@command = nil
-		#@evaluate = nil
-	#end
-
-	#def self.command(command)
-		#@command = command
-	#end
-
-	#def self.getCommand()
-		#return @command
-	#end
-
-	def self.evaluate(evl)
-		@evaluate = evl
-	end
-
-	def self.getEvaluate()
-		return @evaluate
-	end
-
-end
+require_relative "../mock_vim"
 
 class TestGradle < Minitest::Test
 
 	def setup()
+		VIM.reinit()
 		@testTools = TestTools.new
 		@gradle = Gradle.new
 	end
@@ -42,10 +20,7 @@ class TestGradle < Minitest::Test
 
 		@gradle.executeGradleCommand("test")
 
-		# TODO VIM module classes are messing eachother up because they are
-		# both static I guess. Try converting to one VIM class
-
-		#assert_equal("test", Vim.getCommand())
+		assert_equal("test", VIM.getCommand()[0])
 	end
 
 	def test_hasGradleWrapper_falseWhenNoWrapper()
@@ -77,7 +52,7 @@ class TestGradle < Minitest::Test
 
 		@gradle.hasDispatch()
 
-		assert_equal("exists(':Dispatch')", VIM.getEvaluate())
+		assert_equal("exists(':Dispatch')", VIM.getEvaluate()[0])
 	end
 
 end

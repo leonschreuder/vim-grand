@@ -2,7 +2,7 @@
 class Gradle
 
 	def executeGradleCommand(command)
-		#VIM.command(command)
+		VIM.command(command)
 	end
 
 	def hasGradleWrapper()
