@@ -16,11 +16,27 @@ class TestGradle < Minitest::Test
 		@testTools.removeTestFilesAndDirs()
 	end
 
-	def test_executeGradleCommand()
+	def test_executeGradleCommand_shouldDefaultToStandardGradle()
 
 		@gradle.executeGradleCommand("test")
 
-		assert_equal("test", VIM.getCommand()[0])
+		assert_equal("! gradle test -q", VIM.getCommand()[0])
+	end
+
+	def test_executeGradleCommand_shouldUseDispatchWhenAvailable()
+		VIM.setEvaluateResult true
+
+		@gradle.executeGradleCommand("test")
+
+		assert_equal("Dispatch gradle test -q", VIM.getCommand()[0])
+	end
+
+	def test_executeGradleCommand_shouldUseWrapperWhenAvailable()
+		createGradlew()
+
+		@gradle.executeGradleCommand("test")
+
+		assert_equal("! ./gradlew test -q", VIM.getCommand()[0])
 	end
 
 	def test_hasGradleWrapper_falseWhenNoWrapper()
@@ -31,8 +47,7 @@ class TestGradle < Minitest::Test
 	end
 
 	def test_hasGradleWrapper_shouldWorkOnUnix()
-		@testTools.createTestFile("gradlew")
-		FileUtils.chmod('+x', 'gradlew')
+		createGradlew()
 
 		result = @gradle.hasGradleWrapper()
 
@@ -53,6 +68,11 @@ class TestGradle < Minitest::Test
 		@gradle.hasDispatch()
 
 		assert_equal("exists(':Dispatch')", VIM.getEvaluate()[0])
+	end
+
+	def createGradlew()
+		@testTools.createTestFile("gradlew")
+		FileUtils.chmod('+x', 'gradlew')
 	end
 
 end
