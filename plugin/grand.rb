@@ -1,23 +1,31 @@
+require_relative "talk_to_gradle/gradle"
 
 class Grand
 
 	def addAllCommands()
-		setupCommand("Grand")
-		setupCommand("GrandTags")
-		setupCommand("GrandInstall")
+		setupCommand("Tags")
+		setupCommand("Install")
 	end
 
-	def executeCommand()
-        p "The 'Grand' command does nothing. It is only usefull for getting a quick overview of what commands are supported."
+	def executeCommand(command)
+		completeCommand = "execute"+command
+		if respond_to? completeCommand
+			send(completeCommand)
+		else
+			puts "command '" + command + "' not defined"
+		end
 	end
 
+	def setupCommand(commandId)
+		commandName = "Grand" + commandId
+		rubyCall = "Grand.new.executeCommand('" + commandId + "')"
 
-	def setupCommand(commandName)
-		commandCall = ".new.executeCommand()"
-
-		command = ["command!", commandName]
-		command += [":ruby", commandName + commandCall]
+		command = ["command!", commandName, ":ruby", rubyCall]
 
 		VIM.command(command.join(" "))
+	end
+
+	def executeInstall()
+		Gradle.new.executeGradleCommand('installDebug')
 	end
 end

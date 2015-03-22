@@ -16,4 +16,5 @@ class GrandTags():
     def generateTagsAndAddToVim(self):
         TagsHandler().generateTagsFile()
 
+        # TODO: Move to GrandSetup
         vim.command('silent! set tags+='+'.tags')
