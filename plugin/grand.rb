@@ -1,4 +1,5 @@
 require_relative "talk_to_gradle/gradle"
+require_relative "generate_tags/tags_handler"
 
 class Grand
 
@@ -8,11 +9,11 @@ class Grand
 	end
 
 	def executeCommand(command)
-		completeCommand = "execute"+command
-		if respond_to? completeCommand
-			send(completeCommand)
+		methodCall = "execute"+command
+		if respond_to? methodCall
+			send(methodCall)
 		else
-			puts "command '" + command + "' not defined"
+			puts "Command '" + command + "' not recognised."
 		end
 	end
 
@@ -25,7 +26,12 @@ class Grand
 		VIM.command(command.join(" "))
 	end
 
+	# Commands
 	def executeInstall()
 		Gradle.new.executeGradleCommand('installDebug')
+	end
+
+	def executeTags()
+		TagsHandler.new.generateTagsFile()
 	end
 end

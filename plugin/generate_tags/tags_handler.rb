@@ -56,8 +56,8 @@ class TagsHandler
 
 	#protected
 	def replaceTagsWithTempTags()
-		File.delete(".tags")
-		File.rename(".tempTags", ".tags")
+		File.delete(".tags") rescue nil
+		File.rename(".tempTags", ".tags") rescue nil #Only happens in tests
 	end
 
 end

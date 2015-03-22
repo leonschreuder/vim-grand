@@ -1,18 +1,7 @@
-
-require_relative "tags_handler"
 require "test/unit"
 
-# Mock
-module Kernel
-	def self.spawn(*arg)
-		@@spawned = arg
-		return 0
-	end
-
-	def self.getSpawned()
-		return @@spawned
-	end
-end
+require_relative "tags_handler"
+require_relative "../mock_kernel"
 
 class TestTagsHandler < Test::Unit::TestCase
 
@@ -27,6 +16,7 @@ class TestTagsHandler < Test::Unit::TestCase
 	def teardown()
 		@testTools.removeTestFilesAndDirs()
 	end
+
 
 
 	def test_generateTagsFile_shouldCallShell()
@@ -75,6 +65,5 @@ class TestTagsHandler < Test::Unit::TestCase
 		assert File.exists?(".tempTags") == false, ".tempTags should have been removed"
 		assert File.exists?(".tags") == true, ".tags should have been replaced with .tempTags"
 	end
-
 
 end
