@@ -3,11 +3,13 @@ require_relative "generate_tags/tags_handler"
 
 class Grand
 
+	#public
 	def addAllCommands()
 		setupCommand("Tags")
 		setupCommand("Install")
 	end
 
+	#public
 	def executeCommand(command)
 		methodCall = "execute"+command
 		if respond_to? methodCall
@@ -17,6 +19,7 @@ class Grand
 		end
 	end
 
+	#private
 	def setupCommand(commandId)
 		commandName = "Grand" + commandId
 		rubyCall = "Grand.new.executeCommand('" + commandId + "')"
@@ -26,11 +29,16 @@ class Grand
 		VIM.command(command.join(" "))
 	end
 
+
 	# Commands
+	#----------------------------------------
+
+	#protected
 	def executeInstall()
 		Gradle.new.executeGradleCommand('installDebug')
 	end
 
+	#protected
 	def executeTags()
 		TagsHandler.new.generateTagsFile()
 	end
