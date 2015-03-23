@@ -1,5 +1,15 @@
+require_relative "find_paths/path_resolver"
 
 class ProjectSetup
+
+	def initialize()
+		@pathReslover = PathResolver.new
+	end
+
+	#def tryout()
+		#puts @pathReslover
+	#end
+
 
 	#protected
 	def isGradleProject()
@@ -8,27 +18,22 @@ class ProjectSetup
 
 	#protected
 	def isAndroidProject()
-		Find.find("./") { |f|
-			if f =~ /.*\/AndroidManifest.xml$/
-				return true
-			end
-			if f.scan(%r{/}).size > 4
-				Find.prune
-			end
-		}
+		if findFileWithDepth('AndroidManifest.xml', 4)
+			return true
+		end
 		return false
 	end
 
-	#TODO: Hier war ich
-	def searchFileTillDepth(filename, depth)
+	# regex filename alowed
+	def findFileWithDepth(filename, depth)
 		Find.find("./") { |f|
 			if f =~ /.*\/#{filename}$/
-				return true
+				return f
 			end
 			if f.scan(%r{/}).size > depth
 				Find.prune
 			end
 		}
-		return false
+		return nil
 	end
 end
