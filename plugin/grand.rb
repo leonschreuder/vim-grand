@@ -52,6 +52,7 @@ class Grand
 	end
 
 	def executeSetup()
+		#TODO: check $ANDROID_HOME is set
 		if ProjectControler.isGradleProject() and ProjectControler.isAndroidProject
 			configurator = Configurator.new()
 			configurator.setupJavacomplete()

@@ -27,6 +27,7 @@ class Configurator
 		jarsPaths = getPathsFromResolver(@@javacomplete_jars)
 		sourcePaths = getPathsFromResolver(@@javacomplete_src)
 
+
 		callJavacompleteMethodWithPaths('SetClassPath', jarsPaths)
 		callJavacompleteMethodWithPaths('SetSourcePath', sourcePaths)
 	end
@@ -35,6 +36,7 @@ class Configurator
 	def getPathsFromResolver(pathsArray)
 		foundPaths = []
 		pathsArray.each do |requestedPath|
+			p "hier: "+requestedPath
 			foundPaths << @pathReslover.send('get' + requestedPath)
 		end
 		return foundPaths
