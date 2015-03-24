@@ -1,7 +1,12 @@
-if !has('python')
-    echo "Error starting vim-grand: Required vim compiled with +python"
+if !has('ruby')
+    echo "Error starting vim-grand: Required vim compiled with +ruby"
     finish
 endif
+
+"if !has('python')
+    "echo "Error starting vim-grand: Required vim compiled with +python"
+    "finish
+"endif
 
 
 " python will be started from the python installation location.
@@ -12,3 +17,5 @@ let s:script_folder_path = escape( expand( '<sfile>:p:h' ), '\' ) . '/'
 " Setting up the plugin is completely delegated to python
 execute "pyfile ". s:script_folder_path . "grand.py"
 
+"execute "rubyfile ". s:script_folder_path . "grand.rb"
+"execute "ruby Grand.new"

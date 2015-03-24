@@ -31,11 +31,13 @@ class PathResolver
 
 		filename = 'gradle-sources'
 
-		f = File.open(filename, "r")
-		f.each_line do |line|
-			list.push(line.chomp)
+		if File.file?(filename)
+			f = File.open(filename, "r")
+			f.each_line do |line|
+				list.push(line.chomp)
+			end
+			f.close()
 		end
-		f.close()
 
 		return list
 	end
@@ -60,8 +62,10 @@ class PathResolver
 	def getExplodedAarClasses()
 		foundJars = []
 
-		Find.find("./build/") do |path|
-			foundJars << path if path =~ /.*\.jar$/
+		if File.exists?("build")
+			Find.find("./build/") do |path|
+				foundJars << path if path =~ /.*\.jar$/
+			end
 		end
 
 		return foundJars

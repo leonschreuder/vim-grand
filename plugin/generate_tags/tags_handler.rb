@@ -54,6 +54,11 @@ class TagsHandler
 		Process.detach(pid)
 	end
 
+	# TODO
+	# make process that calls `command`
+	# start process on different thread
+	# end > replace/delete .tempTags
+
 	#protected
 	def replaceTagsWithTempTags()
 		File.delete(".tags") rescue nil

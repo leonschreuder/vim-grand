@@ -1,7 +1,13 @@
 require_relative "talk_to_gradle/gradle"
 require_relative "generate_tags/tags_handler"
+require_relative "project_controler"
+require_relative "configurator"
 
 class Grand
+
+	def initialize()
+		setupCommand("Setup")
+	end
 
 	#public
 	def addAllCommands()
@@ -41,5 +47,17 @@ class Grand
 	#protected
 	def executeTags()
 		TagsHandler.new.generateTagsFile()
+
+		VIM.command('silent! set tags+=.tags')
+	end
+
+	def executeSetup()
+		if ProjectControler.isGradleProject() and ProjectControler.isAndroidProject
+			configurator = Configurator.new()
+			configurator.setupJavacomplete()
+			configurator.setupSyntastic()
+
+			addAllCommands()
+		end
 	end
 end
