@@ -5,7 +5,6 @@ class TagsHandler
 	def generateTagsFile()
 		if !isAlreadyRunning()
 			runCtagsCommand()
-			replaceTagsWithTempTags()
 		end
 	end
 
@@ -17,7 +16,9 @@ class TagsHandler
 	#private
 	def runCtagsCommand()
 		command = getCtagsCommand()
-		executeCommandAsyncly(command)
+		fork {
+			executeShellCommand(command)
+		}
 	end
 
 	#protected
@@ -49,15 +50,10 @@ class TagsHandler
 	end
 
 	#protected
-	def executeCommandAsyncly(command)
-		pid = Kernel.spawn(*command)
-		Process.detach(pid)
+	def executeShellCommand(command)
+		Kernel.system(*command)
+		replaceTagsWithTempTags()
 	end
-
-	# TODO
-	# make process that calls `command`
-	# start process on different thread
-	# end > replace/delete .tempTags
 
 	#protected
 	def replaceTagsWithTempTags()

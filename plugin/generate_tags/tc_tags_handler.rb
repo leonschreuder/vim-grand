@@ -22,7 +22,7 @@ class TestTagsHandler < Test::Unit::TestCase
 	def test_generateTagsFile_shouldCallShell()
 		@testTools.createTestBuildFile()
 
-		assert Kernel.getSpawned.size > 2, "Kernel shell should have been called"
+		assert Kernel.getSystem.size > 2, "Kernel shell should have been called"
 	end
 
 	def test_isAlreadyRunning_shouldReturnFalseWhenIsNotRunning()
@@ -49,19 +49,12 @@ class TestTagsHandler < Test::Unit::TestCase
 
 	def test_executeCommandAsyncly_shouldCallKernelWithArray()
 		command = ['a', 'b', 'c']
-
-		@tagsHandler.executeCommandAsyncly(command)
-
-		assert_equal command, Kernel.getSpawned, "Should have called command on Kernel"
-
-	end
-
-	def test_replaceTagsWithTempTags_shouldReplaceFile()
 		@testTools.createTestFile(".tags")
 		@testTools.createTestFile(".tempTags")
 
-		@tagsHandler.replaceTagsWithTempTags()
+		@tagsHandler.executeShellCommand(command)
 
+		assert_equal command, Kernel.getSystem, "Should have called command on Kernel"
 		assert File.exists?(".tempTags") == false, ".tempTags should have been removed"
 		assert File.exists?(".tags") == true, ".tags should have been replaced with .tempTags"
 	end
