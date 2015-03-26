@@ -51,7 +51,6 @@ class TestGrand < Minitest::Test
 		@grand.executeCommand("Tags")
 
 		# TODO: The tagsHandler is not not checked
-		#assert Kernel.getSystem.size > 2, "Kernel shell should have been called"
 		assert_equal 'silent! set tags+=.tags', VIM.getCommand()[-1]
 	end
 
@@ -59,11 +58,15 @@ class TestGrand < Minitest::Test
 		@testTools.createTestBuildFile()
 		@testTools.mkTestDirs("./src/main/")
 		@testTools.createTestFile("./src/main/AndroidManifest.xml")
-
 		preLength = VIM.getCommand().length
 
 		@grand.executeCommand("Setup")
-		assert_equal 6, VIM.getCommand().length - preLength, "Should add 2*Javacomplete + 1*Syntastic + 3*Grand-command through vim module"
+
+		expectedVIMCommandsFromConfigurator = 3
+		expectedVIMCommandsFromSetupCommand = 2
+		expectedVIMCommandsTotal = expectedVIMCommandsFromConfigurator + expectedVIMCommandsFromSetupCommand
+		actualAddedVIMCommands = VIM.getCommand().length - preLength
+		assert_equal expectedVIMCommandsTotal, actualAddedVIMCommands, "Should add 2*Javacomplete + 1*Syntastic + 3*Grand-command through vim module"
 	end
 
 end

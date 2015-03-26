@@ -27,20 +27,11 @@ class TestConfigurator < Minitest::Test
 
 		configurator.setupJavacomplete()
 
-		jarsPaths = configurator.getPathsFromResolver(configurator.javacomplete_jars)
-		sourcePaths = configurator.getPathsFromResolver(configurator.javacomplete_src)
-
+		jarsPaths = configurator.getPathsFromResolver(Configurator::JAVACOMPLETE_JARS )
+		sourcePaths = configurator.getPathsFromResolver(Configurator::JAVACOMPLETE_SRC )
 
 		expectedClass = jarsPaths.join(':')
-		#expectedClass = '~/android.jar'
-		#expectedClass += ':aar1.jar:aar2.jar'
-		#expectedClass += ':./build/classes'
-		#expectedClass += ':genA:genB'
-
 		expectedSource = sourcePaths.join(':')
-		#expectedSource = '~/android/sources'
-		#expectedSource += ':./src/main/:./src/test/'
-		#expectedSource += ':genA:genB'
 
 		assert_equal "silent! call javacomplete#SetClassPath('#{expectedClass}')", VIM.getCommand()[0]
         assert_equal "silent! call javacomplete#SetSourcePath('#{expectedSource}')", VIM.getCommand()[1]
