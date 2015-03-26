@@ -7,7 +7,7 @@ require_relative "mock_vim"
 class StubPathsResolver
 	def getAndroidSdkJar(); "~/android.jar"; end
 	def getExplodedAarClasses; ["aar1.jar", "aar2.jar"]; end
-	def getGeneratedProjectClassPaths; './build/classes'; end
+	def getBuildProjectClassPaths; './build/classes'; end
 	def getGradleClassPathsFromFile; ['genA', 'genB']; end
 	def getAndroidSdkSourcePath; '~/android/sources'; end
 	def getProjectSourcePaths; ['./src/main/', './src/test/']; end
@@ -46,7 +46,7 @@ class TestConfigurator < Minitest::Test
 		configurator.setupSyntastic()
 
 		syntasticClasses = './src/main/:./src/test/' # ProjectSourcePaths,
-		syntasticClasses += ':./build/classes'       # GeneratedProjectClassPaths,
+		syntasticClasses += ':./build/classes'       # BuildProjectClassPaths,
 		syntasticClasses += ':genA:genB'             # GradleClassPathsFromFile,
 		syntasticClasses += ':~/android.jar'         # AndroidSdkJar,
 		syntasticClasses += ':aar1.jar:aar2.jar'     # ExplodedAarClasses

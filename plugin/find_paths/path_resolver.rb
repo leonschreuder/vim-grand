@@ -15,12 +15,13 @@ class PathResolver
 
 
 	def getProjectSourcePaths()
-		projectClassPath = './src/main/java'
-		projectResPath = './src/main/res'
-		return [projectClassPath, projectResPath]
+		result = []
+		result << './src/main/java'
+		#result << './src/main/res' # seems to have biggest influence on '.'
+		return result
 	end
 
-	def getGeneratedProjectClassPaths()
+	def getBuildProjectClassPaths()
 		generatedDebugClasses =  './build/intermediates/classes/debug'
 		return [generatedDebugClasses]
 	end

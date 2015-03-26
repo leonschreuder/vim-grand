@@ -45,7 +45,7 @@ class TestPathResolver < Minitest::Test
 
 	def test_getGeneratedProjectClassPaths_returnsPathsFromFile
 
-		result = @pathResolver.getGeneratedProjectClassPaths();
+		result = @pathResolver.getBuildProjectClassPaths();
 
 		assert_equal('./build/intermediates/classes/debug', result[0])
 	end

@@ -3,20 +3,23 @@ require_relative "find_paths/path_resolver"
 class Configurator
 	#These are the name of the required get* methods in PathResolver
 	@@javacomplete_jars = [
-		'AndroidSdkJar',
+		#'AndroidSdkJar',
 		'ExplodedAarClasses',
-		'GeneratedProjectClassPaths',
-		'GradleClassPathsFromFile']
+		#'BuildProjectClassPaths',
+		#'GradleClassPathsFromFile',
+		]
 	@@javacomplete_src = [
-		'AndroidSdkSourcePath',
+		#'AndroidSdkSourcePath',
 		'ProjectSourcePaths',
-		'GradleClassPathsFromFile']
-	@@syntastic_paths = 
+		#'GradleClassPathsFromFile',
+		]
+	@@syntastic_paths = [
         'ProjectSourcePaths',
-        'GeneratedProjectClassPaths',
+        'BuildProjectClassPaths',
         'GradleClassPathsFromFile',
         'AndroidSdkJar',
         'ExplodedAarClasses'
+		]
 
 	def initialize(pathResolver = PathResolver.new)
 		@pathReslover = pathResolver
@@ -28,15 +31,14 @@ class Configurator
 		sourcePaths = getPathsFromResolver(@@javacomplete_src)
 
 
-		callJavacompleteMethodWithPaths('SetClassPath', jarsPaths)
-		callJavacompleteMethodWithPaths('SetSourcePath', sourcePaths)
+		callJavacompleteMethodWithPaths('AddClassPath', jarsPaths)
+		callJavacompleteMethodWithPaths('AddSourcePath', sourcePaths)
 	end
 
 	#private
 	def getPathsFromResolver(pathsArray)
 		foundPaths = []
 		pathsArray.each do |requestedPath|
-			p "hier: "+requestedPath
 			foundPaths << @pathReslover.send('get' + requestedPath)
 		end
 		return foundPaths

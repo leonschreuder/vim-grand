@@ -20,7 +20,7 @@ class MockPathsResolver
 	def getGradleClassPathsFromFile()
 		return ['src/test','src/main']
 	end
-	def getGeneratedProjectClassPaths()
+	def getBuildProjectClassPaths()
 		return ['src/test','src/main']
 	end
 	def getAndroidSdkSourcePath()
