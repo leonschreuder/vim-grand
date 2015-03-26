@@ -4,7 +4,7 @@ class Configurator
 	#These are the name of the required get* methods in PathResolver
 	@@javacomplete_jars = [
 		#'AndroidSdkJar',
-		'ExplodedAarClasses',
+		#'ExplodedAarClasses',
 		#'BuildProjectClassPaths',
 		#'GradleClassPathsFromFile',
 		]
@@ -31,8 +31,8 @@ class Configurator
 		sourcePaths = getPathsFromResolver(@@javacomplete_src)
 
 
-		callJavacompleteMethodWithPaths('AddClassPath', jarsPaths)
-		callJavacompleteMethodWithPaths('AddSourcePath', sourcePaths)
+		callJavacompleteMethodWithPaths('SetClassPath', jarsPaths)
+		callJavacompleteMethodWithPaths('SetSourcePath', sourcePaths)
 	end
 
 	#private
@@ -44,9 +44,12 @@ class Configurator
 		return foundPaths
 	end
 
+	# call javacomplete#GetClassPath()
+	# call javacomplete#GetSourcePath()
 	#private
 	def callJavacompleteMethodWithPaths(methodName, pathsArray)
 		joinedPaths = pathsArray.join(':')
+		p "joined: " + joinedPaths
 		VIM.command("silent! call javacomplete##{methodName}('#{ joinedPaths }')")
 	end
 
@@ -55,7 +58,8 @@ class Configurator
 	def setupSyntastic()
 		paths = getPathsFromResolver(@@syntastic_paths)
 
-        VIM.command("let $CLASSPATH = '" + paths.join(':') + "'")
-		VIM.command("let $CLASSPATH = '#{ paths.join(':') }'")
+        #VIM.command("let $CLASSPATH = '" + paths.join(':') + "'")
+		#VIM.command("let $CLASSPATH = '#{ paths.join(':') }'")
+		VIM.command("let g:syntastic_java_javac_classpath = '#{ paths.join(':') }'")
 	end
 end
