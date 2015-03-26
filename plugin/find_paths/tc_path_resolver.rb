@@ -24,7 +24,8 @@ class TestPathResolver < Minitest::Test
 
 		result = @pathResolver.getAllSourcePaths()
 
-		assert_equal(2+1, result.length)
+		#assert_equal(2+1, result.length)
+		assert_equal(1+1, result.length)
 	end
 
 
@@ -40,7 +41,7 @@ class TestPathResolver < Minitest::Test
 		result = @pathResolver.getProjectSourcePaths();
 
 		assert_equal('./src/main/java', result[0])
-		assert_equal('./src/main/res', result[1])
+		#assert_equal('./src/main/res', result[1])
 	end
 
 	def test_getGeneratedProjectClassPaths_returnsPathsFromFile

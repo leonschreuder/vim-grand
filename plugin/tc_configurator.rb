@@ -27,14 +27,20 @@ class TestConfigurator < Minitest::Test
 
 		configurator.setupJavacomplete()
 
-		expectedClass = '~/android.jar'
-		expectedClass += ':aar1.jar:aar2.jar'
-		expectedClass += ':./build/classes'
-		expectedClass += ':genA:genB'
+		jarsPaths = configurator.getPathsFromResolver(configurator.javacomplete_jars)
+		sourcePaths = configurator.getPathsFromResolver(configurator.javacomplete_src)
 
-		expectedSource = '~/android/sources'
-		expectedSource += ':./src/main/:./src/test/'
-		expectedSource += ':genA:genB'
+
+		expectedClass = jarsPaths.join(':')
+		#expectedClass = '~/android.jar'
+		#expectedClass += ':aar1.jar:aar2.jar'
+		#expectedClass += ':./build/classes'
+		#expectedClass += ':genA:genB'
+
+		expectedSource = sourcePaths.join(':')
+		#expectedSource = '~/android/sources'
+		#expectedSource += ':./src/main/:./src/test/'
+		#expectedSource += ':genA:genB'
 
 		assert_equal "silent! call javacomplete#SetClassPath('#{expectedClass}')", VIM.getCommand()[0]
         assert_equal "silent! call javacomplete#SetSourcePath('#{expectedSource}')", VIM.getCommand()[1]
@@ -51,6 +57,6 @@ class TestConfigurator < Minitest::Test
 		syntasticClasses += ':~/android.jar'         # AndroidSdkJar,
 		syntasticClasses += ':aar1.jar:aar2.jar'     # ExplodedAarClasses
 
-        assert_equal "let $CLASSPATH = '#{ syntasticClasses }'", VIM.getCommand()[0]
+        assert_equal "let g:syntastic_java_javac_classpath = '#{ syntasticClasses }'", VIM.getCommand()[0]
 	end
 end

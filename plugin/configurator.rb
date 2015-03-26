@@ -2,18 +2,20 @@ require_relative "find_paths/path_resolver"
 
 class Configurator
 	#These are the name of the required get* methods in PathResolver
-	@@javacomplete_jars = [
+	@javacomplete_jars = [
 		#'AndroidSdkJar',
 		#'ExplodedAarClasses',
 		#'BuildProjectClassPaths',
 		#'GradleClassPathsFromFile',
 		]
-	@@javacomplete_src = [
+
+	@javacomplete_src = [
 		#'AndroidSdkSourcePath',
 		'ProjectSourcePaths',
 		#'GradleClassPathsFromFile',
 		]
-	@@syntastic_paths = [
+
+	@syntastic_paths = [
         'ProjectSourcePaths',
         'BuildProjectClassPaths',
         'GradleClassPathsFromFile',
@@ -21,26 +23,30 @@ class Configurator
         'ExplodedAarClasses'
 		]
 
+	attr_accessor :javacomplete_jars
+	attr_accessor :javacomplete_src
+	attr_accessor :syntastic_paths
+
 	def initialize(pathResolver = PathResolver.new)
 		@pathReslover = pathResolver
 	end
 
 	#public
 	def setupJavacomplete()
-		jarsPaths = getPathsFromResolver(@@javacomplete_jars)
-		sourcePaths = getPathsFromResolver(@@javacomplete_src)
+		jarsPaths = getPathsFromResolver(@javacomplete_jars)
+		sourcePaths = getPathsFromResolver(@javacomplete_src)
 
 
 		callJavacompleteMethodWithPaths('SetClassPath', jarsPaths)
 		callJavacompleteMethodWithPaths('SetSourcePath', sourcePaths)
 	end
 
-	#private
+	#protected
 	def getPathsFromResolver(pathsArray)
 		foundPaths = []
-		pathsArray.each do |requestedPath|
+		pathsArray.each { |requestedPath|
 			foundPaths << @pathReslover.send('get' + requestedPath)
-		end
+		}
 		return foundPaths
 	end
 
@@ -56,7 +62,7 @@ class Configurator
 
 	#public
 	def setupSyntastic()
-		paths = getPathsFromResolver(@@syntastic_paths)
+		paths = getPathsFromResolver(@syntastic_paths)
 
         #VIM.command("let $CLASSPATH = '" + paths.join(':') + "'")
 		#VIM.command("let $CLASSPATH = '#{ paths.join(':') }'")
