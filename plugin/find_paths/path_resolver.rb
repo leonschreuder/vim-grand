@@ -53,11 +53,14 @@ class PathResolver
 	end
 
 	def getAndroidSdkSourcePath()
-		currentPlatformDir = 'android-' + getAndroidVersionFromBuildGradle()
+		androidVersion = getAndroidVersionFromBuildGradle()
+		if androidVersion
+			currentPlatformDir = 'android-' + androidVersion
 
-		sdkSourcePath = File.join(getAndroidHome(), 'sources', currentPlatformDir)
+			sdkSourcePath = File.join(getAndroidHome(), 'sources', currentPlatformDir)
 
-		return sdkSourcePath
+			return sdkSourcePath
+		end
 	end
 
 	def getExplodedAarClasses()
