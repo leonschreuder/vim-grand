@@ -1,7 +1,7 @@
 require_relative "find_paths/path_resolver"
 
 class Configurator
-	#These are the name of the required get* methods in PathResolver
+	#These are the name of the get* methods in PathResolver to add as a source
 	JAVACOMPLETE_JARS = [
 		#'AndroidSdkJar',
 		#'ExplodedAarClasses',
