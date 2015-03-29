@@ -1,4 +1,4 @@
-require "test/unit"
+require "minitest/autorun"
 
 require_relative "tags_handler"
 require_relative "../mock_kernel"
