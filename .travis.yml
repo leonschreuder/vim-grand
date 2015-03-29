@@ -5,5 +5,5 @@ rvm:
 #install: pip install mock
 # command to run tests, e.g. python setup.py test
 script:
-- python plugin/ts_allTests.rb
+- ruby plugin/ts_allTests.rb
 env: ANDROID_HOME=TEST_ANDROID_HOME
