@@ -33,7 +33,6 @@ class Configurator
 		jarsPaths = getPathsFromResolver(JAVACOMPLETE_JARS)
 		sourcePaths = getPathsFromResolver(JAVACOMPLETE_SRC)
 
-
 		callJavacompleteMethodWithPaths('SetClassPath', jarsPaths)
 		callJavacompleteMethodWithPaths('SetSourcePath', sourcePaths)
 	end
