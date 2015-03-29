@@ -10,8 +10,9 @@ class Configurator
 		]
 
 	JAVACOMPLETE_SRC = [
+		'BuildProjectClassPaths', #Tryout with built class-files
 		#'AndroidSdkSourcePath',
-		'ProjectSourcePaths',
+		#'ProjectSourcePaths',
 		#'GradleClassPathsFromFile',
 		]
 
@@ -22,10 +23,6 @@ class Configurator
         'AndroidSdkJar',
         'ExplodedAarClasses'
 		]
-
-	attr_accessor :javacomplete_jars
-	attr_accessor :javacomplete_src
-	attr_accessor :syntastic_paths
 
 	def initialize(pathResolver = PathResolver.new)
 		@pathReslover = pathResolver

@@ -15,39 +15,30 @@ end
 
 class TestConfigurator < Minitest::Test
 	def setup()
+		@configurator = Configurator.new(StubPathsResolver.new)
 		VIM.reinit()
-	end
-
-	def teardown()
 	end
 
 
 	def test_setupJavacomplete()
-		configurator = Configurator.new(StubPathsResolver.new)
+		expectedClass = findPathsFor(Configurator::JAVACOMPLETE_JARS)
+		expectedSource = findPathsFor(Configurator::JAVACOMPLETE_SRC)
 
-		configurator.setupJavacomplete()
-
-		jarsPaths = configurator.getPathsFromResolver(Configurator::JAVACOMPLETE_JARS )
-		sourcePaths = configurator.getPathsFromResolver(Configurator::JAVACOMPLETE_SRC )
-
-		expectedClass = jarsPaths.join(':')
-		expectedSource = sourcePaths.join(':')
+		@configurator.setupJavacomplete()
 
 		assert_equal "silent! call javacomplete#SetClassPath('#{expectedClass}')", VIM.getCommand()[0]
         assert_equal "silent! call javacomplete#SetSourcePath('#{expectedSource}')", VIM.getCommand()[1]
 	end
 
 	def test_setupSyntastic()
-		configurator = Configurator.new(StubPathsResolver.new)
+		expectedPaths = findPathsFor(Configurator::SYNTASTIC_PATHS)
 
-		configurator.setupSyntastic()
+		@configurator.setupSyntastic()
 
-		syntasticClasses = './src/main/:./src/test/' # ProjectSourcePaths,
-		syntasticClasses += ':./build/classes'       # BuildProjectClassPaths,
-		syntasticClasses += ':genA:genB'             # GradleClassPathsFromFile,
-		syntasticClasses += ':~/android.jar'         # AndroidSdkJar,
-		syntasticClasses += ':aar1.jar:aar2.jar'     # ExplodedAarClasses
+        assert_equal "let g:syntastic_java_javac_classpath = '#{ expectedPaths }'", VIM.getCommand()[0]
+	end
 
-        assert_equal "let g:syntastic_java_javac_classpath = '#{ syntasticClasses }'", VIM.getCommand()[0]
+	def findPathsFor(const)
+		@configurator.getPathsFromResolver(const).join(':')
 	end
 end
