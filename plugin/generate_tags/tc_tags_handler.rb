@@ -3,7 +3,7 @@ require "test/unit"
 require_relative "tags_handler"
 require_relative "../mock_kernel"
 
-class TestTagsHandler < Test::Unit::TestCase
+class TestTagsHandler < Minitest::Test
 
 	def setup()
 		@testTools = TestTools.new()
