@@ -1,3 +1,4 @@
+require "thread"
 
 class TagsHandler
 
@@ -16,9 +17,7 @@ class TagsHandler
 	#private
 	def runCtagsCommand()
 		command = getCtagsCommand()
-		Kernel.spawn {
-			executeShellCommand(command)
-		}
+		Thread.new { executeShellCommand(command) }
 	end
 
 	#protected

@@ -1,12 +1,13 @@
 require "minitest/autorun"
 
-require_relative "tags_handler"
 require_relative "../mock_kernel"
+require_relative "../mock_thread"
+require_relative "tags_handler"
 
 class TestTagsHandler < Minitest::Test
 
 	def setup()
-		Kernel.reinit()
+		Thread.reinit()
 		@testTools = TestTools.new()
 		@tagsHandler = TagsHandler.new()
 
@@ -23,8 +24,9 @@ class TestTagsHandler < Minitest::Test
 	def test_generateTagsFile_shouldCallShell()
 		@testTools.createTestBuildFile()
 
-		#assert Kernel.getSystem.size > 2, "Kernel shell should have been called"
-		assert Kernel.getSpawned() != []
+		@tagsHandler.generateTagsFile()
+
+		assert Thread.wasInitialized
 	end
 
 	def test_isAlreadyRunning_shouldReturnFalseWhenIsNotRunning()

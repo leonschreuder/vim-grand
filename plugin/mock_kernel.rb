@@ -12,6 +12,7 @@ module Kernel
 		@@spawned = arg
 		return 0
 	end
+
 	def self.getSpawned()
 		return @@spawned
 	end
