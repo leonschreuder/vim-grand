@@ -23,11 +23,8 @@ class TestTagsHandler < Minitest::Test
 	def test_generateTagsFile_shouldCallShell()
 		@testTools.createTestBuildFile()
 
-		# Since we have to make sure the the child process in the fork finishes
-		# first, we wait a 1/4th of a second here
-		#sleep(1.0/4) TODO Doesn't work
-
-		assert Kernel.getSystem.size > 2, "Kernel shell should have been called"
+		#assert Kernel.getSystem.size > 2, "Kernel shell should have been called"
+		assert Kernel.getSpawned() != []
 	end
 
 	def test_isAlreadyRunning_shouldReturnFalseWhenIsNotRunning()

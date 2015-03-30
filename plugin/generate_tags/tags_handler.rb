@@ -16,7 +16,7 @@ class TagsHandler
 	#private
 	def runCtagsCommand()
 		command = getCtagsCommand()
-		fork {
+		Kernel.spawn {
 			executeShellCommand(command)
 		}
 	end

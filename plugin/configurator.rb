@@ -3,18 +3,23 @@ require_relative "find_paths/path_resolver"
 class Configurator
 	#These are the name of the get* methods in PathResolver to add as a source
 	JAVACOMPLETE_JARS = [
-		#'AndroidSdkJar',
-		#'ExplodedAarClasses',
-		#'BuildProjectClassPaths',
-		#'GradleClassPathsFromFile',
+		'ProjectSourcePaths', # Results in adding import package completion for project
+		'BuildProjectClassPaths',
+		'AndroidSdkJar',
+		'ExplodedAarClasses', # Results in adding support package for import completion
+		'GradleClassPathsFromFile', # Results in adding regular completion for Robolectric (seems to add slowness inside Tests)
 		]
 
 	JAVACOMPLETE_SRC = [
-		'BuildProjectClassPaths', #Tryout with built class-files
+		'BuildProjectClassPaths',
+		'ExplodedAarClasses', # Results in adding support package for class completion
+		#'AndroidSdkJar',
 		#'AndroidSdkSourcePath',
 		#'ProjectSourcePaths',
 		#'GradleClassPathsFromFile',
 		]
+
+	# Correct imports don't seem to apply to test-classes
 
 	SYNTASTIC_PATHS = [
         'ProjectSourcePaths',
