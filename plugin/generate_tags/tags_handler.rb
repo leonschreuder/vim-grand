@@ -1,6 +1,7 @@
-require "thread"
-
 class TagsHandler
+
+	TAGS_FILE = '.tags'
+	TEMP_FILE = '.tempTags'
 
 	#public
 	def generateTagsFile()
@@ -11,20 +12,15 @@ class TagsHandler
 
 	#protected
 	def isAlreadyRunning()
-		return File.exists?(".tempTags")
+		# TODO: Does this even function as a valid lock?
+		return File.exists?(TEMP_FILE)
 	end
 
 	#private
 	def runCtagsCommand()
 		command = getCtagsCommand()
-		tagsProcess = fork {
-			executeShellCommand(command)
-			replaceTagsWithTempTags()
-		}
-		Process.detach(tagsProcess)
+		executeShellCommand(command)
 	end
-	#Not working: Thread.new, IO.popen, Open3.popen3 --- they don't stay around after exit
-	# Ask stackexchange for windows solution.
 
 	#protected
 	def getCtagsCommand()
@@ -34,19 +30,20 @@ class TagsHandler
 		addTagsTargetFile()
 		addTagsReadSources()
 
+		addShellPipe()
+		addMvCommand()
+
 		return @finalCommandArray
 	end
 
 	#private
 	def addBasicTagsCommand()
-		ctagsShellCommand = ['ctags', '--recurse', '--fields=+l', '--langdef=XML', '--langmap=Java:.java,XML:.xml', '--languages=Java,XML', '--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
-		@finalCommandArray += ctagsShellCommand
+		@finalCommandArray += ['ctags', '--recurse', '--fields=+l', '--langdef=XML', '--langmap=Java:.java,XML:.xml', '--languages=Java,XML', '--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
 	end
 
 	#private
 	def addTagsTargetFile()
-		ctagsTargetFile = '.tempTags'
-		@finalCommandArray += ['-f', ctagsTargetFile]
+		@finalCommandArray += ['-f', TEMP_FILE]
 	end
 
 	#private
@@ -54,15 +51,20 @@ class TagsHandler
 		@finalCommandArray += PathResolver.new.getAllSourcePaths()
 	end
 
-	#protected
-	def executeShellCommand(command)
-		Kernel.system(*command)
+	#private
+	def addShellPipe()
+		@finalCommandArray << '|'
+	end
+
+	#private
+	def addMvCommand()
+		@finalCommandArray += ['mv', TEMP_FILE, TAGS_FILE]
 	end
 
 	#protected
-	def replaceTagsWithTempTags()
-		File.delete(".tags") rescue nil
-		File.rename(".tempTags", ".tags") rescue nil #Only happens in tests
+	def executeShellCommand(command)
+		tagsProcess = Kernel.spawn(*command)
+		Process.detach(tagsProcess)
 	end
 
 end

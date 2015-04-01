@@ -5,9 +5,12 @@ require_relative "mock_vim"
 require_relative "mock_kernel"
 
 class TestGrand < Minitest::Test
+	ANDROID_HOME_VALUE = "stub/android/home"
+
 	def setup()
 		VIM.reinit()
 		Kernel.reinit()
+		ENV['ANDROID_HOME'] = ANDROID_HOME_VALUE
 		@testTools = TestTools.new()
 		@grand = Grand.new()
 	end

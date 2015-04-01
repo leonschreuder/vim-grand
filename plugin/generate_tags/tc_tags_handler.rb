@@ -1,7 +1,6 @@
 require "minitest/autorun"
 
 require_relative "../mock_kernel"
-require_relative "../mock_thread"
 require_relative "tags_handler"
 
 class TestTagsHandler < Minitest::Test
@@ -9,7 +8,7 @@ class TestTagsHandler < Minitest::Test
 	ANDROID_HOME_VALUE = "stub/android/home"
 
 	def setup()
-		Thread.reinit()
+		Kernel.reinit()
 		@testTools = TestTools.new()
 		@tagsHandler = TagsHandler.new()
 
@@ -27,13 +26,13 @@ class TestTagsHandler < Minitest::Test
 
 		@tagsHandler.generateTagsFile()
 
-		assert Thread.wasInitialized
+		assert Kernel.getSpawned() != nil
 	end
 
 	def test_isAlreadyRunning_shouldReturnFalseWhenIsNotRunning()
 		resultNotRunning = @tagsHandler.isAlreadyRunning()
 
-		@testTools.createTestFile(".tempTags")
+		@testTools.createTestFile(TagsHandler::TEMP_FILE)
 		resultRunning = @tagsHandler.isAlreadyRunning()
 
 		assert(resultRunning, "Should be running")
@@ -46,8 +45,9 @@ class TestTagsHandler < Minitest::Test
 		result = @tagsHandler.getCtagsCommand()
 
 		expectedCommand = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
-        expectedCommand += ['-f', '.tempTags']
+        expectedCommand += ['-f', TagsHandler::TEMP_FILE]
 		expectedCommand += PathResolver.new.getAllSourcePaths()
+		expectedCommand += ['|', 'mv', TagsHandler::TEMP_FILE, TagsHandler::TAGS_FILE]
 
 		assert_equal(expectedCommand, result, "Should have generated the right command")
 	end
@@ -59,9 +59,7 @@ class TestTagsHandler < Minitest::Test
 
 		@tagsHandler.executeShellCommand(command)
 
-		assert_equal command, Kernel.getSystem, "Should have called command on Kernel"
-		assert File.exists?(".tempTags") == false, ".tempTags should have been removed"
-		assert File.exists?(".tags") == true, ".tags should have been replaced with .tempTags"
+		assert_equal command, Kernel.getSpawned(), "Should have called command on Kernel"
 	end
 
 end
