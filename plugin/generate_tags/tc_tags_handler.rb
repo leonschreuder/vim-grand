@@ -6,13 +6,14 @@ require_relative "tags_handler"
 
 class TestTagsHandler < Minitest::Test
 
+	ANDROID_HOME_VALUE = "stub/android/home"
+
 	def setup()
 		Thread.reinit()
 		@testTools = TestTools.new()
 		@tagsHandler = TagsHandler.new()
 
-		@android_home_value = "stub/android/home"
-		ENV['ANDROID_HOME'] = @android_home_value
+		ENV['ANDROID_HOME'] = ANDROID_HOME_VALUE
 	end
 
 	def teardown()

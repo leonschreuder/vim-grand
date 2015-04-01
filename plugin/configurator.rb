@@ -12,7 +12,7 @@ class Configurator
 
 	JAVACOMPLETE_SRC = [
 		'BuildProjectClassPaths',
-		'ExplodedAarClasses', # Results in adding support package for class completion
+		#'ExplodedAarClasses', # Results in adding support package for class completion
 		#'AndroidSdkJar',
 		#'AndroidSdkSourcePath',
 		#'ProjectSourcePaths',

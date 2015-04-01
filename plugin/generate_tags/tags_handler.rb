@@ -17,8 +17,14 @@ class TagsHandler
 	#private
 	def runCtagsCommand()
 		command = getCtagsCommand()
-		Thread.new { executeShellCommand(command) }
+		tagsProcess = fork {
+			executeShellCommand(command)
+			replaceTagsWithTempTags()
+		}
+		Process.detach(tagsProcess)
 	end
+	#Not working: Thread.new, IO.popen, Open3.popen3 --- they don't stay around after exit
+	# Ask stackexchange for windows solution.
 
 	#protected
 	def getCtagsCommand()
@@ -51,7 +57,6 @@ class TagsHandler
 	#protected
 	def executeShellCommand(command)
 		Kernel.system(*command)
-		replaceTagsWithTempTags()
 	end
 
 	#protected
