@@ -1,8 +1,7 @@
 
-require_relative "path_resolver"
 require "minitest/autorun"
 
-#require "FileUtils"
+require_relative "path_resolver"
 require_relative "../utils/test_tools"
 
 class TestPathResolver < Minitest::Test
@@ -24,7 +23,6 @@ class TestPathResolver < Minitest::Test
 
 		result = @pathResolver.getAllSourcePaths()
 
-		#assert_equal(2+1, result.length)
 		assert_equal(1+1, result.length)
 	end
 
@@ -52,15 +50,50 @@ class TestPathResolver < Minitest::Test
 	end
 
 
-	def test_getGradleClassPathsFromFile_shouldLoadAllLines
-		@testTools.buildTestSourcesFile()
+	#def test_getGradleClassPathsFromFile_shouldLoadAllLines
+		#@testTools.buildTestSourcesFile()
 
-		result = @pathResolver.getGradleClassPathsFromFile();
+		#result = @pathResolver.getGradleClassPathsFromFile();
+
+		#assert_equal(2, result.size)
+		#assert_equal('/path/a', result[0])
+		#assert_equal('/path/b', result[1])
+
+	#end
+
+	def test_getSyntasticPathsFromSourcesFile
+		@testTools.buildTestSourcesV2File()
+
+		result = @pathResolver.getSyntasticPathsFromSourcesFile();
 
 		assert_equal(2, result.size)
-		assert_equal('/path/a', result[0])
-		assert_equal('/path/b', result[1])
+		assert_equal('/path/plus', result[0])
+		assert_equal('/path/syntastic', result[1])
+	end
 
+	def test_getCompletionPathsFromSourcesFile
+		@testTools.buildTestSourcesV2File()
+
+		result = @pathResolver.getCompletionPathsFromSourcesFile();
+
+		assert_equal(2, result.size)
+		assert_equal('/path/plus', result[0])
+		assert_equal('/path/completion', result[1])
+	end
+
+	def test_getPathsFromSourcesFileWithPreceiding
+		@testTools.buildTestSourcesV2File()
+
+		resultPlus = @pathResolver.getPathsFromSourcesFileWithPreceidingChar('+');
+		resultMinus = @pathResolver.getPathsFromSourcesFileWithPreceidingChar('-');
+		resultSyntastic = @pathResolver.getPathsFromSourcesFileWithPreceidingChar('s');
+
+		assert_equal(1, resultPlus.size)
+		assert_equal(1, resultMinus.size)
+		assert_equal(1, resultSyntastic.size)
+		assert_equal('/path/plus', resultPlus[0])
+		assert_equal('/path/minus', resultMinus[0])
+		assert_equal('/path/syntastic', resultSyntastic[0])
 	end
 
 	def test_getAndroidVersionFromBuildGradle_shouldReturnVersionNumber

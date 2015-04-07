@@ -47,7 +47,7 @@ class TestTagsHandler < Minitest::Test
 		expectedCommand = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
         expectedCommand += ['-f', TagsHandler::TEMP_FILE]
 		expectedCommand += PathResolver.new.getAllSourcePaths()
-		expectedCommand += ['|', 'mv', TagsHandler::TEMP_FILE, TagsHandler::TAGS_FILE]
+		expectedCommand += ['&&', 'mv', TagsHandler::TEMP_FILE, TagsHandler::TAGS_FILE]
 
 		assert_equal(expectedCommand, result, "Should have generated the right command")
 	end
@@ -59,7 +59,7 @@ class TestTagsHandler < Minitest::Test
 
 		@tagsHandler.executeShellCommand(command)
 
-		assert_equal command, Kernel.getSpawned(), "Should have called command on Kernel"
+		assert_equal command.join(' '), Kernel.getSpawned()[0], "Should have called command on Kernel"
 	end
 
 end

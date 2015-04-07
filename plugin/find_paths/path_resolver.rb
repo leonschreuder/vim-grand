@@ -27,7 +27,22 @@ class PathResolver
 	end
 
 
-	def getGradleClassPathsFromFile()
+	def getSyntasticPathsFromSourcesFile()
+		paths = []
+		paths += getPathsFromSourcesFileWithPreceidingChar('+')
+		paths += getPathsFromSourcesFileWithPreceidingChar('s')
+		return paths
+	end
+
+	def getCompletionPathsFromSourcesFile()
+		paths = []
+		paths += getPathsFromSourcesFileWithPreceidingChar('+')
+		paths += getPathsFromSourcesFileWithPreceidingChar('c')
+		return paths
+	end
+
+
+	def getPathsFromSourcesFileWithPreceidingChar(preceidingChar)
 		list = []
 
 		filename = 'gradle-sources'
@@ -35,13 +50,29 @@ class PathResolver
 		if File.file?(filename)
 			f = File.open(filename, "r")
 			f.each_line do |line|
-				list.push(line.chomp)
+				if line.start_with?(preceidingChar)
+
+					list << getPathFromLine(preceidingChar, line)
+
+				end
 			end
 			f.close()
 		end
 
 		return list
 	end
+
+	def getPathFromLine(preceidingChar, line)
+		char = escape_characters_in_string(preceidingChar)
+		return line[/#{char}\s*(.*)$/,1]
+	end
+
+	# Thanks http://stackoverflow.com/a/21397142/3968618
+	def escape_characters_in_string(string)
+		pattern = /(\'|\"|\.|\*|\/|\-|\\|\)|\$|\+|\(|\^|\?|\!|\~|\`)/
+		string.gsub(pattern){|match|"\\"  + match}
+	end
+
 
 
 	def getAndroidSdkJar()

@@ -8,7 +8,8 @@ class StubPathsResolver
 	def getAndroidSdkJar(); "~/android.jar"; end
 	def getExplodedAarClasses; ["aar1.jar", "aar2.jar"]; end
 	def getBuildProjectClassPaths; './build/classes'; end
-	def getGradleClassPathsFromFile; ['genA', 'genB']; end
+	def getCompletionPathsFromSourcesFile() ['genA', 'genB']; end
+	def getSyntasticPathsFromSourcesFile() ['genA', 'genB']; end
 	def getAndroidSdkSourcePath; '~/android/sources'; end
 	def getProjectSourcePaths; ['./src/main/', './src/test/']; end
 end

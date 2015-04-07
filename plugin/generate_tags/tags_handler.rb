@@ -30,7 +30,7 @@ class TagsHandler
 		addTagsTargetFile()
 		addTagsReadSources()
 
-		addShellPipe()
+		addCommandSeperator()
 		addMvCommand()
 
 		return @finalCommandArray
@@ -52,8 +52,8 @@ class TagsHandler
 	end
 
 	#private
-	def addShellPipe()
-		@finalCommandArray << '|'
+	def addCommandSeperator()
+		@finalCommandArray << '&&'
 	end
 
 	#private
@@ -63,7 +63,8 @@ class TagsHandler
 
 	#protected
 	def executeShellCommand(command)
-		tagsProcess = Kernel.spawn(*command)
+		#tagsProcess = Kernel.spawn(*command)
+		tagsProcess = Kernel.spawn(command.join(' '))
 		Process.detach(tagsProcess)
 	end
 

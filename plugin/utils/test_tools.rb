@@ -14,6 +14,13 @@ class TestTools
 		}
 	end
 
+	def buildTestSourcesV2File
+		@testFiles.push('gradle-sources')
+		File.open("gradle-sources", 'w') {|f|
+			f.write("+ /path/plus\n- /path/minus\ns /path/syntastic\nc /path/completion")
+		}
+	end
+
 	def createTestFileInPast(path, timeInPast)
 		@testFiles.push(path)
 		FileUtils.touch path, :mtime => Time.now - timeInPast
