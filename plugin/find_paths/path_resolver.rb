@@ -2,6 +2,8 @@ require "find"
 
 class PathResolver
 
+	FILE_WITH_PATHS = 'gradle-sources'
+
 	def getAndroidHome()
 		return ENV['ANDROID_HOME']
 	end
@@ -45,10 +47,8 @@ class PathResolver
 	def getPathsFromSourcesFileWithPreceidingChar(preceidingChar)
 		list = []
 
-		filename = 'gradle-sources'
-
-		if File.file?(filename)
-			f = File.open(filename, "r")
+		if File.file?(FILE_WITH_PATHS)
+			f = File.open(FILE_WITH_PATHS, "r")
 			f.each_line do |line|
 				if line.start_with?(preceidingChar)
 
@@ -65,12 +65,6 @@ class PathResolver
 	def getPathFromLine(preceidingChar, line)
 		char = escape_characters_in_string(preceidingChar)
 		return line[/#{char}\s*(.*)$/,1]
-	end
-
-	# Thanks http://stackoverflow.com/a/21397142/3968618
-	def escape_characters_in_string(string)
-		pattern = /(\'|\"|\.|\*|\/|\-|\\|\)|\$|\+|\(|\^|\?|\!|\~|\`)/
-		string.gsub(pattern){|match|"\\"  + match}
 	end
 
 
@@ -131,6 +125,15 @@ class PathResolver
 		}.reverse
 
 		return foundFiles[0]
+	end
+
+	# HELPERS
+	#--------------------------------------------------------------------------------
+
+	# Thanks http://stackoverflow.com/a/21397142/3968618
+	def escape_characters_in_string(string)
+		pattern = /(\'|\"|\.|\*|\/|\-|\\|\)|\$|\+|\(|\^|\?|\!|\~|\`)/
+		string.gsub(pattern){|match|"\\"  + match}
 	end
 
 end

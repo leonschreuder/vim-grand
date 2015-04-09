@@ -63,7 +63,6 @@ class TagsHandler
 
 	#protected
 	def executeShellCommand(command)
-		#tagsProcess = Kernel.spawn(*command)
 		tagsProcess = Kernel.spawn(command.join(' '))
 		Process.detach(tagsProcess)
 	end
