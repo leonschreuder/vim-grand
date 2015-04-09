@@ -62,7 +62,7 @@ class TestPathResolver < Minitest::Test
 	#end
 
 	def test_getSyntasticPathsFromSourcesFile
-		@testTools.buildTestSourcesV2File()
+		@testTools.buildTestSourcesFile()
 
 		result = @pathResolver.getSyntasticPathsFromSourcesFile();
 
@@ -72,7 +72,7 @@ class TestPathResolver < Minitest::Test
 	end
 
 	def test_getCompletionPathsFromSourcesFile
-		@testTools.buildTestSourcesV2File()
+		@testTools.buildTestSourcesFile()
 
 		result = @pathResolver.getCompletionPathsFromSourcesFile();
 
@@ -82,7 +82,7 @@ class TestPathResolver < Minitest::Test
 	end
 
 	def test_getPathsFromSourcesFileWithPreceiding
-		@testTools.buildTestSourcesV2File()
+		@testTools.buildTestSourcesFile()
 
 		resultPlus = @pathResolver.getPathsFromSourcesFileWithPreceidingChar('+');
 		resultMinus = @pathResolver.getPathsFromSourcesFileWithPreceidingChar('-');

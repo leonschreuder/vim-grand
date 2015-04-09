@@ -6,24 +6,9 @@ class TestTools
 		@testDirs = []
 	end
 
-
-	def buildTestSourcesFile
-		@testFiles.push('gradle-sources')
-		File.open("gradle-sources", 'w') {|f|
-			f.write("/path/a\n/path/b")
-		}
-	end
-
-	def buildTestSourcesV2File
-		@testFiles.push('gradle-sources')
-		File.open("gradle-sources", 'w') {|f|
-			f.write("+ /path/plus\n- /path/minus\ns /path/syntastic\nc /path/completion")
-		}
-	end
-
-	def createTestFileInPast(path, timeInPast)
-		@testFiles.push(path)
-		FileUtils.touch path, :mtime => Time.now - timeInPast
+	def mkTestDirs(path)
+		@testDirs.push(path)
+		FileUtils.mkdir_p(path)
 	end
 
 	def createTestFile(path)
@@ -39,24 +24,37 @@ class TestTools
 		}
 	end
 
-	def mkTestDirs(path)
-		@testDirs.push(path)
-		FileUtils.mkdir_p(path)
+	def createTestFileInPast(path, timeInPast)
+		@testFiles.push(path)
+		FileUtils.touch path, :mtime => Time.now - timeInPast
+	end
+
+
+	def buildTestSourcesFile
+		content = [
+			"+ /path/plus\n",
+			"- /path/minus\n",
+			"s /path/syntastic\n",
+			"c /path/completion"
+		]
+
+		createTestFileWithContent(ProjectControler::LIBRARY_PATHS_FILE, content.join)
 	end
 
 	def createTestBuildFile()
-		@testFiles.push('build.gradle')
-		File.open("build.gradle", "w") { |f|
-			f.write("	 }\n" \
-					"	 compileSdkVersion 19\n" \
-					"	 buildToolsVersion \"19.1.0\"\n" \
-					"\n" \
-					"	 defaultConfig {\n"
-			)
-		}
+		content = [
+			"	 }\n",
+			"	 compileSdkVersion 19\n",
+			"	 buildToolsVersion \"19.1.0\"\n",
+			"\n",
+			"	 defaultConfig {\n"
+		]
+
+		createTestFileWithContent(ProjectControler::GRADLE_BUILD_FILE, content.join)
 	end
 
 
+	# Removing
 	def removeTestFilesAndDirs()
 		removeTestFiles()
 		removeTestDirs()

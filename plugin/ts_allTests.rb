@@ -7,3 +7,5 @@ require_relative "find_paths/tc_path_resolver"
 require_relative "generate_tags/tc_tags_handler"
 require_relative "talk_to_gradle/tc_gradle"
 require_relative "talk_to_adb/tc_adb"
+require_relative "utils/tc_test_tools"
+

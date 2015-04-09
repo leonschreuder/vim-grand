@@ -2,8 +2,6 @@ require "find"
 
 class PathResolver
 
-	FILE_WITH_PATHS = 'gradle-sources'
-
 	def getAndroidHome()
 		return ENV['ANDROID_HOME']
 	end
@@ -47,8 +45,8 @@ class PathResolver
 	def getPathsFromSourcesFileWithPreceidingChar(preceidingChar)
 		list = []
 
-		if File.file?(FILE_WITH_PATHS)
-			f = File.open(FILE_WITH_PATHS, "r")
+		if File.file?(ProjectControler::LIBRARY_PATHS_FILE)
+			f = File.open(ProjectControler::LIBRARY_PATHS_FILE, "r")
 			f.each_line do |line|
 				if line.start_with?(preceidingChar)
 
