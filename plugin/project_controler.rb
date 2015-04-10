@@ -18,51 +18,6 @@ class ProjectControler
 		return false
 	end
 
-	def self.convertOutputResultToSources()
-		if not File.exists?(GRADLE_WRITE_FILE)
-			return
-		end
-
-		pathsString = IO.readlines(GRADLE_WRITE_FILE)[0]
-		paths = pathsString.split(':')
-		appending = false
-
-		if File.exists?(LIBRARY_PATHS_FILE)
-			appending = true
-			definedPaths = IO.readlines(LIBRARY_PATHS_FILE)
-
-			removeDuplicatePathEntries(paths, definedPaths)
-
-			definedPaths.last << "\n"
-		end
-
-		paths.each { |path|
-			path.prepend "+ "
-			path.concat "\n"
-		}
-
-
-		File.open(LIBRARY_PATHS_FILE, 'a') { |file|
-			if appending
-				file.write("\n")
-			end
-			file.write(paths.join)
-		}
-		File.delete(GRADLE_WRITE_FILE)
-	end
-
-	def self.removeDuplicatePathEntries(source, duplicates)
-		final = source
-
-		duplicates.each { |duplicate|
-			final.reject! do |path|
-				duplicate =~ /.*#{escape_characters_in_string(path)}/
-			end
-		}
-
-		return final
-	end
-
 
 	# HELPERS
 	#--------------------------------------------------------------------------------

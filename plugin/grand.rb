@@ -2,6 +2,7 @@ require_relative "talk_to_gradle/gradle"
 require_relative "generate_tags/tags_handler"
 require_relative "project_controler"
 require_relative "configurator"
+require_relative "find_paths/path_file_manager"
 
 class Grand
 
@@ -54,7 +55,7 @@ class Grand
 	def executeSetup()
 		#TODO: check $ANDROID_HOME is set
 		if ProjectControler.isGradleProject() and ProjectControler.isAndroidProject
-			ProjectControler.convertOutputResultToSources()
+			PathFileManager.convertOutputResultToSources()
 			configurator = Configurator.new()
 			configurator.setupJavacomplete()
 			configurator.setupSyntastic()
