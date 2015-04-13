@@ -23,12 +23,11 @@ class PathFileManagerTest < Minitest::Test
 		assert_equal "path/d", result[1]
 	end
 
-	def test_convertOutputResultToSources()
-		@testTools.createTestFileWithContent(ProjectControler::GRADLE_WRITE_FILE, "path/a:path/b:path/c")
+	def test_appendPathsToSources_shouldWriteNew()
+		paths = ["path/a", "path/b", "path/c"]
 
-		PathFileManager.convertOutputResultToSources()
+		PathFileManager.appendPathsToSources(paths)
 
-		refute File.exists?(ProjectControler::GRADLE_WRITE_FILE)
 		assert File.exists?(ProjectControler::LIBRARY_PATHS_FILE)
 		expected = [
 			"+ path/a\n",
@@ -39,14 +38,12 @@ class PathFileManagerTest < Minitest::Test
 		File.delete(ProjectControler::LIBRARY_PATHS_FILE)
 	end
 
-	def test_convertOutputResultToSources_shouldNotReplace()
-		@testTools.createTestFileWithContent(ProjectControler::GRADLE_WRITE_FILE, "path/a:path/b:path/c")
+	def test_appendPathsToSources_shouldNotRewriteDuplicats()
 		@testTools.createTestFileWithContent(ProjectControler::LIBRARY_PATHS_FILE, "+ path/a\n- path/b")
+		paths = ["path/a", "path/b", "path/c"]
 
-		PathFileManager.convertOutputResultToSources()
+		PathFileManager.appendPathsToSources(paths)
 
-		refute File.exists?(ProjectControler::GRADLE_WRITE_FILE)
-		assert File.exists?(ProjectControler::LIBRARY_PATHS_FILE)
 		expected = [
 			"+ path/a\n",
 			"- path/b\n",
@@ -55,5 +52,20 @@ class PathFileManagerTest < Minitest::Test
 		assert_equal expected, IO.readlines(ProjectControler::LIBRARY_PATHS_FILE)
 	end
 
+
+	def test_getPathsFromSourcesFileWithPreceiding
+		@testTools.buildTestSourcesFile()
+
+		resultPlus      = PathFileManager.getPathsFromSourcesFileWithPreceidingChar('+');
+		resultMinus     = PathFileManager.getPathsFromSourcesFileWithPreceidingChar('-');
+		resultSyntastic = PathFileManager.getPathsFromSourcesFileWithPreceidingChar('s');
+
+		assert_equal(1, resultPlus.size)
+		assert_equal(1, resultMinus.size)
+		assert_equal(1, resultSyntastic.size)
+		assert_equal('/path/plus', resultPlus[0])
+		assert_equal('/path/minus', resultMinus[0])
+		assert_equal('/path/syntastic', resultSyntastic[0])
+	end
 
 end

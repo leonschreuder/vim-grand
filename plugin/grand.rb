@@ -55,8 +55,8 @@ class Grand
 	def executeSetup()
 		#TODO: check $ANDROID_HOME is set
 		if ProjectControler.isGradleProject() and ProjectControler.isAndroidProject
-			PathFileManager.convertOutputResultToSources()
 			configurator = Configurator.new()
+			configurator.updatePathFile()
 			configurator.setupJavacomplete()
 			configurator.setupSyntastic()
 

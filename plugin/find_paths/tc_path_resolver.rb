@@ -18,12 +18,45 @@ class TestPathResolver < Minitest::Test
 		@testTools.removeTestFilesAndDirs()
 	end
 
+
 	def test_getAllSourcePaths()
 		@testTools.createTestBuildFile()
 
 		result = @pathResolver.getAllSourcePaths()
 
 		assert_equal(1+1, result.length)
+	end
+
+	def test_getStaticPaths()
+		result = @pathResolver.getStaticPaths()
+
+		assert_equal('./src/main/java', result[0])
+		assert_equal './build/intermediates/classes/debug', result[1]
+	end
+
+	def test_getDynamicPaths()
+		@testTools.createTestBuildFile()
+		@testTools.mkTestDirs('./build/intermediates/exploded-aar/some_project/')
+		testFile1 = './build/intermediates/exploded-aar/fakeJar.jar'
+		testFile2 = './build/intermediates/exploded-aar/some_project/fakeJar2.jar'
+		@testTools.createTestFile(testFile1)
+		@testTools.createTestFile(testFile2)
+
+		result = @pathResolver.getDynamicPaths()
+
+		assert_equal @android_home_value + "/platforms/android-19/android.jar", result[0]
+		assert_equal @android_home_value + "/sources/android-19", result[1]
+		assert_equal(testFile1, result[2])
+		assert_equal(testFile2, result[3])
+	end
+
+	def test_loadGradleDependencyPaths_shoulReadPathsFromFile()
+		@testTools.createTestFileWithContent(ProjectControler::GRADLE_WRITE_FILE, "path/a:path/b:path/c")
+
+		result = @pathResolver.loadGradleDependencyPaths()
+
+		assert_equal 3, result.length
+		assert_equal [ "path/a", "path/b", "path/c", ], result
 	end
 
 
@@ -50,51 +83,7 @@ class TestPathResolver < Minitest::Test
 	end
 
 
-	#def test_getGradleClassPathsFromFile_shouldLoadAllLines
-		#@testTools.buildTestSourcesFile()
 
-		#result = @pathResolver.getGradleClassPathsFromFile();
-
-		#assert_equal(2, result.size)
-		#assert_equal('/path/a', result[0])
-		#assert_equal('/path/b', result[1])
-
-	#end
-
-	def test_getSyntasticPathsFromSourcesFile
-		@testTools.buildTestSourcesFile()
-
-		result = @pathResolver.getSyntasticPathsFromSourcesFile();
-
-		assert_equal(2, result.size)
-		assert_equal('/path/plus', result[0])
-		assert_equal('/path/syntastic', result[1])
-	end
-
-	def test_getCompletionPathsFromSourcesFile
-		@testTools.buildTestSourcesFile()
-
-		result = @pathResolver.getCompletionPathsFromSourcesFile();
-
-		assert_equal(2, result.size)
-		assert_equal('/path/plus', result[0])
-		assert_equal('/path/completion', result[1])
-	end
-
-	def test_getPathsFromSourcesFileWithPreceiding
-		@testTools.buildTestSourcesFile()
-
-		resultPlus = @pathResolver.getPathsFromSourcesFileWithPreceidingChar('+');
-		resultMinus = @pathResolver.getPathsFromSourcesFileWithPreceidingChar('-');
-		resultSyntastic = @pathResolver.getPathsFromSourcesFileWithPreceidingChar('s');
-
-		assert_equal(1, resultPlus.size)
-		assert_equal(1, resultMinus.size)
-		assert_equal(1, resultSyntastic.size)
-		assert_equal('/path/plus', resultPlus[0])
-		assert_equal('/path/minus', resultMinus[0])
-		assert_equal('/path/syntastic', resultSyntastic[0])
-	end
 
 	def test_getAndroidVersionFromBuildGradle_shouldReturnVersionNumber
 		@testTools.createTestBuildFile()
@@ -122,14 +111,18 @@ class TestPathResolver < Minitest::Test
 	end
 
 	def test_getExplodedAarClasses()
-		@testTools.mkTestDirs('./build/intermediates/exploded-arr/some_project/')
-		testFile1 = './build/intermediates/exploded-arr/fakeJar.jar'
-		testFile2 = './build/intermediates/exploded-arr/some_project/fakeJar2.jar'
+		@testTools.mkTestDirs('./build/intermediates/exploded-aar/some_project/')
+		@testTools.mkTestDirs('./build/intermediates/pre-dexed/some_project/')
+		testFile1 = './build/intermediates/exploded-aar/fakeJar.jar'
+		testFile2 = './build/intermediates/exploded-aar/some_project/fakeJar2.jar'
+		testFile3 = './build/intermediates/pre-dexed/some_project/fakeJar3.jar'
 		@testTools.createTestFile(testFile1)
 		@testTools.createTestFile(testFile2)
+		@testTools.createTestFile(testFile3)
 
 		result = @pathResolver.getExplodedAarClasses()
 
+		assert_equal(2, result.length)
 		assert_equal(testFile1, result[0])
 		assert_equal(testFile2, result[1])
 	end

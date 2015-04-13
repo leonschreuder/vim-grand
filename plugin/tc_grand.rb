@@ -61,15 +61,22 @@ class TestGrand < Minitest::Test
 		@testTools.createTestBuildFile()
 		@testTools.mkTestDirs("./src/main/")
 		@testTools.createTestFile("./src/main/AndroidManifest.xml")
-		preLength = VIM.getCommand().length
 
 		@grand.executeCommand("Setup")
 
-		expectedVIMCommandsFromConfigurator = 3
-		expectedVIMCommandsFromSetupCommand = 2
-		expectedVIMCommandsTotal = expectedVIMCommandsFromConfigurator + expectedVIMCommandsFromSetupCommand
-		actualAddedVIMCommands = VIM.getCommand().length - preLength
-		assert_equal expectedVIMCommandsTotal, actualAddedVIMCommands, "Should add 2*Javacomplete + 1*Syntastic + 3*Grand-command through vim module"
+		assert File.exists?(ProjectControler::LIBRARY_PATHS_FILE)
+
+		commands = VIM.getCommand()
+		assert contains(commands, "javacomplete#SetClassPath")
+		assert contains(commands, "syntastic_java_javac_classpath")
 	end
+
+	def contains(array, string)
+		array.each { |command|
+			return true if command =~ /#{string}/
+		}
+		return false
+	end
+
 
 end

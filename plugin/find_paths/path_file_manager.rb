@@ -2,6 +2,7 @@
 
 class PathFileManager
 
+	# Depricated. Delete when ready
 	def self.convertOutputResultToSources()
 		if File.exists?(ProjectControler::GRADLE_WRITE_FILE)
 			pathsString = IO.readlines(ProjectControler::GRADLE_WRITE_FILE)[0]
@@ -30,6 +31,29 @@ class PathFileManager
 			end
 			file.write(paths.join)
 		}
+	end
+
+	def self.getPathsFromSourcesFileWithPreceidingChar(preceidingChar)
+		list = []
+
+		if File.file?(ProjectControler::LIBRARY_PATHS_FILE)
+			f = File.open(ProjectControler::LIBRARY_PATHS_FILE, "r")
+			f.each_line do |line|
+				if line.start_with?(preceidingChar)
+
+					list << getPathFromLine(preceidingChar, line)
+
+				end
+			end
+			f.close()
+		end
+
+		return list
+	end
+
+	def self.getPathFromLine(preceidingChar, line)
+		char = escape_characters_in_string(preceidingChar)
+		return line[/#{char}\s*(.*)$/,1]
 	end
 
 	def self.reformatRawPaths(paths)

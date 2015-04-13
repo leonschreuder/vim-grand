@@ -6,6 +6,22 @@ class PathResolver
 		return ENV['ANDROID_HOME']
 	end
 
+	def getStaticPaths()
+		result = []
+		result << './src/main/java'
+		#result << './src/main/res' # test influence on '.'
+		result << './build/intermediates/classes/debug'
+		return result
+	end
+
+	def getDynamicPaths()
+		result = []
+		result << getAndroidSdkJar()
+		result << getAndroidSdkSourcePath()
+		result += getExplodedAarClasses()
+		return result
+	end
+
 	def getAllSourcePaths()
 		sourcePaths = []
 		sourcePaths += getProjectSourcePaths()
@@ -13,7 +29,18 @@ class PathResolver
 		return sourcePaths
 	end
 
+	def loadGradleDependencyPaths()
+		if File.exists?(ProjectControler::GRADLE_WRITE_FILE)
+			pathsString = IO.readlines(ProjectControler::GRADLE_WRITE_FILE)[0]
+			return pathsString.split(':')
+		else
+			return []
+		end
+	end
 
+
+
+	# Depricated. Use getStaticPaths()
 	def getProjectSourcePaths()
 		result = []
 		result << './src/main/java'
@@ -21,53 +48,17 @@ class PathResolver
 		return result
 	end
 
+	# Depricated. Use getStaticPaths()
 	def getBuildProjectClassPaths()
 		generatedDebugClasses =  './build/intermediates/classes/debug'
 		return [generatedDebugClasses]
 	end
 
 
-	def getSyntasticPathsFromSourcesFile()
-		paths = []
-		paths += getPathsFromSourcesFileWithPreceidingChar('+')
-		paths += getPathsFromSourcesFileWithPreceidingChar('s')
-		return paths
-	end
-
-	def getCompletionPathsFromSourcesFile()
-		paths = []
-		paths += getPathsFromSourcesFileWithPreceidingChar('+')
-		paths += getPathsFromSourcesFileWithPreceidingChar('c')
-		return paths
-	end
-
-
-	def getPathsFromSourcesFileWithPreceidingChar(preceidingChar)
-		list = []
-
-		if File.file?(ProjectControler::LIBRARY_PATHS_FILE)
-			f = File.open(ProjectControler::LIBRARY_PATHS_FILE, "r")
-			f.each_line do |line|
-				if line.start_with?(preceidingChar)
-
-					list << getPathFromLine(preceidingChar, line)
-
-				end
-			end
-			f.close()
-		end
-
-		return list
-	end
-
-	def getPathFromLine(preceidingChar, line)
-		char = escape_characters_in_string(preceidingChar)
-		return line[/#{char}\s*(.*)$/,1]
-	end
-
 
 
 	def getAndroidSdkJar()
+		if not File.exists?("build.gradle"); return; end
 		currentPlatformDir = 'android-' + getAndroidVersionFromBuildGradle()
 
 		sdkJarPath = File.join(getAndroidHome(), 'platforms', currentPlatformDir, 'android.jar')
@@ -76,6 +67,7 @@ class PathResolver
 	end
 
 	def getAndroidSdkSourcePath()
+		if not File.exists?("build.gradle"); return; end
 		androidVersion = getAndroidVersionFromBuildGradle()
 		if androidVersion
 			currentPlatformDir = 'android-' + androidVersion
@@ -89,8 +81,8 @@ class PathResolver
 	def getExplodedAarClasses()
 		foundJars = []
 
-		if File.exists?("build")
-			Find.find("./build/") do |path|
+		if File.exists?(File.expand_path("./build/intermediates/exploded-aar"))
+			Find.find("./build/intermediates/exploded-aar/") do |path|
 				foundJars << path if path =~ /.*\.jar$/
 			end
 		end
