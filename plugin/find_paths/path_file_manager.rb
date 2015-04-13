@@ -2,25 +2,13 @@
 
 class PathFileManager
 
-	# Depricated. Delete when ready
-	def self.convertOutputResultToSources()
-		if File.exists?(ProjectControler::GRADLE_WRITE_FILE)
-			pathsString = IO.readlines(ProjectControler::GRADLE_WRITE_FILE)[0]
-			paths = pathsString.split(':')
-
-			appendPathsToSources(paths)
-
-			File.delete(ProjectControler::GRADLE_WRITE_FILE)
-		end
-	end
-
-	def self.appendPathsToSources(paths)
+	def self.writeOutPaths(paths)
 		appending = false
 		if File.exists?(ProjectControler::LIBRARY_PATHS_FILE)
 			appending = true
 			definedPaths = IO.readlines(ProjectControler::LIBRARY_PATHS_FILE)
 
-			removeDuplicatePathEntries(paths, definedPaths)
+			removeDefinedPathsFromList(paths, definedPaths)
 		end
 
 		reformatRawPaths(paths)
@@ -33,7 +21,19 @@ class PathFileManager
 		}
 	end
 
-	def self.getPathsFromSourcesFileWithPreceidingChar(preceidingChar)
+	def self.removeDefinedPathsFromList(source, duplicates)
+		final = source
+
+		duplicates.each { |duplicate|
+			final.reject! do |path|
+				duplicate =~ /.*#{escape_characters_in_string(path)}/
+			end
+		}
+
+		return final
+	end
+
+	def self.retrievePathsWithPreceidingChar(preceidingChar)
 		list = []
 
 		if File.file?(ProjectControler::LIBRARY_PATHS_FILE)
@@ -61,18 +61,6 @@ class PathFileManager
 			path.prepend "+ "
 			path.concat "\n"
 		}
-	end
-
-	def self.removeDuplicatePathEntries(source, duplicates)
-		final = source
-
-		duplicates.each { |duplicate|
-			final.reject! do |path|
-				duplicate =~ /.*#{escape_characters_in_string(path)}/
-			end
-		}
-
-		return final
 	end
 
 	# Thanks http://stackoverflow.com/a/21397142/3968618

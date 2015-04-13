@@ -41,7 +41,7 @@ class TestConfigurator < Minitest::Test
 
 		@configurator.updatePathFile()
 
-		paths = PathFileManager.getPathsFromSourcesFileWithPreceidingChar('+')
+		paths = PathFileManager.retrievePathsWithPreceidingChar('+')
 		assert paths.include?("./src/main/java"), "Should include static paths"
 		assert paths.include?( @android_home_value+"/platforms/android-19/android.jar" ), "Should include dynamic paths"
 		assert paths.include?( "path/b" ), "Should include Gradle dependency paths"

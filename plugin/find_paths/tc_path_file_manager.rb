@@ -15,18 +15,18 @@ class PathFileManagerTest < Minitest::Test
 	end
 
 
-	def test_removeDuplicatePathEntries()
-		result = PathFileManager.removeDuplicatePathEntries(["path/a", "path/b", "path/c", "path/d"], ["- path/b", "+ path/c"])
+	def test_removeDefinedPathsFromList()
+		result = PathFileManager.removeDefinedPathsFromList(["path/a", "path/b", "path/c", "path/d"], ["- path/b", "+ path/c"])
 
 		assert_equal 2, result.size
 		assert_equal "path/a", result[0]
 		assert_equal "path/d", result[1]
 	end
 
-	def test_appendPathsToSources_shouldWriteNew()
+	def test_writeOutPaths_shouldWriteNew()
 		paths = ["path/a", "path/b", "path/c"]
 
-		PathFileManager.appendPathsToSources(paths)
+		PathFileManager.writeOutPaths(paths)
 
 		assert File.exists?(ProjectControler::LIBRARY_PATHS_FILE)
 		expected = [
@@ -38,11 +38,11 @@ class PathFileManagerTest < Minitest::Test
 		File.delete(ProjectControler::LIBRARY_PATHS_FILE)
 	end
 
-	def test_appendPathsToSources_shouldNotRewriteDuplicats()
+	def test_writeOutPaths_shouldNotRewriteDuplicats()
 		@testTools.createTestFileWithContent(ProjectControler::LIBRARY_PATHS_FILE, "+ path/a\n- path/b")
 		paths = ["path/a", "path/b", "path/c"]
 
-		PathFileManager.appendPathsToSources(paths)
+		PathFileManager.writeOutPaths(paths)
 
 		expected = [
 			"+ path/a\n",
@@ -56,9 +56,9 @@ class PathFileManagerTest < Minitest::Test
 	def test_getPathsFromSourcesFileWithPreceiding
 		@testTools.buildTestSourcesFile()
 
-		resultPlus      = PathFileManager.getPathsFromSourcesFileWithPreceidingChar('+');
-		resultMinus     = PathFileManager.getPathsFromSourcesFileWithPreceidingChar('-');
-		resultSyntastic = PathFileManager.getPathsFromSourcesFileWithPreceidingChar('s');
+		resultPlus      = PathFileManager.retrievePathsWithPreceidingChar('+');
+		resultMinus     = PathFileManager.retrievePathsWithPreceidingChar('-');
+		resultSyntastic = PathFileManager.retrievePathsWithPreceidingChar('s');
 
 		assert_equal(1, resultPlus.size)
 		assert_equal(1, resultMinus.size)

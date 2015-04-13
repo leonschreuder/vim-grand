@@ -37,16 +37,16 @@ class Configurator
 
 	def setupJavacomplete()
 		paths = []
-		paths += PathFileManager.getPathsFromSourcesFileWithPreceidingChar('+')
-		paths += PathFileManager.getPathsFromSourcesFileWithPreceidingChar('c')
+		paths += PathFileManager.retrievePathsWithPreceidingChar('+')
+		paths += PathFileManager.retrievePathsWithPreceidingChar('c')
 
 		callJavacompleteMethodWithPaths('SetClassPath', paths)
 	end
 
 	def setupSyntastic()
 		paths = []
-		paths += PathFileManager.getPathsFromSourcesFileWithPreceidingChar('+')
-		paths += PathFileManager.getPathsFromSourcesFileWithPreceidingChar('s')
+		paths += PathFileManager.retrievePathsWithPreceidingChar('+')
+		paths += PathFileManager.retrievePathsWithPreceidingChar('s')
 
 		VIM.command("let g:syntastic_java_javac_classpath = '#{ paths.join(':') }'")
 	end
@@ -55,7 +55,7 @@ class Configurator
 		paths  = @pathResolver.getStaticPaths()
 		paths += @pathResolver.getDynamicPaths()
 		paths += @pathResolver.loadGradleDependencyPaths()
-		PathFileManager.appendPathsToSources(paths)
+		PathFileManager.writeOutPaths(paths)
 	end
 
 
