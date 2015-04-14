@@ -1,4 +1,6 @@
+
 require_relative "find_paths/path_resolver"
+require_relative "find_paths/path_file_manager"
 
 class Configurator
 

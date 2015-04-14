@@ -21,11 +21,51 @@ class TestTestTools < Minitest::Test
 	end
 
 	def test_createTestFile()
-		testFileName = 'test_createTestFile'
+		workingDirFile = 'test_createTestFile'
+		subdirFile  = "someDir/test_createTestFile"
+		subdir  = "someDir/testcreateTestFile/"
 
-		@testTools.createTestFile(testFileName)
+		@testTools.createTestFile(workingDirFile)
+		@testTools.createTestFile(subdirFile)
+		@testTools.createTestFile(subdir)
 
-		assert File.exists?(testFileName)
+		assert File.exists?(workingDirFile)
+		assert File.exists?(subdirFile)
+		assert File.exists?(subdir)
+	end
+
+	def test_splitFile()
+		fileOnly = "test_createTestFile"
+		dir = "someDir/"
+		subdirFile  = "someDir/test_createTestFile"
+		subdir  = "someDir/test_createTestFile/"
+
+		
+		resultFileOnly  = @testTools.splitFile(fileOnly  )
+		resultDir       = @testTools.splitFile(dir       )
+		resultSubdirFile= @testTools.splitFile(subdirFile)
+		resultSubdir    = @testTools.splitFile(subdir    )
+
+		assert_equal [".", fileOnly], resultFileOnly
+		assert_equal ["./someDir", ""], resultDir
+		assert_equal ["./someDir", "test_createTestFile"], resultSubdirFile
+		assert_equal ["./someDir/test_createTestFile", ""], resultSubdir
+	end
+
+	def test_createTestFileWithContent()
+		file = 'test_createTestFileWithContent'
+		subdirFile  = "someDir/test_createTestFile.txt"
+		expected = [
+			"line1\n", 
+			"line2 ",
+		]
+
+		@testTools.createTestFileWithContent(file, "line1\nline2 ")
+		@testTools.createTestFileWithContent(subdirFile, "line1\nline2 ")
+
+		assert File.exists?(file)
+		assert File.exists?(subdirFile)
+		assert_equal expected, IO.readlines(file)
 	end
 
 	def test_createTestFileInPast()
@@ -35,19 +75,6 @@ class TestTestTools < Minitest::Test
 
 		assert File.exists?(testFileName), "File should have been created"
 		assert_equal (Time.now - 10).to_i, File.mtime(testFileName).to_i, "File should have specified timestamp"
-	end
-
-	def test_createTestFileWithContent()
-		file = 'test_createTestFileWithContent'
-		expected = [
-			"line1\n", 
-			"line2 ",
-		]
-
-		@testTools.createTestFileWithContent(file, "line1\nline2 ")
-
-		assert File.exists?(file)
-		assert_equal expected, IO.readlines(file)
 	end
 
 	def test_buildTestSourcesFile()
@@ -80,6 +107,7 @@ class TestTestTools < Minitest::Test
 		]
 		assert_equal expected, IO.readlines(ProjectControler::GRADLE_BUILD_FILE)
 	end
+
 
 
 	def test_removeTestFilesAndDirs()

@@ -1,7 +1,9 @@
 require "minitest/autorun"
 
+require_relative "../utils/test_tools"
 require_relative "../mock_kernel"
 require_relative "tags_handler"
+require_relative "../find_paths/path_resolver"
 
 class TestTagsHandler < Minitest::Test
 

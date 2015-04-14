@@ -3,34 +3,41 @@
 class PathFileManager
 
 	def self.writeOutPaths(paths)
-		appending = false
+		@paths = paths
+		@appending = false
+
+		purgePathsAlreadyInFile()
+		addPathImportSyntax()
+		writePathsToFile()
+	end
+
+	def self.purgePathsAlreadyInFile(paths = @paths)
 		if File.exists?(ProjectControler::LIBRARY_PATHS_FILE)
-			appending = true
-			definedPaths = IO.readlines(ProjectControler::LIBRARY_PATHS_FILE)
+			@appending = true
 
-			removeDefinedPathsFromList(paths, definedPaths)
+			linesInFile = IO.readlines(ProjectControler::LIBRARY_PATHS_FILE)
+			linesInFile.each { |line|
+				paths.reject! do |path|
+					line =~ /.*#{escape_characters_in_string(path)}/
+				end
+			}
+			return paths
 		end
+	end
 
-		reformatRawPaths(paths)
-
-		File.open(ProjectControler::LIBRARY_PATHS_FILE, 'a') { |file|
-			if appending
-				file.write("\n") # Start on a new line
-			end
-			file.write(paths.join)
+	def self.addPathImportSyntax(paths = @paths)
+		paths.each { |path|
+			path.prepend "+ "
 		}
 	end
 
-	def self.removeDefinedPathsFromList(source, duplicates)
-		final = source
-
-		duplicates.each { |duplicate|
-			final.reject! do |path|
-				duplicate =~ /.*#{escape_characters_in_string(path)}/
+	def self.writePathsToFile(paths = @paths)
+		File.open(ProjectControler::LIBRARY_PATHS_FILE, 'a') { |file|
+			if @appending
+				file.write("\n") # Start on a new line
 			end
+			file.write(paths.join("\n"))
 		}
-
-		return final
 	end
 
 	def self.retrievePathsWithPreceidingChar(preceidingChar)
@@ -54,13 +61,6 @@ class PathFileManager
 	def self.getPathFromLine(preceidingChar, line)
 		char = escape_characters_in_string(preceidingChar)
 		return line[/#{char}\s*(.*)$/,1]
-	end
-
-	def self.reformatRawPaths(paths)
-		paths.each { |path|
-			path.prepend "+ "
-			path.concat "\n"
-		}
 	end
 
 	# Thanks http://stackoverflow.com/a/21397142/3968618

@@ -2,6 +2,7 @@
 require "minitest/autorun"
 require_relative "../utils/test_tools"
 
+require_relative "../project_controler"
 require_relative "path_file_manager"
 
 class PathFileManagerTest < Minitest::Test
@@ -15,15 +16,7 @@ class PathFileManagerTest < Minitest::Test
 	end
 
 
-	def test_removeDefinedPathsFromList()
-		result = PathFileManager.removeDefinedPathsFromList(["path/a", "path/b", "path/c", "path/d"], ["- path/b", "+ path/c"])
-
-		assert_equal 2, result.size
-		assert_equal "path/a", result[0]
-		assert_equal "path/d", result[1]
-	end
-
-	def test_writeOutPaths_shouldWriteNew()
+	def test_writeOutPaths_shouldCreateFile()
 		paths = ["path/a", "path/b", "path/c"]
 
 		PathFileManager.writeOutPaths(paths)
@@ -32,13 +25,13 @@ class PathFileManagerTest < Minitest::Test
 		expected = [
 			"+ path/a\n",
 			"+ path/b\n",
-			"+ path/c\n",
+			"+ path/c",
 		]
-		assert_equal expected, IO.readlines(".gradle_sources")
-		File.delete(ProjectControler::LIBRARY_PATHS_FILE)
+		assert_equal expected, IO.readlines(ProjectControler::LIBRARY_PATHS_FILE)
+		@testTools.deleteFileIfExists(ProjectControler::LIBRARY_PATHS_FILE)
 	end
 
-	def test_writeOutPaths_shouldNotRewriteDuplicats()
+	def test_writeOutPaths_shouldNotRewritePathsInFile()
 		@testTools.createTestFileWithContent(ProjectControler::LIBRARY_PATHS_FILE, "+ path/a\n- path/b")
 		paths = ["path/a", "path/b", "path/c"]
 
@@ -47,13 +40,24 @@ class PathFileManagerTest < Minitest::Test
 		expected = [
 			"+ path/a\n",
 			"- path/b\n",
-			"+ path/c\n",
+			"+ path/c",
 		]
 		assert_equal expected, IO.readlines(ProjectControler::LIBRARY_PATHS_FILE)
 	end
 
+	def test_removeDefinedPathsFromList()
+		pathsToAdd = ["path/a", "path/b", "path/c", "path/d"]
+		@testTools.createTestFileWithContent(ProjectControler::LIBRARY_PATHS_FILE, "+ path/b\n- path/c")
 
-	def test_getPathsFromSourcesFileWithPreceiding
+		result = PathFileManager.purgePathsAlreadyInFile(pathsToAdd)
+
+		assert_equal 2, result.size
+		assert_equal "path/a", result[0]
+		assert_equal "path/d", result[1]
+	end
+
+
+	def test_retrievePathsWithPreceidingChar
 		@testTools.buildTestSourcesFile()
 
 		resultPlus      = PathFileManager.retrievePathsWithPreceidingChar('+');

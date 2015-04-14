@@ -1,5 +1,16 @@
 [![Build Status](https://travis-ci.org/meonlol/vim-grand.svg?branch=develop)](https://travis-ci.org/meonlol/vim-grand)
 
+TODO:
+- Major refactoring (project not clean)
+- Update README
+- Release v0.1
+
+v0.2
+- GradleInstall should also launch app
+- Better build output in quickfix
+	- build compiler? || custom ruby-script?
+
+
 ### ALPHA STATUS!
 
 It's working and looks pretty stable to me (I use it at work every day), but

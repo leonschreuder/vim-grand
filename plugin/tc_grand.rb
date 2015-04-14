@@ -3,6 +3,7 @@ require "minitest/autorun"
 require_relative "grand"
 require_relative "mock_vim"
 require_relative "mock_kernel"
+require_relative "utils/test_tools"
 
 class TestGrand < Minitest::Test
 	ANDROID_HOME_VALUE = "stub/android/home"
@@ -69,6 +70,7 @@ class TestGrand < Minitest::Test
 		commands = VIM.getCommand()
 		assert contains(commands, "javacomplete#SetClassPath")
 		assert contains(commands, "syntastic_java_javac_classpath")
+		@testTools.deleteFileIfExists(ProjectControler::LIBRARY_PATHS_FILE)
 	end
 
 	def contains(array, string)

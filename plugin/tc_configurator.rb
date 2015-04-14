@@ -4,6 +4,8 @@ require "minitest/autorun"
 require_relative "utils/test_tools"
 require_relative "configurator"
 require_relative "mock_vim"
+require_relative "project_controler"
+
 
 class TestConfigurator < Minitest::Test
 	def setup()
@@ -45,6 +47,7 @@ class TestConfigurator < Minitest::Test
 		assert paths.include?("./src/main/java"), "Should include static paths"
 		assert paths.include?( @android_home_value+"/platforms/android-19/android.jar" ), "Should include dynamic paths"
 		assert paths.include?( "path/b" ), "Should include Gradle dependency paths"
+		@testTools.deleteFileIfExists(ProjectControler::LIBRARY_PATHS_FILE)
 	end
 
 end

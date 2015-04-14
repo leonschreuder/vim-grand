@@ -1,3 +1,4 @@
+require_relative "../project_controler"
 
 class TestTools
 
@@ -8,20 +9,34 @@ class TestTools
 
 	def mkTestDirs(path)
 		@testDirs.push(path)
-		FileUtils.mkdir_p(path)
+		FileUtils.mkpath(path) if not File.exist?(path)
+		#FileUtils.mkdir_p(path)
 	end
 
 	def createTestFile(path)
 		@testFiles.push(path)
-		FileUtils.touch path
+		createTestFileWithContent(path, "")
 	end
 
 	def createTestFileWithContent(path, content)
 		@testFiles.push(path)
 
-		File.open(path, 'w') {|f|
-			f.write(content)
-		}
+		file = splitFile(path)
+
+		mkTestDirs(file[0])
+		if file[1] != ""
+			File.open(path, 'w') {|f|
+				f.write(content)
+			}
+		end
+	end
+
+	def splitFile(path)
+		sep = File::SEPARATOR
+		if not path.start_with?(sep)
+			path = "." + sep + path
+		end
+		path.split(/#{sep}(?!.*#{sep})/, -1)
 	end
 
 	def createTestFileInPast(path, timeInPast)
@@ -62,11 +77,15 @@ class TestTools
 
 	def removeTestFiles()
 		@testFiles.each do |file|
-			begin
-				File.delete(file)
-			rescue
-				#File already gone
-			end
+			deleteFileIfExists(file)
+		end
+	end
+
+	def deleteFileIfExists(file)
+		begin
+			File.delete(file)
+		rescue
+			#File already gone
 		end
 	end
 
