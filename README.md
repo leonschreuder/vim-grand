@@ -1,33 +1,40 @@
 [![Build Status](https://travis-ci.org/meonlol/vim-grand.svg?branch=develop)](https://travis-ci.org/meonlol/vim-grand)
 
+
+Vim-Grand - a Gradle Android plugin for the vim editor
+================================================================================
+
+This is a Vim plugin for Android development using Gradle as a build system,
+supporting Robolectric Unit Testing. It is based on the excellent
+[hsanson/vim-android](https://github.com/hsanson/vim-android) plugin, except
+that it is be written mostly in ruby, is unit tested, and is aimed at using it
+with the Gradle build system only. If you'd like to use ant/maven, or don't
+need unit-testing, maybe hsanson's plugin will do the trick.
+
+### Wait, wasn't this thing written in Python?
+
+Very observant my young padawan. Python, or my lack of good
+pythonic-techniques, frustrated me so much that I didn't want to do any work on
+the Plugin anymore. Being a good programmer, I avoided the necessary work
+completely by doing something more fun, which was trying out how it would work
+in ruby. I liked it so much, that I ended up porting the whole plugin.
+
+
 TODO:
+--------------------------------------------------------------------------------
 - Major refactoring (project not clean)
 - Update README
 - Release v0.1
 
 v0.2
+- add vimdocs
 - GradleInstall should also launch app
-- Better build output in quickfix
-	- build compiler? || custom ruby-script?
+- Integrated testing support with compiler-like output
+    - build using Dispatch
+    - parse test-result xml to build quickfix
 
 
-### ALPHA STATUS!
-
-It's working and looks pretty stable to me (I use it at work every day), but
-you will need to do some manual setup and don't expect a completely
-frustration-free experience yet either. But hey, you are trying to use vim for
-android development, so you must be extremely awesome and so I know you can
-take it!
-
-# Vim-Grand - a Gradle Android plugin for the vim editor
-
-This is a Vim plugin for Android development using Gradle as a build system,
-supporting Robolectric Unit Testing. It is based on the excellent
-[hsanson/vim-android](https://github.com/hsanson/vim-android) plugin, except
-that it is be written mostly in python, is unit tested, and is meant for Gradle
-only. If you'd like to use ant/maven, or don't need unit-testing, maybe his
-plugin will do the trick.
-
+\-------
 
 ## Setup
 
