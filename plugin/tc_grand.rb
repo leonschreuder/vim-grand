@@ -6,79 +6,78 @@ require_relative "mock_kernel"
 require_relative "utils/test_tools"
 
 class TestGrand < Minitest::Test
-	ANDROID_HOME_VALUE = "stub/android/home"
+    ANDROID_HOME_VALUE = "stub/android/home"
 
-	def setup()
-		VIM.reinit()
-		Kernel.reinit()
-		ENV['ANDROID_HOME'] = ANDROID_HOME_VALUE
-		@testTools = TestTools.new()
-		@grand = Grand.new()
-	end
+    def setup()
+        VIM.reinit()
+        Kernel.reinit()
+        ENV['ANDROID_HOME'] = ANDROID_HOME_VALUE
+        @testTools = TestTools.new()
+        @grand = Grand.new()
+    end
 
-	def teardown()
-		@testTools.removeTestFilesAndDirs()
-	end
-
-
-	def test_init_shouldAddSetupCommand()
-
-		assert_equal "command! GrandSetup :ruby Grand.new.executeCommand('Setup')", VIM.getCommand[0]
-	end
+    def teardown()
+        @testTools.removeTestFilesAndDirs()
+        @testTools.deleteFileIfExists(ProjectControler::PATH_FILE)
+    end
 
 
-	def test_addAllCommands_shouldAddCommands()
-		@grand.addAllCommands()
+    def test_init_shouldAddSetupCommand()
 
-		assert_equal "command! GrandTags :ruby Grand.new.executeCommand('Tags')", VIM.getCommand[-2]
-		assert_equal "command! GrandInstall :ruby Grand.new.executeCommand('Install')", VIM.getCommand[-1]
-	end
+        assert_equal "command! GrandSetup :ruby Grand.new.executeCommand('Setup')", VIM.getCommand[0]
+    end
 
-	def test_executeCommand_shouldCatchNonExistent()
 
-		out = capture_io do
-			@grand.executeCommand("something")
-		end
+    def test_addAllCommands()
+        @grand.addAllCommands()
 
-		assert_equal "Command 'something' not recognised.\n", out[0]
-	end
+        assert_equal "command! GrandTags :ruby Grand.new.executeCommand('Tags')", VIM.getCommand[-2]
+        assert_equal "command! GrandInstall :ruby Grand.new.executeCommand('Install')", VIM.getCommand[-1]
+    end
 
-	def test_executeCommand_withInstall()
-		@grand.executeCommand("Install")
+    def test_executeCommand_shouldCatchNonExistent()
+        out = capture_io do
+            @grand.executeCommand("something")
+        end
 
-		assert_equal("! gradle installDebug -q", VIM.getCommand()[-1])
-	end
+        assert_equal "Command 'something' not recognised.\n", out[0]
+    end
 
-	def test_executeCommand_withTags()
-		@testTools.createTestBuildFile()
+    def test_executeCommand_withInstall()
+        @grand.executeCommand("Install")
 
-		@grand.executeCommand("Tags")
+        assert_equal("! gradle installDebug -q", VIM.getCommand()[-1])
+    end
 
-		# TODO: The tagsHandler is not not checked
-		assert_equal 'silent! set tags+=.tags', VIM.getCommand()[-1]
-	end
+    def test_executeCommand_withTags()
+        @testTools.createTestBuildFile()
 
-	def test_executeCommand_withSetup()
-		@testTools.createTestBuildFile()
-		@testTools.mkTestDirs("./src/main/")
-		@testTools.createTestFile("./src/main/AndroidManifest.xml")
+        @grand.executeCommand("Tags")
 
-		@grand.executeCommand("Setup")
+        # TODO: The tagsHandler is not not checked
+        assert_equal 'silent! set tags+=.tags', VIM.getCommand()[-1]
+    end
 
-		assert File.exists?(ProjectControler::LIBRARY_PATHS_FILE)
+    def test_executeCommand_withSetup()
+        @testTools.createTestBuildFile()
+        @testTools.createTestFile("./src/main/AndroidManifest.xml")
 
-		commands = VIM.getCommand()
-		assert contains(commands, "javacomplete#SetClassPath")
-		assert contains(commands, "syntastic_java_javac_classpath")
-		@testTools.deleteFileIfExists(ProjectControler::LIBRARY_PATHS_FILE)
-	end
+        @grand.executeCommand("Setup")
 
-	def contains(array, string)
-		array.each { |command|
-			return true if command =~ /#{string}/
-		}
-		return false
-	end
+        assert File.exists?(ProjectControler::PATH_FILE)
 
+        commands = VIM.getCommand()
+        assert contains(commands, "javacomplete#SetClassPath")
+        assert contains(commands, "syntastic_java_javac_classpath")
+    end
+
+    # Helpers
+    #--------------------------------------------------------------------------------
+    def contains(array, string)
+        array.each { |command|
+            return true if command =~ /#{string}/
+        }
+        return false
+    end
 
 end

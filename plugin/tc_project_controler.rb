@@ -5,28 +5,29 @@ require_relative "project_controler"
 
 class TestProjectControler < Minitest::Test
 
-	def setup()
-		@testTools = TestTools.new()
-	end
+    def setup()
+        @testTools = TestTools.new()
+    end
 
-	def teardown()
-		@testTools.removeTestFilesAndDirs()
-	end
+    def teardown()
+        @testTools.removeTestFilesAndDirs()
+    end
 
-	def test_isGradleProject()
-		@testTools.createTestBuildFile()
+    def test_isGradleProject()
+        preResult = ProjectControler.isGradleProject()
+        @testTools.createTestBuildFile()
+        postResult = ProjectControler.isGradleProject()
 
-		result = ProjectControler.isGradleProject()
+        refute preResult, "Should returned false if no gradle file"
+        assert postResult, "Should returned true if gradle file exists"
+    end
 
-		assert result, "Should returned true"
-	end
+    def test_isAndroidProject()
+        preResult = ProjectControler.isAndroidProject()
+        @testTools.createTestFile("./src/main/AndroidManifest.xml")
+        postResult = ProjectControler.isAndroidProject()
 
-	def test_isAndroidProject()
-		@testTools.mkTestDirs("./src/main/")
-		@testTools.createTestFile("./src/main/AndroidManifest.xml")
-
-		result = ProjectControler.isAndroidProject()
-
-		assert result, "Should returned true"
-	end
+        refute preResult, "Should returned false if no Android manifest"
+        assert postResult, "Should returned true if Android manifest exists"
+    end
 end

@@ -52,15 +52,18 @@ class Grand
 		VIM.command('silent! set tags+=.tags')
 	end
 
+	#protected
 	def executeSetup()
 		#TODO: check $ANDROID_HOME is set
 		if ProjectControler.isGradleProject() and ProjectControler.isAndroidProject
 			configurator = Configurator.new()
 			configurator.updatePathFile()
+
 			configurator.setupJavacomplete()
 			configurator.setupSyntastic()
 
 			addAllCommands()
 		end
 	end
+
 end

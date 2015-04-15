@@ -36,7 +36,6 @@ class TestPathResolver < Minitest::Test
 
 	def test_getDynamicPaths()
 		@testTools.createTestBuildFile()
-		@testTools.mkTestDirs('./build/intermediates/exploded-aar/some_project/')
 		testFile1 = './build/intermediates/exploded-aar/fakeJar.jar'
 		testFile2 = './build/intermediates/exploded-aar/some_project/fakeJar2.jar'
 		@testTools.createTestFile(testFile1)
@@ -111,8 +110,6 @@ class TestPathResolver < Minitest::Test
 	end
 
 	def test_getExplodedAarClasses()
-		@testTools.mkTestDirs('./build/intermediates/exploded-aar/some_project/')
-		@testTools.mkTestDirs('./build/intermediates/pre-dexed/some_project/')
 		testFile1 = './build/intermediates/exploded-aar/fakeJar.jar'
 		testFile2 = './build/intermediates/exploded-aar/some_project/fakeJar2.jar'
 		testFile3 = './build/intermediates/pre-dexed/some_project/fakeJar3.jar'
@@ -128,7 +125,6 @@ class TestPathResolver < Minitest::Test
 	end
 
 	def test_getLatestApkFile_shouldCooseLatest()
-		@testTools.mkTestDirs('./build/apk/')
 		@testTools.createTestFileInPast( './build/apk/someNew.apk', 30)
 		@testTools.createTestFileInPast( './build/apk/someOld.apk', 60)
 

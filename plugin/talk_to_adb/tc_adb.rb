@@ -30,7 +30,6 @@ class TestAdb < Minitest::Test
 	end
 
 	def test_installLatestApk()
-		@testTools.mkTestDirs('./build/apk/')
 		apkPath = './build/apk/someNew.apk'
 		@testTools.createTestFileInPast( apkPath, 30)
 

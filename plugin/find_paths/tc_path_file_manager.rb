@@ -21,18 +21,18 @@ class PathFileManagerTest < Minitest::Test
 
 		PathFileManager.writeOutPaths(paths)
 
-		assert File.exists?(ProjectControler::LIBRARY_PATHS_FILE)
+		assert File.exists?(ProjectControler::PATH_FILE)
 		expected = [
 			"+ path/a\n",
 			"+ path/b\n",
 			"+ path/c",
 		]
-		assert_equal expected, IO.readlines(ProjectControler::LIBRARY_PATHS_FILE)
-		@testTools.deleteFileIfExists(ProjectControler::LIBRARY_PATHS_FILE)
+		assert_equal expected, IO.readlines(ProjectControler::PATH_FILE)
+		@testTools.deleteFileIfExists(ProjectControler::PATH_FILE)
 	end
 
 	def test_writeOutPaths_shouldNotRewritePathsInFile()
-		@testTools.createTestFileWithContent(ProjectControler::LIBRARY_PATHS_FILE, "+ path/a\n- path/b")
+		@testTools.createTestFileWithContent(ProjectControler::PATH_FILE, "+ path/a\n- path/b")
 		paths = ["path/a", "path/b", "path/c"]
 
 		PathFileManager.writeOutPaths(paths)
@@ -42,12 +42,12 @@ class PathFileManagerTest < Minitest::Test
 			"- path/b\n",
 			"+ path/c",
 		]
-		assert_equal expected, IO.readlines(ProjectControler::LIBRARY_PATHS_FILE)
+		assert_equal expected, IO.readlines(ProjectControler::PATH_FILE)
 	end
 
 	def test_removeDefinedPathsFromList()
 		pathsToAdd = ["path/a", "path/b", "path/c", "path/d"]
-		@testTools.createTestFileWithContent(ProjectControler::LIBRARY_PATHS_FILE, "+ path/b\n- path/c")
+		@testTools.createTestFileWithContent(ProjectControler::PATH_FILE, "+ path/b\n- path/c")
 
 		result = PathFileManager.purgePathsAlreadyInFile(pathsToAdd)
 
@@ -58,7 +58,13 @@ class PathFileManagerTest < Minitest::Test
 
 
 	def test_retrievePathsWithPreceidingChar
-		@testTools.buildTestSourcesFile()
+		content = [
+			"+ /path/plus\n",
+			"- /path/minus\n",
+			"s /path/syntastic\n",
+			"c /path/completion"
+		]
+		@testTools.createTestFileWithContent(ProjectControler::PATH_FILE, content.join)
 
 		resultPlus      = PathFileManager.retrievePathsWithPreceidingChar('+');
 		resultMinus     = PathFileManager.retrievePathsWithPreceidingChar('-');

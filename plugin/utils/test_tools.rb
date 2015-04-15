@@ -2,113 +2,107 @@ require_relative "../project_controler"
 
 class TestTools
 
-	def initialize()
-		@testFiles = []
-		@testDirs = []
-	end
+    def initialize()
+        @testFiles = []
+        @testDirs = []
+    end
 
-	def mkTestDirs(path)
-		@testDirs.push(path)
-		FileUtils.mkpath(path) if not File.exist?(path)
-		#FileUtils.mkdir_p(path)
-	end
+    # public
+    def createTestFileWithContent(path, content)
+        @testFiles.push(path)
 
-	def createTestFile(path)
-		@testFiles.push(path)
-		createTestFileWithContent(path, "")
-	end
+        file = splitFile(path)
 
-	def createTestFileWithContent(path, content)
-		@testFiles.push(path)
+        mkTestDirs(file[0])
+        if file[1] != ""
+            File.open(path, 'w') {|f|
+                f.write(content)
+            }
+        end
+    end
 
-		file = splitFile(path)
+    # public
+    def mkTestDirs(path)
+        @testDirs.push(path)
+        FileUtils.mkpath(path) if not File.exist?(path)
+    end
 
-		mkTestDirs(file[0])
-		if file[1] != ""
-			File.open(path, 'w') {|f|
-				f.write(content)
-			}
-		end
-	end
+    # public
+    def createTestFile(path)
+        @testFiles.push(path)
+        createTestFileWithContent(path, "")
+    end
 
-	def splitFile(path)
-		sep = File::SEPARATOR
-		if not path.start_with?(sep)
-			path = "." + sep + path
-		end
-		path.split(/#{sep}(?!.*#{sep})/, -1)
-	end
+    # private
+    def splitFile(path)
+        sep = File::SEPARATOR
+        if not path.start_with?(sep)
+            path = "." + sep + path
+        end
+        path.split(/#{sep}(?!.*#{sep})/, -1)
+    end
 
-	def createTestFileInPast(path, timeInPast)
-		@testFiles.push(path)
-		FileUtils.touch path, :mtime => Time.now - timeInPast
-	end
+    # public
+    def createTestFileInPast(path, timeInPast)
+        createTestFile(path)
+        FileUtils.touch path, :mtime => Time.now - timeInPast
+    end
 
+    # public
+    def createTestBuildFile()
+        content = [
+            "    }\n",
+            "    compileSdkVersion 19\n",
+            "    buildToolsVersion \"19.1.0\"\n",
+            "\n",
+            "    defaultConfig {\n"
+        ]
 
-	def buildTestSourcesFile
-		content = [
-			"+ /path/plus\n",
-			"- /path/minus\n",
-			"s /path/syntastic\n",
-			"c /path/completion"
-		]
-
-		createTestFileWithContent(ProjectControler::LIBRARY_PATHS_FILE, content.join)
-	end
-
-	def createTestBuildFile()
-		content = [
-			"	 }\n",
-			"	 compileSdkVersion 19\n",
-			"	 buildToolsVersion \"19.1.0\"\n",
-			"\n",
-			"	 defaultConfig {\n"
-		]
-
-		createTestFileWithContent(ProjectControler::GRADLE_BUILD_FILE, content.join)
-	end
+        createTestFileWithContent(ProjectControler::GRADLE_BUILD_FILE, content.join)
+    end
 
 
-	# Removing
-	def removeTestFilesAndDirs()
-		removeTestFiles()
-		removeTestDirs()
-	end
+    # Removing
+    #--------------------------------------------------------------------------------
+    def removeTestFilesAndDirs()
+        removeTestFiles()
+        removeTestDirs()
+    end
 
-	def removeTestFiles()
-		@testFiles.each do |file|
-			deleteFileIfExists(file)
-		end
-	end
+    def removeTestFiles()
+        @testFiles.each do |file|
+            deleteFileIfExists(file)
+        end
+    end
 
-	def deleteFileIfExists(file)
-		begin
-			File.delete(file)
-		rescue
-			#File already gone
-		end
-	end
+    def deleteFileIfExists(file)
+        begin
+            File.delete(file)
+        rescue
+            #File already gone
+        end
+    end
 
-	def removeTestDirs()
-		# This removes all created (sub)dirs (now empty) in the specified path
-		@testDirs.each do |testDir|
-			folderArray = testDir.split(File::SEPARATOR)
+    def removeTestDirs()
+        # This removes all created (sub)dirs (now empty) in the specified path
+        @testDirs.each do |testDir|
+            folderArray = testDir.split(File::SEPARATOR)
 
-			indexes = (0 .. folderArray.length-1)
-			indexes.reverse_each do |i|
-				currentDir = File.join(folderArray[0,i+1])
+            indexes = (0 .. folderArray.length-1)
+            indexes.reverse_each do |i|
+                currentDir = File.join(folderArray[0,i+1])
 
-				rmdirWhenEmpty(currentDir)
-			end
-		end
-	end
+                rmdirWhenEmpty(currentDir)
+            end
+        end
+    end
 
-	def rmdirWhenEmpty(dir)
-		begin
-			Dir.rmdir(dir)
-		rescue
-			# Dir non empty. Just ignore.
-		end
-	end
+    def rmdirWhenEmpty(dir)
+        begin
+            Dir.rmdir(dir)
+        rescue
+            # Dir non empty. Just ignore.
+        end
+    end
 
 end

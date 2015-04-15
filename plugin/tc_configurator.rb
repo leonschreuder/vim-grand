@@ -22,7 +22,7 @@ class TestConfigurator < Minitest::Test
 
 
 	def test_setupJavacomplete()
-		@testTools.createTestFileWithContent(ProjectControler::LIBRARY_PATHS_FILE, "+ path1\nc path2")
+		@testTools.createTestFileWithContent(ProjectControler::PATH_FILE, "+ path1\nc path2")
 
 		@configurator.setupJavacomplete()
 
@@ -30,7 +30,7 @@ class TestConfigurator < Minitest::Test
 	end
 
 	def test_setupSyntastic()
-		@testTools.createTestFileWithContent(ProjectControler::LIBRARY_PATHS_FILE, "+ path1\ns path2")
+		@testTools.createTestFileWithContent(ProjectControler::PATH_FILE, "+ path1\ns path2")
 
 		@configurator.setupSyntastic()
 
@@ -47,7 +47,7 @@ class TestConfigurator < Minitest::Test
 		assert paths.include?("./src/main/java"), "Should include static paths"
 		assert paths.include?( @android_home_value+"/platforms/android-19/android.jar" ), "Should include dynamic paths"
 		assert paths.include?( "path/b" ), "Should include Gradle dependency paths"
-		@testTools.deleteFileIfExists(ProjectControler::LIBRARY_PATHS_FILE)
+		@testTools.deleteFileIfExists(ProjectControler::PATH_FILE)
 	end
 
 end
