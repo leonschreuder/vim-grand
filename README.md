@@ -7,7 +7,7 @@ Vim-Grand - a Gradle Android plugin for the vim editor
 This is a Vim plugin for Android development using Gradle as a build system,
 supporting Robolectric Unit Testing. It is based on the excellent
 [hsanson/vim-android](https://github.com/hsanson/vim-android) plugin, except
-that it is be written mostly in ruby, is unit tested, and exclusively supports
+that it is written mostly in ruby, is unit tested, and exclusively supports
 the Gradle build system. If you'd like to use ant/maven, or don't need
 unit-testing, maybe hsanson's plugin will do the trick.
 
@@ -18,7 +18,7 @@ BREAKING CHANGES!
 Since I've completely rewritten the plugin, things might inexplicably stop
 to work. Here's what I've changed:
 
-- The plugin is now written in ruby in stead of python (liked it better).
+- The plugin is now written in ruby instead of python (liked it better).
 - Calling `gradle ouputPaths` now writes to a different output file.
 - The plugin now creates and uses a central import-paths file that you can
   manually customize.
@@ -30,12 +30,12 @@ Requirements
 - Ruby 1.9.3+
 - Android SDK installed with the $ANDROID_HOME environment variable set.
 - Gradle 2.0+ (?) or a gradle wrapper in the project.
-- exuberant-ctags for the `GrandTags` command.
+- [exuberant-ctags](http://ctags.sourceforge.net/) for the `GrandTags` command.
 - [scrooloose/syntastic](https://github.com/scrooloose/syntastic) for syntax
   checking.
 - [meonlol/javacomplete](https://github.com/meonlol/javacomplete) For code
-  completion. My fork might litter your :messages window, but at least it
-  works.
+  completion. My fork might still litter your :messages window a bit, but at
+  least it works.
 
 ### Recommended
 
@@ -71,12 +71,12 @@ Copy and past into the terminal:
 TODO:
 --------------------------------------------------------------------------------
 
-- [ ] Major refactoring (project not clean)
 - [ ] Update README
 - [ ] Release v0.1
 
 For v0.2
 
+- [ ] Some refactoring (project not clean)
 - [ ] add vimdocs
 - [ ] GradleInstall should also launch app
 - [ ] Integrated testing with jumpable test results
@@ -92,7 +92,7 @@ When used in combination with the `grand.gradle` script, all paths defined in
 your build.gradle will also be used for autocompletion and syntax checking.  
 *:GrandTags* Generates a tags file in the background using exuberant-ctags.
 This way you can jump to classes (even Androids source files) simply by
-presseing `CTRL-]`.  
+pressing `CTRL-]`.  
 *:GrandInstall* Installs your project on all connected devices (you'll still
 have to manually start the app. It's in the TODO list).
 
@@ -113,13 +113,13 @@ apply from: 'https://raw.githubusercontent.com/meonlol/vim-grand/refactor/grand.
 
 When you now call `./gradlew outputPaths` on the commandline, a text file is
 generated containing gradle's paths. Every time `GrandSetup` is called, this
-file is parced for new paths. So if you change a dependency in build.gradle
+file is parsed for new paths. So if you change a dependency in build.gradle
 run the 'outputPaths' command again and vim-grand will know about it.
 
-### Customise paths
+### Customize paths
 
 If javacomplete gets slow, it might have to many paths to search. Open the
-`.grand_source_paths` file and customise what paths are to be used where,
+`.grand_source_paths` file and customize what paths are to be used where,
 according to the following rules:
 
     - some/path       # Path is ignored
@@ -149,21 +149,22 @@ autocmd FileType java nnoremap <leader>ua :w<bar>Dispatch gradle test -q<CR>
 
 ### Output formatting
 
-The formatting of the test results is realy poor.  I'll try and improve this
-soon, but in the mean time, you can use [this
-gist](https://gist.github.com/meonlol/c5e84ca21a768fd76a7d) gist to make it 
-look exceptable now.
+The formatting of the gradles test output is really messy. I'll try and improve
+this soon, but in the mean time, you can use [this
+gist](https://gist.github.com/meonlol/c5e84ca21a768fd76a7d) to make it
+look acceptable.
 
 ### Running one test
 
 Don't want to run all the tests every time? The robolectric plugin does not
 support that yet. You can add [this little
 gist](https://gist.github.com/meonlol/3f222f8687073c46cd64) to your
-build.gradle under `robolectric {}`. Then you can now call `gradle test -q
--Dclasses=AwesomeTestClass` from the commandline, or you could use this mapping from vim:
+build.gradle under `robolectric {}`. Then you can call `gradle test -q
+-Dclasses=AwesomeTestClass` from the commandline, or you could use this mapping
+from vim:
 
 ```VimL
-"This runs the robolectric test for the current buffer
+"This runs the robolectric test for the current buffer with <leader>uc
 autocmd FileType java nnoremap <leader>uc :w<bar>Dispatch gradle test -q -Dclasses=%:t:r<CR>
 ```
 
@@ -174,13 +175,9 @@ Please do! You know the drill. Just
 [issue](https://github.com/meonlol/vim-grand/issues) and
 [pull](https://github.com/meonlol/vim-grand/pulls).
 
-By the way, the javacomplete paths importing could still use some tryout and
-tweaking. Hint, Hint. Wink, wink. \**Points to you, points to class*\*.
-
 License
 --------------------------------------------------------------------------------
 
 Copyright (c) Leon Moll. Distributed under the same terms as Vim itself.
 See `:help license`.
-
 
