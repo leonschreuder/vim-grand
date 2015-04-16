@@ -22,7 +22,7 @@ to work. Here's what's changed:
 - The plugin is now written in ruby in stead of python (liked it better).
 - Calling `gradle ouputPaths` now writes to a different output file.
 - The plugin now creates and uses a central import-paths file that you can
-  manually customise.
+  manually customize.
 
 
 Requirements
@@ -40,7 +40,7 @@ Requirements
 Installation
 --------------------------------------------------------------------------------
 
-If you don't use one already, install a package mangeger plugin like Pathogen
+If you don't use one already, install a package manager plugin like Pathogen
 or Vundle. It makes installing as simple as:
 
 _Vundle:_
@@ -61,16 +61,18 @@ Copy and past into the terminal:
 
 TODO:
 --------------------------------------------------------------------------------
-[ ] Major refactoring (project not clean)
-[ ] Update README
-[ ] Release v0.1
 
-v0.2
-[ ] add vimdocs
-[ ] GradleInstall should also launch app
-[ ] Integrated testing support with compiler-like output
-    [ ] build using Dispatch
-    [ ] parse test-result xml to build quickfix
+- [ ] Major refactoring (project not clean)
+- [ ] Update README
+- [ ] Release v0.1
+
+For v0.2
+
+- [ ] add vimdocs
+- [ ] GradleInstall should also launch app
+- [ ] Integrated testing support with compiler-like output
+    - [ ] build using Dispatch
+    - [ ] parse test-result xml to build quickfix
 
 
 \-------
