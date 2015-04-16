@@ -68,22 +68,6 @@ Copy and past into the terminal:
 
 
 
-TODO:
---------------------------------------------------------------------------------
-
-- [ ] Update README
-- [ ] Release v0.1
-
-For v0.2
-
-- [ ] Some refactoring (project not clean)
-- [ ] add vimdocs
-- [ ] GradleInstall should also launch app
-- [ ] Integrated testing with jumpable test results
-    - [ ] build using Dispatch
-    - [ ] parse test-result xml to build quickfix
-
-
 Features
 --------------------------------------------------------------------------------
 
@@ -133,28 +117,28 @@ Additional setup for a pleasant experience
 
 These tweaks and mappings for in you .vimrc will make you happy.
 
-### Update tags on save
+#### Update tags on save
 
 ```VimL
 "Run GrandCtags command every time you save a java file
 autocmd BufWritePost *.java silent! GrandCtags
 ```
 
-### Run tests using vim-dispatch
+#### Run tests using vim-dispatch
 
 ```VimL
 "Use vim-dispatch to run gradleTest when you press <leader>ua
 autocmd FileType java nnoremap <leader>ua :w<bar>Dispatch gradle test -q<CR>
 ```
 
-### Output formatting
+#### Output formatting
 
 The formatting of the gradles test output is really messy. I'll try and improve
 this soon, but in the mean time, you can use [this
 gist](https://gist.github.com/meonlol/c5e84ca21a768fd76a7d) to make it
 look acceptable.
 
-### Running one test
+#### Running one test
 
 Don't want to run all the tests every time? The robolectric plugin does not
 support that yet. You can add [this little
@@ -167,6 +151,17 @@ from vim:
 "This runs the robolectric test for the current buffer with <leader>uc
 autocmd FileType java nnoremap <leader>uc :w<bar>Dispatch gradle test -q -Dclasses=%:t:r<CR>
 ```
+
+
+TODO:
+--------------------------------------------------------------------------------
+
+- [ ] Some refactoring (project not clean)
+- [ ] add vimdocs
+- [ ] GradleInstall should also launch app
+- [ ] Integrated testing with jumpable test results
+    - [ ] build using Dispatch
+    - [ ] parse test-result xml to build quickfix
 
 Contributing
 --------------------------------------------------------------------------------
