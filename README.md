@@ -11,45 +11,72 @@ that it is be written mostly in ruby, is unit tested, and is aimed at using it
 with the Gradle build system only. If you'd like to use ant/maven, or don't
 need unit-testing, maybe hsanson's plugin will do the trick.
 
-### Wait, wasn't this thing written in Python?
 
-Very observant my young padawan. Python, or my lack of good
-pythonic-techniques, frustrated me so much that I didn't want to do any work on
-the Plugin anymore. Being a good programmer, I avoided the necessary work
-completely by doing something more fun, which was trying out how it would work
-in ruby. I liked it so much, that I ended up porting the whole plugin.
+BREAKING CHANGES!
+--------------------------------------------------------------------------------
+
+This plugin is still pre-1.0, so you might expect I will shuffle stuff around.
+But since I've completely rewritten the plugin things might inexplicably stop
+to work. Here's what's changed:
+
+- The plugin is now written in ruby in stead of python (liked it better).
+- Calling `gradle ouputPaths` now writes to a different output file.
+- The plugin now creates and uses a central import-paths file that you can
+  manually customise.
+
+
+Requirements
+--------------------------------------------------------------------------------
+
+- Ruby 1.9.3+
+- Android SDK with the $ANDROID_HOME environment variable set.
+- Gradle 2.0+ (?) or a gradle wrapper in the project
+- exuberant-ctags for the `GrandTags` command
+- the javacomplete plugin
+
+<!--TODO: Link to appropriate repos-->
+
+
+Installation
+--------------------------------------------------------------------------------
+
+If you don't use one already, install a package mangeger plugin like Pathogen
+or Vundle. It makes installing as simple as:
+
+_Vundle:_
+
+1. Add the line `Plugin 'hsanson/vim-android'` to your .vimrc
+2. Call `:so %` on the updated .vimrc to reload it.
+3. Run `:PluginInstall` to let vundle install it for you.
+
+_Pathogen:_
+
+Copy and past into the terminal:
+
+    cd ~/.vim/bundle
+    git clone git://github.com/tpope/vim-fugitive.git
+    vim -u NONE -c "helptags vim-fugitive/doc" -c q
+
 
 
 TODO:
 --------------------------------------------------------------------------------
-- Major refactoring (project not clean)
-- Update README
-- Release v0.1
+[ ] Major refactoring (project not clean)
+[ ] Update README
+[ ] Release v0.1
 
 v0.2
-- add vimdocs
-- GradleInstall should also launch app
-- Integrated testing support with compiler-like output
-    - build using Dispatch
-    - parse test-result xml to build quickfix
+[ ] add vimdocs
+[ ] GradleInstall should also launch app
+[ ] Integrated testing support with compiler-like output
+    [ ] build using Dispatch
+    [ ] parse test-result xml to build quickfix
 
 
 \-------
 
-## Setup
-
-This is the setup I have tested with. Please let me know if it's working on
-your platform.
-
-- Mac osX 10.6 and 10.9.
-- Vim 7.4 (latest version) but since most of the difficult stuff happens in
-  python, vim is probably not going to be to picky.
-- Exuberant Ctags 5.8
-- Python 2.7.8 (latest version) Note: python 3 untested (will probably fail
-  miserably)
-
-
-## Features
+Features
+--------------------------------------------------------------------------------
 
 - Setting up Syntastic and javacomplete when you `:GrandSetup`.
 - Generates a tags file in the background with the `:GrandTags` command.
@@ -58,7 +85,8 @@ your platform.
 
 (Got ideas? [Tell me!](https://github.com/meonlol/vim-grand/issues))
 
-## Requirements
+Requirements
+--------------------------------------------------------------------------------
 
 - [Syntastic](https://github.com/scrooloose/syntastic) for syntax checking.
 - [Javacomplete](https://github.com/vim-scripts/javacomplete) for code completion.
@@ -71,7 +99,8 @@ your platform.
   run the appropriate commands through it, so vim doesn't get blocked.
 
 
-##Installation
+Installation
+--------------------------------------------------------------------------------
 
 1. Setup an Android project with Robolectric.  
    I use [deckard-gradle](https://github.com/robolectric/deckard-gradle) as a
@@ -102,7 +131,8 @@ your platform.
    open a java file, it does the same thing.
 
 
-## Additional setup for a pleasant experience
+Additional setup for a pleasant experience
+--------------------------------------------------------------------------------
 
 These tweaks and mappings will make you happy.
 
@@ -168,7 +198,8 @@ will run the test class in the current buffer.
 autocmd FileType java nnoremap <leader>uc :w<bar>Dispatch gradle test -q -Dclasses=%:t:r<CR>
 ```
 
-## Contributing
+Contributing
+--------------------------------------------------------------------------------
 
 Please do! You know the drill. Just
 [issue](https://github.com/meonlol/vim-grand/issues) and
@@ -177,7 +208,8 @@ Please do! You know the drill. Just
 By the way, the javacomplete paths importing could still use some tryout and
 tweaking. Hint, Hint. Wink, wink. \**Points to you, points to class*\*.
 
-## License
+License
+--------------------------------------------------------------------------------
 
 Copyright (c) Leon Moll.  Distributed under the same terms as Vim itself.
 See `:help license`.
