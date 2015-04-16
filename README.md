@@ -7,17 +7,16 @@ Vim-Grand - a Gradle Android plugin for the vim editor
 This is a Vim plugin for Android development using Gradle as a build system,
 supporting Robolectric Unit Testing. It is based on the excellent
 [hsanson/vim-android](https://github.com/hsanson/vim-android) plugin, except
-that it is be written mostly in ruby, is unit tested, and is aimed at using it
-with the Gradle build system only. If you'd like to use ant/maven, or don't
-need unit-testing, maybe hsanson's plugin will do the trick.
+that it is be written mostly in ruby, is unit tested, and exclusively supports
+the Gradle build system. If you'd like to use ant/maven, or don't need
+unit-testing, maybe hsanson's plugin will do the trick.
 
 
 BREAKING CHANGES!
 --------------------------------------------------------------------------------
 
-This plugin is still pre-1.0, so you might expect I will shuffle stuff around.
-But since I've completely rewritten the plugin things might inexplicably stop
-to work. Here's what's changed:
+Since I've completely rewritten the plugin, things might inexplicably stop
+to work. Here's what I've changed:
 
 - The plugin is now written in ruby in stead of python (liked it better).
 - Calling `gradle ouputPaths` now writes to a different output file.
@@ -29,12 +28,22 @@ Requirements
 --------------------------------------------------------------------------------
 
 - Ruby 1.9.3+
-- Android SDK with the $ANDROID_HOME environment variable set.
-- Gradle 2.0+ (?) or a gradle wrapper in the project
-- exuberant-ctags for the `GrandTags` command
-- the javacomplete plugin
+- Android SDK installed with the $ANDROID_HOME environment variable set.
+- Gradle 2.0+ (?) or a gradle wrapper in the project.
+- exuberant-ctags for the `GrandTags` command.
+- [scrooloose/syntastic](https://github.com/scrooloose/syntastic) for syntax
+  checking.
+- [meonlol/javacomplete](https://github.com/meonlol/javacomplete) For code
+  completion. My fork might litter your :messages window, but at least it
+  works.
 
-<!--TODO: Link to appropriate repos-->
+### Recommended
+
+- [Tim Pope's Dispatch](https://github.com/tpope/vim-dispatch) vim-grand will
+  run the appropriate commands through it, so vim doesn't get blocked. Highly
+  recommended.
+- [YouCompleteMe](https://github.com/Valloric/YouCompleteMe) for managing
+  additional autocompletion features.
 
 
 Installation
@@ -70,73 +79,59 @@ For v0.2
 
 - [ ] add vimdocs
 - [ ] GradleInstall should also launch app
-- [ ] Integrated testing support with compiler-like output
+- [ ] Integrated testing with jumpable test results
     - [ ] build using Dispatch
     - [ ] parse test-result xml to build quickfix
 
 
-\-------
-
 Features
 --------------------------------------------------------------------------------
 
-- Setting up Syntastic and javacomplete when you `:GrandSetup`.
-- Generates a tags file in the background with the `:GrandTags` command.
-- Installing to connected devices with the `:GrandInstall` command (you'll have
-  to manually start the app, will probably fix that one soon).
+*:GrandSetup* Sets up all the project paths for javacomplete and syntastic.
+When used in combination with the `grand.gradle` script, all paths defined in
+your build.gradle will also be used for autocompletion and syntax checking.  
+*:GrandTags* Generates a tags file in the background using exuberant-ctags.
+This way you can jump to classes (even Androids source files) simply by
+presseing `CTRL-]`.  
+*:GrandInstall* Installs your project on all connected devices (you'll still
+have to manually start the app. It's in the TODO list).
 
 (Got ideas? [Tell me!](https://github.com/meonlol/vim-grand/issues))
 
-Requirements
+
+Setup
 --------------------------------------------------------------------------------
 
-- [Syntastic](https://github.com/scrooloose/syntastic) for syntax checking.
-- [Javacomplete](https://github.com/vim-scripts/javacomplete) for code completion.
-- python (see setup)
-- Exuberant Ctags (see setup)
+### Output Paths
 
-### Advised:
+To have the plugin know what dependencies you have in your project, add this
+line to your `build.gradle` file:
 
-- [Tim Pope's Dispatch](https://github.com/tpope/vim-dispatch) vim-grand will
-  run the appropriate commands through it, so vim doesn't get blocked.
+```gradle
+apply from: 'https://raw.githubusercontent.com/meonlol/vim-grand/refactor/grand.gradle'
+```
 
+When you now call `./gradlew outputPaths` on the commandline, a text file is
+generated containing gradle's paths. Every time `GrandSetup` is called, this
+file is parced for new paths. So if you change a dependency in build.gradle
+run the 'outputPaths' command again and vim-grand will know about it.
 
-Installation
---------------------------------------------------------------------------------
+### Customise paths
 
-1. Setup an Android project with Robolectric.  
-   I use [deckard-gradle](https://github.com/robolectric/deckard-gradle) as a
-   starting point.
-2. Copy `grand.gradle` to your project  
-   This is a gradle plugin that poops out all the paths to the libraries gradle
-   uses in your project (including your custom ones). Copy the `grand.gradle`
-   file from the vim-grand project folder into the root of your Android
-   project.
-3. Let gradle know about `grand.gradle`  
-   To do this, add the following line to your build.gradle. Right after `apply
-   plugin: 'android'` would be a good location.  
-   `apply from: 'grand.gradle'`
-4. Generate paths file.  
-   From the project root run `gradle outputPaths` or `.\gradlew outputPaths`.
-   This uses the vim.gradle script to generate a 'gradle-sources' file in the
-   root, containing all the paths to the jars gradle uses.
-5. Remove useless paths from `gradle-sources` file.  
-   This one sucks I know. Sadly, gradle regurgitates all paths it can think of,
-   including stuff you will never ever need autocompletion for. And all those
-   extra paths will make javacomplete EXTREMELY slow blocking vim entirely!
-   You'll have to experiment with it to see which ones you will and which you
-   won't need. It's best to start with nothing, adding more paths only
-   when you need them. (hint: remember CTRL-C for when you added to much)
-6. Enjoy  
-   Open vim in the project root and run `GrandPaths`. This imports the paths to
-   syntastic and javacomplete, and sets up all the commands. Or you can just
-   open a java file, it does the same thing.
+If javacomplete gets slow, it might have to many paths to search. Open the
+`.grand_source_paths` file and customise what paths are to be used where,
+according to the following rules:
+
+    - some/path       # Path is ignored
+    c some/other/path # Used for completion javacomplete only
+    s some/jar.jar    # Used for syntastic only
+    + some/sources    # Used everywhere
 
 
 Additional setup for a pleasant experience
 --------------------------------------------------------------------------------
 
-These tweaks and mappings will make you happy.
+These tweaks and mappings for in you .vimrc will make you happy.
 
 ### Update tags on save
 
@@ -145,58 +140,30 @@ These tweaks and mappings will make you happy.
 autocmd BufWritePost *.java silent! GrandCtags
 ```
 
-The `GrandCtags` command runs in the background and doesn't allow multiple
-simultaneous runs. So you can just call `GrandCtags` every time you save
-without making a mess of the tags file and keeping things up to date.
-
-### 'gradle test' mapping
+### Run tests using vim-dispatch
 
 ```VimL
-"Use vim-dispatch to run gradleTest
+"Use vim-dispatch to run gradleTest when you press <leader>ua
 autocmd FileType java nnoremap <leader>ua :w<bar>Dispatch gradle test -q<CR>
 ```
 
-Runs `gradle test` with Dispatch when you press `<leader>u`. It displays the
-result in the quickfix window as soon as gradle is done.
-
 ### Output formatting
 
-The build result gradle returns is a little messy (huge understatement). Just
-add the code from [this
-gist](https://gist.github.com/meonlol/c5e84ca21a768fd76a7d) to your
-build.gradle, and it will improve to an acceptable level and look like this:
-
-```
-|| (0.229ms)	+ com.example.project.SmellyActivityTest > init_shouldLoadModel
-|| (0.179ms)	- com.example.project.SmellyActivityTest > init_shouldLoadDataToViews
-|| CategoryActivityTest.java:52:
-|| RobolectricTestRunner.java:236:
-|| RobolectricTestRunner.java:158:
-|| org.junit.ComparisonFailure: expected:<some_cat[egory]> but was:<some_cat[]>
-|| (0.207ms)	+ com.example.project.SmellyActivityTest > finishesWithResult
-|| 
-|| 9 tests completed, 1 failed
-```
-
-What do you mean "why don't you make a vim compiler?". I ain't nobody got time
-for that! Why don't YOU build one for me if you need one. It doesn't annoy me
-enough to be honest, maybe if you guys ask nicely.
+The formatting of the test results is realy poor.  I'll try and improve this
+soon, but in the mean time, you can use [this
+gist](https://gist.github.com/meonlol/c5e84ca21a768fd76a7d) gist to make it 
+look exceptable now.
 
 ### Running one test
 
 Don't want to run all the tests every time? The robolectric plugin does not
-support anything fancy like that, just add [this little
+support that yet. You can add [this little
 gist](https://gist.github.com/meonlol/3f222f8687073c46cd64) to your
-build.gradle under `robolectric {}`, to fix it yourself.
-
-You can now call `gradle test -q
--Dclasses=MyAwesomeTestClassInSomeRandomPackage` from the commandline.
-
-Since nobody will want to do that, this mapping will come in real handy. It
-will run the test class in the current buffer.
+build.gradle under `robolectric {}`. Then you can now call `gradle test -q
+-Dclasses=AwesomeTestClass` from the commandline, or you could use this mapping from vim:
 
 ```VimL
-"This runs the robolectric test in the current buffer
+"This runs the robolectric test for the current buffer
 autocmd FileType java nnoremap <leader>uc :w<bar>Dispatch gradle test -q -Dclasses=%:t:r<CR>
 ```
 
@@ -213,5 +180,7 @@ tweaking. Hint, Hint. Wink, wink. \**Points to you, points to class*\*.
 License
 --------------------------------------------------------------------------------
 
-Copyright (c) Leon Moll.  Distributed under the same terms as Vim itself.
+Copyright (c) Leon Moll. Distributed under the same terms as Vim itself.
 See `:help license`.
+
+
