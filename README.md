@@ -80,8 +80,6 @@ pressing `CTRL-]`.
 *:GrandInstall* Installs your project on all connected devices (you'll still
 have to manually start the app. It's in the TODO list).
 
-(Got ideas? [Tell me!](https://github.com/meonlol/vim-grand/issues))
-
 
 Setup
 --------------------------------------------------------------------------------
@@ -92,7 +90,7 @@ To have the plugin know what dependencies you have in your project, add this
 line to your `build.gradle` file:
 
 ```gradle
-apply from: 'https://raw.githubusercontent.com/meonlol/vim-grand/refactor/grand.gradle'
+apply from: 'https://raw.githubusercontent.com/meonlol/vim-grand/master/grand.gradle'
 ```
 
 When you now call `./gradlew outputPaths` on the commandline, a text file is
