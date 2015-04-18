@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.fuenfzig_hertz.eeg_app.DataFacadeTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2015-04-17T13:03:39" hostname="mac-leon-moll" time="4.549">
+  <properties/>
+  <testcase name="getAllCharts_shouldReturnChartModelList" classname="de.fuenfzig_hertz.eeg_app.DataFacadeTest" time="4.324"/>
+  <testcase name="getChartFromCategoryByName_shouldReturnChartModel" classname="de.fuenfzig_hertz.eeg_app.DataFacadeTest" time="0.029"/>
+  <testcase name="instantiation" classname="de.fuenfzig_hertz.eeg_app.DataFacadeTest" time="0.026"/>
+  <testcase name="getChartsListContentForCategory_shouldLoadMockData" classname="de.fuenfzig_hertz.eeg_app.DataFacadeTest" time="0.067"/>
+  <testcase name="getCategories_shouldReturnMockCategories" classname="de.fuenfzig_hertz.eeg_app.DataFacadeTest" time="0.045"/>
+  <testcase name="getFileForChartFromCategory_shouldReturnFileName" classname="de.fuenfzig_hertz.eeg_app.DataFacadeTest" time="0.047"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[WARNING: no system properties value for ro.build.date.utc
+]]></system-err>
+</testsuite>

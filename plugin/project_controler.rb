@@ -18,6 +18,11 @@ class ProjectControler
         return false
     end
 
+    def self.hasExuberantCtags()
+        result = `man ctags | sed q`
+        return result.include?("Exuberant")
+    end
+
 
     # HELPERS
     #--------------------------------------------------------------------------------

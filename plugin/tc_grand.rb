@@ -29,6 +29,7 @@ class TestGrand < Minitest::Test
 
 
     def test_addAllCommands()
+
         @grand.addAllCommands()
 
         assert_equal "command! GrandTags :ruby Grand.new.executeCommand('Tags')", VIM.getCommand[-2]
@@ -51,6 +52,7 @@ class TestGrand < Minitest::Test
 
     def test_executeCommand_withTags()
         @testTools.createTestBuildFile()
+        Kernel.backtickReturns TestProjectControler::CTAGS_MAN_EXUBERANT
 
         @grand.executeCommand("Tags")
 

@@ -12,7 +12,7 @@ class Grand
 
 	#public
 	def addAllCommands()
-		setupCommand("Tags")
+        setupCommand("Tags")
 		setupCommand("Install")
 	end
 
@@ -47,9 +47,14 @@ class Grand
 
 	#protected
 	def executeTags()
-		TagsHandler.new.generateTagsFile()
+        if ProjectControler.hasExuberantCtags()
+            TagsHandler.new.generateTagsFile()
 
-		VIM.command('silent! set tags+=.tags')
+            #FIXME: This re-adds the tags every time.
+            VIM.command('silent! set tags+=.tags')
+        else
+            p "You need to install Exuberant-Ctags for :GrandTags to work..."
+        end
 	end
 
 	#protected
