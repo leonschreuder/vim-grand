@@ -11,7 +11,7 @@ class TestTools
     def createTestFileWithContent(path, content)
         @testFiles.push(path)
 
-        file = splitFile(path)
+        file = splitFileAndPath(path)
 
         mkTestDirs(file[0])
         if file[1] != ""
@@ -34,12 +34,18 @@ class TestTools
     end
 
     # private
-    def splitFile(path)
+    def splitFileAndPath(path)
         sep = File::SEPARATOR
         if not path.start_with?(sep)
             path = "." + sep + path
         end
         path.split(/#{sep}(?!.*#{sep})/, -1)
+    end
+
+    def copyFileForTest(source, targetDir)
+        mkTestDirs(targetDir)
+        @testFiles.push targetDir + splitFileAndPath(source)[1]
+        FileUtils.copy(source, targetDir)
     end
 
     # public

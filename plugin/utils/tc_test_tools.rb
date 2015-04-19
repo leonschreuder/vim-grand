@@ -34,22 +34,34 @@ class TestTestTools < Minitest::Test
         assert File.exists?(subdir)
     end
 
-    def test_splitFile()
+    def test_splitFileAndPath()
         fileOnly = "test_createTestFile"
         dir = "someDir/"
         subdirFile  = "someDir/test_createTestFile"
         subdir  = "someDir/test_createTestFile/"
 
         
-        resultFileOnly  = @testTools.splitFile(fileOnly  )
-        resultDir       = @testTools.splitFile(dir       )
-        resultSubdirFile= @testTools.splitFile(subdirFile)
-        resultSubdir    = @testTools.splitFile(subdir    )
+        resultFileOnly  = @testTools.splitFileAndPath(fileOnly  )
+        resultDir       = @testTools.splitFileAndPath(dir       )
+        resultSubdirFile= @testTools.splitFileAndPath(subdirFile)
+        resultSubdir    = @testTools.splitFileAndPath(subdir    )
 
         assert_equal [".", fileOnly], resultFileOnly
         assert_equal ["./someDir", ""], resultDir
         assert_equal ["./someDir", "test_createTestFile"], resultSubdirFile
         assert_equal ["./someDir/test_createTestFile", ""], resultSubdir
+    end
+
+    def test_copyFileForTest()
+        sourceDir = 'plugin/test_sources/'
+        file = 'test_result_result.xml'
+        targetDir =  './build/test-results/'
+
+        @testTools.copyFileForTest(sourceDir + file, targetDir)
+
+        assert File.exists?(targetDir+file), "Should have copied file"
+        @testTools.removeTestFilesAndDirs()
+        refute File.exists?(targetDir+file), "Should have removed test-file"
     end
 
     def test_createTestFileWithContent()

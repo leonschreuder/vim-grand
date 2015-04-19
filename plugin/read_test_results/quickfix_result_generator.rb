@@ -2,13 +2,22 @@ require 'rexml/document'
 
 class QuickfixResultGenerator
 
-    def extract(file)
-        failures = extractFailuresFromXml(file)
+    def extract(ofile)
+        failures = []
+
+        getTestResultFiles().each { |file|
+            failures += extractFailuresFromXml(file)
+        }
 
         return quickfixMessageFromFailures(failures)
     end
 
-    def extractFailuresFromXml(file)
+    def getTestResultFiles
+        return Dir.glob('./build/test-results/debug/*.xml')
+    end
+
+    def extractFailuresFromXml(filePath)
+        file = File.open(filePath)
         doc = REXML::Document.new(file)
         failures = []
 
@@ -61,6 +70,7 @@ class QuickfixResultGenerator
         trace.each_line { |line|
             if line =~ /#{Regexp.escape classname}/
                 rightLine = line
+                break
             end
         }
 

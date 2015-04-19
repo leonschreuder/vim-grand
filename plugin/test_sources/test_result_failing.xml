@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="nl.leonschreuder.zettel_wirtschaft.AddItemDialogFragmentTest" tests="2" skipped="0" failures="1" errors="0" timestamp="2015-04-17T17:33:25" hostname="mini-2.fritz.box" time="79.512">
+<testsuite name="com.example.project.AddItemDialogFragmentTest" tests="2" skipped="0" failures="1" errors="0" timestamp="2015-04-17T17:33:25" hostname="mini-2.fritz.box" time="79.512">
   <properties/>
-  <testcase name="onSaveListener" classname="nl.leonschreuder.zettel_wirtschaft.AddItemDialogFragmentTest" time="74.074">
+  <testcase name="onSaveListener" classname="com.example.project.AddItemDialogFragmentTest" time="74.074">
     <failure message="org.junit.ComparisonFailure: EditText value retrieval expected:&lt;[]est&gt; but was:&lt;[t]est&gt;" type="org.junit.ComparisonFailure">org.junit.ComparisonFailure: EditText value retrieval expected:&lt;[]est&gt; but was:&lt;[t]est&gt;
 	at org.junit.Assert.assertEquals(Assert.java:115)
-	at nl.leonschreuder.zettel_wirtschaft.AddItemDialogFragmentTest.onSaveListener(AddItemDialogFragmentTest.java:35)
+	at com.example.project.AddItemDialogFragmentTest.onSaveListener(AddItemDialogFragmentTest.java:35)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
@@ -51,9 +51,9 @@
 	at java.lang.Thread.run(Thread.java:695)
 </failure>
   </testcase>
-  <testcase name="dialogInstantiation" classname="nl.leonschreuder.zettel_wirtschaft.AddItemDialogFragmentTest" time="5.438"/>
+  <testcase name="dialogInstantiation" classname="com.example.project.AddItemDialogFragmentTest" time="5.438"/>
   <system-out><![CDATA[DEBUG: Loading resources for android from jar:/Users/admin/.m2/repository/org/robolectric/android-all/4.3_r2-robolectric-0/android-all-4.3_r2-robolectric-0.jar!/res...
-DEBUG: Loading resources for nl.leonschreuder.zettel_wirtschaft from /Users/admin/Documents/zettel_wirtschaft/build/intermediates/res/debug...
+DEBUG: Loading resources for com.example.project from /Users/admin/Documents/zettel_wirtschaft/build/intermediates/res/debug...
 Couldn't find ResName{android:attr/actionBarWidgetTheme} in ResName{android:style/Theme_DeviceDefault}
 Couldn't find ResName{android:attr/actionBarWidgetTheme} in ResName{android:style/Theme_DeviceDefault}
 ]]></system-out>
