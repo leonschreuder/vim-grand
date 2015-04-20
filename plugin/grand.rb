@@ -28,9 +28,11 @@ class Grand
 		commandName = "Grand" + commandId
 		rubyCall = "Grand.new.executeCommand('" + commandId + "')"
 
-		command = ["command!", commandName, ":ruby", rubyCall]
+        if VIM.evaluate("!exists(':GrandTags')") == 1
+        end
 
-		VIM.command(command.join(" "))
+        command = ["command!", commandName, ":ruby", rubyCall]
+        VIM.command(command.join(" "))
 	end
 
 

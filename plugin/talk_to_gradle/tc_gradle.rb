@@ -8,6 +8,7 @@ class TestGradle < Minitest::Test
 
 	def setup()
 		VIM.reinit()
+		VIM.setEvaluateResult false
 		@testTools = TestTools.new
 		@gradle = Gradle.new
 	end
