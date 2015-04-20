@@ -10,13 +10,11 @@ class Grand
 		setupCommand("Setup")
 	end
 
-	#public
 	def addAllCommands()
         setupCommand("Tags")
 		setupCommand("Install")
 	end
 
-	#public
 	def executeCommand(command)
 		methodCall = "execute"+command
 		if respond_to? methodCall
@@ -26,7 +24,6 @@ class Grand
 		end
 	end
 
-	#private
 	def setupCommand(commandId)
 		commandName = "Grand" + commandId
 		rubyCall = "Grand.new.executeCommand('" + commandId + "')"
@@ -40,12 +37,10 @@ class Grand
 	# Commands
 	#----------------------------------------
 
-	#protected
 	def executeInstall()
 		Gradle.new.executeGradleCommand('installDebug')
 	end
 
-	#protected
 	def executeTags()
         if ProjectControler.hasExuberantCtags()
             TagsHandler.new.generateTagsFile()
@@ -57,7 +52,6 @@ class Grand
         end
 	end
 
-	#protected
 	def executeSetup()
 		#TODO: check $ANDROID_HOME is set
 		if ProjectControler.isGradleProject() and ProjectControler.isAndroidProject

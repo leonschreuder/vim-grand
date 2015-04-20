@@ -44,7 +44,7 @@ class TestTagsHandler < Minitest::Test
 	def test_getCtagsCommand_shouldGenerateCommandArray()
 		@testTools.createTestBuildFile()
 
-		result = @tagsHandler.getCtagsCommand()
+		result = @tagsHandler.constructCtagsCommand()
 
 		expectedCommand = ['ctags','--recurse','--fields=+l','--langdef=XML','--langmap=Java:.java,XML:.xml','--languages=Java,XML','--regex-XML=/id="([a-zA-Z0-9_]+)"/\\1/d,definition/']
         expectedCommand += ['-f', TagsHandler::TEMP_FILE]

@@ -9,5 +9,5 @@ require_relative 'generate_tags/tc_tags_handler'
 require_relative 'talk_to_gradle/tc_gradle'
 require_relative 'talk_to_adb/tc_adb'
 require_relative 'utils/tc_test_tools'
-require_relative 'read_test_results/tc_quickfix_result_generator'
+require_relative 'read_test_results/tc_quickfix_content_generator'
 

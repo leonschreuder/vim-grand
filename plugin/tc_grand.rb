@@ -5,6 +5,8 @@ require_relative "mock_vim"
 require_relative "mock_kernel"
 require_relative "utils/test_tools"
 
+require_relative 'tc_project_controler'
+
 class TestGrand < Minitest::Test
     ANDROID_HOME_VALUE = "stub/android/home"
 
