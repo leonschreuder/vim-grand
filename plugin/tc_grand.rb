@@ -15,8 +15,9 @@ class TestGrand < Minitest::Test
         Kernel.reinit()
         ENV['ANDROID_HOME'] = ANDROID_HOME_VALUE
         @testTools = TestTools.new()
-        VIM.setEvaluateResult(1)
+        VIM.setEvaluateResult(false)
         @grand = Grand.new()
+
     end
 
     def teardown()
@@ -28,12 +29,14 @@ class TestGrand < Minitest::Test
     def test_init_shouldAddSetupCommand()
 
         assert_equal "!exists(':GrandTags')", VIM.getEvaluate()[0]
-        assert_equal "command! GrandSetup :ruby Grand.new.executeCommand('Setup')", VIM.getCommand()[0]
+        assert_equal "command GrandSetup :ruby Grand.new.executeCommand('Setup')", VIM.getCommand()[0]
     end
 
 
 
     def test_addAllCommands()
+        VIM.setEvaluateResult(false)
+        VIM.setEvaluateResult(false)
 
         @grand.addAllCommands()
 
@@ -42,8 +45,8 @@ class TestGrand < Minitest::Test
             #command -nargs=1  Correct  :call s:Add(<q-args>, 0)
         #endif'
 
-        assert_equal "command! GrandTags :ruby Grand.new.executeCommand('Tags')", VIM.getCommand[-2]
-        assert_equal "command! GrandInstall :ruby Grand.new.executeCommand('Install')", VIM.getCommand[-1]
+        assert_equal "command GrandTags :ruby Grand.new.executeCommand('Tags')", VIM.getCommand[-2]
+        assert_equal "command GrandInstall :ruby Grand.new.executeCommand('Install')", VIM.getCommand[-1]
     end
 
     def test_executeCommand_shouldCatchNonExistent()
@@ -51,16 +54,15 @@ class TestGrand < Minitest::Test
             @grand.executeCommand("something")
         end
 
-        assert_equal "Command 'something' not recognised.\n", out[0]
+        assert_equal "Command \"something\" not recognised.\n", out[0]
     end
 
     def test_executeCommand_withInstall()
+        VIM.setEvaluateResult(false)
+
         @grand.executeCommand("Install")
 
-        command = VIM.getCommand()[-1]
-        #FIXME Inexplicably fails.
-        #assert_equal "! gradle installDebug -q", command
-        #assert_equal "! gradle installDebug -q", command
+        assert_equal "! gradle installDebug -q", VIM.getCommand()[-1]
     end
 
     def test_executeCommand_withTags()
@@ -70,12 +72,13 @@ class TestGrand < Minitest::Test
         @grand.executeCommand("Tags")
 
         # TODO: The tagsHandler is not not checked
-        assert_equal 'silent! set tags+=.tags', VIM.getCommand()[-1]
+        assert_equal "silent! set tags+=.tags", VIM.getCommand()[-1]
     end
 
     def test_executeCommand_withSetup()
         @testTools.createTestBuildFile()
         @testTools.createTestFile("./src/main/AndroidManifest.xml")
+        VIM.setEvaluateResult(false, false)
 
         @grand.executeCommand("Setup")
 

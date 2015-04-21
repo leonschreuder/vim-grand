@@ -5,6 +5,7 @@ class VIM
 	def self.reinit()
 		@commandInput = []
 		@evaluateInput = []
+		@evaluateResult = []
 	end
 
 	def self.command(someString)
@@ -15,13 +16,21 @@ class VIM
 		return @commandInput
 	end
 
-	def self.setEvaluateResult(result)
-		@evaluateResult = result
+	def self.setEvaluateResult(*result)
+        result.each { |singleResult|
+            @evaluateResult << singleResult
+        }
 	end
 
 	def self.evaluate(evl)
 		@evaluateInput.push(evl)
-		return @evaluateResult
+
+        # this guards us for unexpected calls and sideeffects from those
+        result = @evaluateResult.pop()
+        if result == nil
+            raise "VIM::evaluate was unexpectedly called"
+        end
+		return result
 	end
 
 	def self.getEvaluate()

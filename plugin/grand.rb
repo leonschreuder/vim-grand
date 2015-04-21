@@ -7,20 +7,21 @@ require_relative "find_paths/path_file_manager"
 class Grand
 
 	def initialize()
-		setupCommand("Setup")
+		setupCommand('Setup')
 	end
 
 	def addAllCommands()
-        setupCommand("Tags")
-		setupCommand("Install")
+        setupCommand('Tags')
+		setupCommand('Install')
 	end
 
 	def executeCommand(command)
-		methodCall = "execute"+command
-		if respond_to? methodCall
-			send(methodCall)
+		actualMethod = 'execute'+command
+
+		if respond_to? actualMethod
+			send(actualMethod)
 		else
-			puts "Command '" + command + "' not recognised."
+			puts "Command \"" + command + "\" not recognised."
 		end
 	end
 
@@ -28,10 +29,10 @@ class Grand
 		commandName = "Grand" + commandId
 		rubyCall = "Grand.new.executeCommand('" + commandId + "')"
 
-        if VIM.evaluate("!exists(':GrandTags')") == 1
+        if VIM.evaluate("!exists(':GrandTags')")
         end
 
-        command = ["command!", commandName, ":ruby", rubyCall]
+        command = ["command", commandName, ":ruby", rubyCall]
         VIM.command(command.join(" "))
 	end
 
@@ -48,7 +49,7 @@ class Grand
             TagsHandler.new.generateTagsFile()
 
             #FIXME: This re-adds the tags every time.
-            VIM.command('silent! set tags+=.tags')
+            VIM.command("silent! set tags+=.tags")
         else
             p "You need to install Exuberant-Ctags for :GrandTags to work..."
         end
