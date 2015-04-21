@@ -41,7 +41,7 @@ class QuickfixContentGeneratorTest < Minitest::Test
             '89',
             'java.lang.AssertionError',
         ]
-        resultLines = result.split('\n')
+        resultLines = result.split('\\n')
         assert_equal expectedLine1.join('|'), resultLines[0]
         assert_equal expectedLine2.join('|'), resultLines[1]
     end
