@@ -6,6 +6,22 @@ require_relative "mock_kernel"
 require_relative "utils/test_tools"
 
 require_relative 'tc_project_controler'
+require_relative 'vim_proxy'
+
+class StubVimProxy < VimProxy
+    attr_accessor :commandDefinedCalledWith
+    attr_accessor :commandDefinedResult
+
+    def initialize()
+        @commandDefinedCalledWith = nil
+        @commandDefinedResult = true
+    end
+
+    def commandDefined?(commandName)
+        @commandDefinedCalledWith = commandName
+        return @commandDefinedResult
+    end
+end
 
 class TestGrand < Minitest::Test
     ANDROID_HOME_VALUE = "stub/android/home"
@@ -15,9 +31,9 @@ class TestGrand < Minitest::Test
         Kernel.reinit()
         ENV['ANDROID_HOME'] = ANDROID_HOME_VALUE
         @testTools = TestTools.new()
+        @vimProxy = StubVimProxy.new
         VIM.setEvaluateResult(false)
-        @grand = Grand.new()
-
+        @grand = Grand.new(@vimProxy)
     end
 
     def teardown()
@@ -28,7 +44,10 @@ class TestGrand < Minitest::Test
 
     def test_init_shouldAddSetupCommand()
 
-        assert_equal "!exists(':GrandTags')", VIM.getEvaluate()[0]
+        @vimProxy.commandDefinedResult = true
+        @grand.setupCommand("Setup")
+
+        assert_equal @vimProxy.commandDefinedCalledWith, "GrandSetup"
         assert_equal "command GrandSetup :ruby Grand.new.executeCommand('Setup')", VIM.getCommand()[0]
     end
 

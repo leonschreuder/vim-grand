@@ -1,12 +1,16 @@
-require_relative "talk_to_gradle/gradle"
-require_relative "generate_tags/tags_handler"
-require_relative "project_controler"
-require_relative "configurator"
-require_relative "find_paths/path_file_manager"
+require_relative 'talk_to_gradle/gradle'
+require_relative 'generate_tags/tags_handler'
+require_relative 'project_controler'
+require_relative 'configurator'
+require_relative 'find_paths/path_file_manager'
+require_relative 'vim_proxy'
+
+
 
 class Grand
 
-	def initialize()
+	def initialize(proxy = VimProxy.new)
+        @vimProxy = proxy
 		setupCommand('Setup')
 	end
 
@@ -29,7 +33,8 @@ class Grand
 		commandName = "Grand" + commandId
 		rubyCall = "Grand.new.executeCommand('" + commandId + "')"
 
-        if VIM.evaluate("exists(':#{commandName}')") == 0
+
+        if @vimProxy.commandDefined?(commandName)
             command = ["command", commandName, ":ruby", rubyCall]
             VIM.command(command.join(" "))
         end
