@@ -1,23 +1,20 @@
 
+require_relative '../vim_proxy'
+
 class Gradle
+
+    def initialize(vimProxy = VimProxy.new)
+        @vimProxy = vimProxy
+    end
 
 	def executeGradleCommand(command)
 		commandString = []
 
-		commandString << getCommandRunner()
 		commandString << getGradleExe()
 		commandString << command
-		commandString << '-q'
+		commandString << "-q"
 
-		VIM.command(commandString.join(' '))
-	end
-
-	def getCommandRunner()
-		if hasDispatch
-			return 'Dispatch'
-		else
-			return '!'
-		end
+        @vimProxy.runOnShellForResult(commandString.join(" "))
 	end
 
 	def getGradleExe()
@@ -30,10 +27,6 @@ class Gradle
 
 	def hasGradleWrapper()
 		File.executable?('./gradlew') || File.executable?('./gradlew.bat') 
-	end
-
-	def hasDispatch()
-		return VIM::evaluate("exists(':Dispatch')")
 	end
 
 end

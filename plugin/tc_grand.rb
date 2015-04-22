@@ -12,11 +12,14 @@ class StubVimProxy < VimProxy
     attr_accessor :commandDefinedCalledWith
     attr_accessor :commandDefinedResult
     attr_accessor :rubyCallingCommandsAdded
+    attr_accessor :tagsFileAdded
 
     def initialize()
         @commandDefinedCalledWith = nil
         @commandDefinedResult = false
         @rubyCallingCommandsAdded = []
+        @tagsFileAdded = nil
+        #p "initialize being called"
     end
 
     def commandDefined?(commandName)
@@ -25,7 +28,14 @@ class StubVimProxy < VimProxy
     end
 
     def addCommandCallingRuby(commandName, rubyMethod)
+        if @rubyCallingCommandsAdded == nil
+            @rubyCallingCommandsAdded = []
+        end
         @rubyCallingCommandsAdded << [commandName, rubyMethod]
+    end
+
+    def addTagsFile(tagsFile)
+        @tagsFileAdded = tagsFile
     end
 end
 
@@ -36,9 +46,8 @@ class TestGrand < Minitest::Test
         VIM.reinit()
         Kernel.reinit()
         ENV['ANDROID_HOME'] = ANDROID_HOME_VALUE
+        @vimProxy = StubVimProxy.new()
         @testTools = TestTools.new()
-        @vimProxy = StubVimProxy.new
-        VIM.setEvaluateResult(false)
         @grand = Grand.new(@vimProxy)
     end
 
@@ -57,19 +66,18 @@ class TestGrand < Minitest::Test
         assert_equal @vimProxy.rubyCallingCommandsAdded[0], ["GrandSetup",  "Grand.new.executeCommand('Setup')"]
     end
 
-
-
     def test_addAllCommands()
 
         @grand.addAllCommands()
 
         assert_equal 3, @vimProxy.rubyCallingCommandsAdded.length
         assert_equal "GrandTags", @vimProxy.rubyCallingCommandsAdded[1][0]
-        assert_equal @vimProxy.rubyCallingCommandsAdded[1][1], "Grand.new.executeCommand('Tags')"
+        assert_equal "Grand.new.executeCommand('Tags')", @vimProxy.rubyCallingCommandsAdded[1][1]
         assert_equal "GrandInstall", @vimProxy.rubyCallingCommandsAdded[2][0]
-        assert_equal @vimProxy.rubyCallingCommandsAdded[2][1], "Grand.new.executeCommand('Install')"
+        assert_equal "Grand.new.executeCommand('Install')", @vimProxy.rubyCallingCommandsAdded[2][1]
     end
 
+    #TODO: Remove this madness (Needsles Complexity)
     def test_executeCommand_shouldCatchNonExistent()
         out = capture_io do
             @grand.executeCommand("something")
@@ -79,7 +87,7 @@ class TestGrand < Minitest::Test
     end
 
     def test_executeCommand_withInstall()
-        VIM.setEvaluateResult(false)
+        VIM.setEvaluateResult(0)
 
         @grand.executeCommand("Install")
 
@@ -92,8 +100,7 @@ class TestGrand < Minitest::Test
 
         @grand.executeCommand("Tags")
 
-        # TODO: The tagsHandler is not not checked
-        assert_equal "silent! set tags+=.tags", VIM.getCommand()[-1]
+        assert_equal ".tags", @vimProxy.tagsFileAdded
     end
 
     def test_executeCommand_withSetup()

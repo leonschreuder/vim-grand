@@ -28,7 +28,7 @@ class VIM
         # this guards us for unexpected calls and sideeffects from those
         result = @evaluateResult.pop()
         if result == nil
-            raise "VIM::evaluate was unexpectedly called"
+            raise "VIM::evaluate was unexpectedly called with "+evl
         end
 		return result
 	end

@@ -5,8 +5,6 @@ require_relative 'configurator'
 require_relative 'find_paths/path_file_manager'
 require_relative 'vim_proxy'
 
-
-
 class Grand
 
 	def initialize(proxy = VimProxy.new)
@@ -33,12 +31,10 @@ class Grand
 		commandName = "Grand" + commandId
 		rubyCall = "Grand.new.executeCommand('" + commandId + "')"
 
+
         if not @vimProxy.commandDefined?(commandName)
             @vimProxy.addCommandCallingRuby(commandName, rubyCall)
-            #command = ["command", commandName, ":ruby", rubyCall]
-            #VIM.command(command.join(" "))
         end
-
 	end
 
 
@@ -53,8 +49,7 @@ class Grand
         if ProjectControler.hasExuberantCtags()
             TagsHandler.new.generateTagsFile()
 
-            #FIXME: This re-adds the tags every time.
-            VIM.command("silent! set tags+=.tags")
+            @vimProxy.addTagsFile(".tags")
         else
             puts "You need to install Exuberant-Ctags for :GrandTags to work..."
         end
