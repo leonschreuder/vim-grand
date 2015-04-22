@@ -8,4 +8,8 @@ class VimProxy
         end
     end
 
+    def addCommandCallingRuby(commandName, rubyMethod)
+        VIM.command("command " + commandName + " :ruby " + rubyMethod + "()")
+    end
+
 end

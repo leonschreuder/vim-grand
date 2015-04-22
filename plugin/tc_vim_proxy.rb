@@ -16,5 +16,13 @@ class VimProxyTest < Minitest::Test
         assert_equal "exists(':GrandSetup')", VIM.getEvaluate()[0]
     end
 
+    def test_addCommandCallingRuby
+        VIM.reinit()
+        proxy = VimProxy.new
+
+        proxy.addCommandCallingRuby("CommandName", "rubyMethod")
+
+        assert_equal "command CommandName :ruby rubyMethod()", VIM.getCommand[0]
+    end
 
 end

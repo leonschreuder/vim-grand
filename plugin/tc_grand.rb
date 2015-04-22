@@ -11,15 +11,21 @@ require_relative 'vim_proxy'
 class StubVimProxy < VimProxy
     attr_accessor :commandDefinedCalledWith
     attr_accessor :commandDefinedResult
+    attr_accessor :rubyCallingCommandsAdded
 
     def initialize()
         @commandDefinedCalledWith = nil
-        @commandDefinedResult = true
+        @commandDefinedResult = false
+        @rubyCallingCommandsAdded = []
     end
 
     def commandDefined?(commandName)
         @commandDefinedCalledWith = commandName
         return @commandDefinedResult
+    end
+
+    def addCommandCallingRuby(commandName, rubyMethod)
+        @rubyCallingCommandsAdded << [commandName, rubyMethod]
     end
 end
 
@@ -48,24 +54,20 @@ class TestGrand < Minitest::Test
         @grand.setupCommand("Setup")
 
         assert_equal @vimProxy.commandDefinedCalledWith, "GrandSetup"
-        assert_equal "command GrandSetup :ruby Grand.new.executeCommand('Setup')", VIM.getCommand()[0]
+        assert_equal @vimProxy.rubyCallingCommandsAdded[0], ["GrandSetup",  "Grand.new.executeCommand('Setup')"]
     end
 
 
 
     def test_addAllCommands()
-        VIM.setEvaluateResult(false)
-        VIM.setEvaluateResult(false)
 
         @grand.addAllCommands()
 
-        # TODO: Use exit check in defining mappings.
-        #'if !exists(":Correct")
-            #command -nargs=1  Correct  :call s:Add(<q-args>, 0)
-        #endif'
-
-        assert_equal "command GrandTags :ruby Grand.new.executeCommand('Tags')", VIM.getCommand[-2]
-        assert_equal "command GrandInstall :ruby Grand.new.executeCommand('Install')", VIM.getCommand[-1]
+        assert_equal 3, @vimProxy.rubyCallingCommandsAdded.length
+        assert_equal "GrandTags", @vimProxy.rubyCallingCommandsAdded[1][0]
+        assert_equal @vimProxy.rubyCallingCommandsAdded[1][1], "Grand.new.executeCommand('Tags')"
+        assert_equal "GrandInstall", @vimProxy.rubyCallingCommandsAdded[2][0]
+        assert_equal @vimProxy.rubyCallingCommandsAdded[2][1], "Grand.new.executeCommand('Install')"
     end
 
     def test_executeCommand_shouldCatchNonExistent()

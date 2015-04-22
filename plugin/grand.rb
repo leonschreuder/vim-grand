@@ -33,10 +33,10 @@ class Grand
 		commandName = "Grand" + commandId
 		rubyCall = "Grand.new.executeCommand('" + commandId + "')"
 
-
-        if @vimProxy.commandDefined?(commandName)
-            command = ["command", commandName, ":ruby", rubyCall]
-            VIM.command(command.join(" "))
+        if not @vimProxy.commandDefined?(commandName)
+            @vimProxy.addCommandCallingRuby(commandName, rubyCall)
+            #command = ["command", commandName, ":ruby", rubyCall]
+            #VIM.command(command.join(" "))
         end
 
 	end
@@ -56,7 +56,7 @@ class Grand
             #FIXME: This re-adds the tags every time.
             VIM.command("silent! set tags+=.tags")
         else
-            p "You need to install Exuberant-Ctags for :GrandTags to work..."
+            puts "You need to install Exuberant-Ctags for :GrandTags to work..."
         end
 	end
 
