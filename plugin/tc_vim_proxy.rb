@@ -32,7 +32,7 @@ class VimProxyTest < Minitest::Test
 
         @proxy.addCommandCallingRuby("CommandName", "rubyMethod")
 
-        assert_equal "command CommandName :ruby rubyMethod()", VIM.getCommand[0]
+        assert_equal "command CommandName :ruby rubyMethod", VIM.getCommand[0]
     end
 
     def test_addTagsFile()

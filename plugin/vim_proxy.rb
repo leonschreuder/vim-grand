@@ -1,4 +1,6 @@
 class VimProxy
+    # TODO: Vim throws indeciphreable errors when some vim call isn't correct.
+    # Add a 'verbose' option or something to make debugging easier.
 
     def exists?(aVimObject)
         VIM.evaluate("exists('#{aVimObject}')") > 0
@@ -10,7 +12,7 @@ class VimProxy
     end
 
     def addCommandCallingRuby(commandName, rubyMethod)
-        VIM.command("command " + commandName + " :ruby " + rubyMethod + "()")
+        VIM.command("command " + commandName + " :ruby " + rubyMethod)
     end
 
     def addTagsFile(tagsFile)
