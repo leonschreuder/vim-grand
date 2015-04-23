@@ -8,6 +8,7 @@ class Gradle
     end
 
 	def executeGradleCommand(command)
+        @@commandLastExecuted = command
 		commandString = []
 
 		commandString << getGradleExe()
@@ -28,5 +29,8 @@ class Gradle
 	def hasGradleWrapper()
 		File.executable?('./gradlew') || File.executable?('./gradlew.bat') 
 	end
+
+
+    def self.getCommandLastExecuted(); @@commandLastExecuted; end
 
 end

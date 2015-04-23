@@ -3,7 +3,6 @@ require "minitest/autorun"
 
 require_relative "utils/test_tools"
 require_relative "configurator"
-require_relative "mock_vim"
 require_relative "project_controler"
 
 class StubVimProxy < VimProxy
@@ -26,7 +25,6 @@ class TestConfigurator < Minitest::Test
 		@configurator = Configurator.new(@vimProxy)
 		@android_home_value = "stub/android/home"
 		ENV['ANDROID_HOME'] = @android_home_value
-		VIM.reinit()
 	end
 
 	def teardown()
@@ -39,7 +37,7 @@ class TestConfigurator < Minitest::Test
 
 		@configurator.setupSyntastic()
 
-        assert_equal ["syntastic_java_javac_classpath", "'path1:path2'"], @vimProxy.setGlobalVariableToValueArg
+        assert_equal ["syntastic_java_javac_classpath", "path1:path2"], @vimProxy.setGlobalVariableToValueArg
 	end
 
 	def test_setupJavacomplete()
@@ -47,7 +45,7 @@ class TestConfigurator < Minitest::Test
 
 		@configurator.setupJavacomplete()
 
-        assert_equal ["javacomplete#SetClassPath", "'path1:path2'"], @vimProxy.callVimMethodArg
+        assert_equal ["javacomplete#SetClassPath", "path1:path2"], @vimProxy.callVimMethodArg
 	end
 
 	def test_updatePathFile()

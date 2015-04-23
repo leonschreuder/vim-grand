@@ -61,8 +61,10 @@ class VimProxyTest < Minitest::Test
     def test_setGlobalVariableToValue()
 
         @proxy.setGlobalVariableToValue("some_global_var", 1)
+        @proxy.setGlobalVariableToValue("some_global_var", "2")
 
         assert_equal "let g:some_global_var = 1", VIM.getCommand[0]
+        assert_equal "let g:some_global_var = '2'", VIM.getCommand[1]
     end
 
     def test_callVimMethod()

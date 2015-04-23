@@ -27,7 +27,7 @@ class VimProxy
     end
 
     def setGlobalVariableToValue(variableName, value)
-        VIM.command("let g:" + variableName + " = " + value.to_s)
+        VIM.command("let g:" + variableName + " = " + typeToVimType(value))
     end
 
     def callVimMethod(methodName, args=nil)

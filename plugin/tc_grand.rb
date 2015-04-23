@@ -5,8 +5,8 @@ require_relative "mock_vim"
 require_relative "mock_kernel"
 require_relative "utils/test_tools"
 
-require_relative 'tc_project_controler'
-require_relative 'vim_proxy'
+require_relative "tc_project_controler"
+require_relative "vim_proxy"
 
 class StubVimProxy < VimProxy
     attr_accessor :commandDefinedCalledWith
@@ -15,7 +15,6 @@ class StubVimProxy < VimProxy
     attr_accessor :tagsFileAdded
 
     def initialize()
-        @commandDefinedCalledWith = nil
         @commandDefinedResult = false
         @rubyCallingCommandsAdded = []
         @tagsFileAdded = nil
@@ -77,7 +76,7 @@ class TestGrand < Minitest::Test
         assert_equal "Grand.new.executeCommand('Install')", @vimProxy.rubyCallingCommandsAdded[2][1]
     end
 
-    #TODO: Remove this madness (Needsles Complexity)
+    #TODO: Remove this madness (Needless Complexity)
     def test_executeCommand_shouldCatchNonExistent()
         out = capture_io do
             @grand.executeCommand("something")
@@ -91,7 +90,7 @@ class TestGrand < Minitest::Test
 
         @grand.executeCommand("Install")
 
-        assert_equal "! gradle installDebug -q", VIM.getCommand()[-1]
+        assert_equal "installDebug", Gradle.getCommandLastExecuted()
     end
 
     def test_executeCommand_withTags()
@@ -106,15 +105,14 @@ class TestGrand < Minitest::Test
     def test_executeCommand_withSetup()
         @testTools.createTestBuildFile()
         @testTools.createTestFile("./src/main/AndroidManifest.xml")
-        VIM.setEvaluateResult(false, false)
+        VIM.setEvaluateResult(false, false) #TODO: Remove me
 
         @grand.executeCommand("Setup")
 
+        assert Configurator.pathFileWasUpdated?, "Should have updated path file"
         assert File.exists?(ProjectControler::PATH_FILE)
-
-        commands = VIM.getCommand()
-        assert contains(commands, "javacomplete#SetClassPath")
-        assert contains(commands, "syntastic_java_javac_classpath")
+        assert Configurator.javacompleteWasSetUp?, "Should have setup javacomplete"
+        assert Configurator.syntasticWasSetUp?, "Should have setup sysntastic"
     end
 
     # Helpers
