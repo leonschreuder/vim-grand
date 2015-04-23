@@ -25,4 +25,24 @@ class VimProxy
             VIM.command("! " + command)
         end
     end
+
+    def setGlobalVariableToValue(variableName, value)
+        VIM.command("let g:" + variableName + " = " + value.to_s)
+    end
+
+    def callVimMethod(methodName, args=nil)
+        if args == nil
+            VIM.command("silent! call " + methodName + "()")
+        else
+            VIM.command("silent! call " + methodName + "(" + typeToVimType(args) + ")")
+        end
+    end
+
+    def typeToVimType(type)
+        if type.is_a?(String)
+            return "'" + type + "'"
+        else
+            return type.to_s()
+        end
+    end
 end

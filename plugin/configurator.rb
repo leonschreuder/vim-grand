@@ -1,10 +1,12 @@
 
 require_relative "find_paths/path_resolver"
 require_relative "find_paths/path_file_manager"
+require_relative "vim_proxy"
 
 class Configurator
 
-    def initialize()
+    def initialize(vimProxy = VimProxy.new)
+        @vimProxy = vimProxy
         @pathResolver = PathResolver.new
     end
 
@@ -23,7 +25,7 @@ class Configurator
         paths += PathFileManager.retrievePathsWithPreceidingChar('+')
         paths += PathFileManager.retrievePathsWithPreceidingChar('s')
 
-        VIM.command("let g:syntastic_java_javac_classpath = '#{ paths.join(':') }'")
+        @vimProxy.setGlobalVariableToValue("syntastic_java_javac_classpath", "'#{ paths.join(':') }'")
     end
 
     def updatePathFile()
@@ -34,10 +36,10 @@ class Configurator
     end
 
 
-    #private
+    private
     def callJavacompleteMethodWithPaths(methodName, pathsArray)
         joinedPaths = pathsArray.join(':')
-        VIM.command("silent! call javacomplete##{methodName}('#{ joinedPaths }')")
+        @vimProxy.callVimMethod("javacomplete#" + methodName, "'#{ joinedPaths }'")
     end
 
 end
