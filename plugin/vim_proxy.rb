@@ -3,7 +3,10 @@ class VimProxy
     # Add a 'verbose' option or something to make debugging easier.
 
     def exists?(aVimObject)
-        VIM.evaluate("exists('#{aVimObject}')") > 0
+        result = evaluate("exists('#{aVimObject}')")
+        if result != nil
+            return result > 0
+        end
     end
 
     # convenience method
@@ -12,31 +15,31 @@ class VimProxy
     end
 
     def addCommandCallingRuby(commandName, rubyMethod)
-        VIM.command("command " + commandName + " :ruby " + rubyMethod)
+        command("command " + commandName + " :ruby " + rubyMethod)
     end
 
     def addTagsFile(tagsFile)
         # Note: does not accumulate
-        VIM.command("silent! set tags+=" + tagsFile)
+        command("silent! set tags+=" + tagsFile)
     end
 
     def runOnShellForResult(command)
         if commandDefined?("Dispatch")
-            VIM.command("Dispatch " + command)
+            command("Dispatch " + command)
         else
-            VIM.command("! " + command)
+            command("! " + command)
         end
     end
 
     def setGlobalVariableToValue(variableName, value)
-        VIM.command("let g:" + variableName + " = " + typeToVimType(value))
+        command("let g:" + variableName + " = " + typeToVimType(value))
     end
 
     def callVimMethod(methodName, args=nil)
         if args == nil
-            VIM.command("silent! call " + methodName + "()")
+            command("silent! call " + methodName + "()")
         else
-            VIM.command("silent! call " + methodName + "(" + typeToVimType(args) + ")")
+            command("silent! call " + methodName + "(" + typeToVimType(args) + ")")
         end
     end
 
@@ -45,6 +48,22 @@ class VimProxy
             return "'" + type + "'"
         else
             return type.to_s()
+        end
+    end
+
+    private
+    def evaluate(command)
+        begin
+            return VIM.evaluate(command)
+        rescue NameError
+        end
+    end
+
+    private
+    def command(arg)
+        begin
+            return VIM.command(arg)
+        rescue NameError
         end
     end
 end

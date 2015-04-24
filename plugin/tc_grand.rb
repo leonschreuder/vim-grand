@@ -1,7 +1,6 @@
 require "minitest/autorun"
 
 require_relative "grand"
-require_relative "mock_vim"
 require_relative "mock_kernel"
 require_relative "utils/test_tools"
 
@@ -18,7 +17,6 @@ class StubVimProxy < VimProxy
         @commandDefinedResult = false
         @rubyCallingCommandsAdded = []
         @tagsFileAdded = nil
-        #p "initialize being called"
     end
 
     def commandDefined?(commandName)
@@ -42,7 +40,6 @@ class TestGrand < Minitest::Test
     ANDROID_HOME_VALUE = "stub/android/home"
 
     def setup()
-        VIM.reinit()
         Kernel.reinit()
         ENV['ANDROID_HOME'] = ANDROID_HOME_VALUE
         @vimProxy = StubVimProxy.new()
@@ -86,7 +83,7 @@ class TestGrand < Minitest::Test
     end
 
     def test_executeCommand_withInstall()
-        VIM.setEvaluateResult(0)
+        @vimProxy.commandDefinedResult = false
 
         @grand.executeCommand("Install")
 
@@ -105,7 +102,7 @@ class TestGrand < Minitest::Test
     def test_executeCommand_withSetup()
         @testTools.createTestBuildFile()
         @testTools.createTestFile("./src/main/AndroidManifest.xml")
-        VIM.setEvaluateResult(false, false) #TODO: Remove me
+        @vimProxy.commandDefinedResult = false
 
         @grand.executeCommand("Setup")
 

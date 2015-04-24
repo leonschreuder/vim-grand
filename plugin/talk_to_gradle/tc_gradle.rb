@@ -2,7 +2,6 @@ require "minitest/autorun"
 
 require_relative "gradle"
 require_relative "../utils/test_tools.rb"
-require_relative "../mock_vim"
 
 
 class StubVimProxy < VimProxy
@@ -20,8 +19,6 @@ end
 class TestGradle < Minitest::Test
 
 	def setup()
-		VIM.reinit()
-		VIM.setEvaluateResult false
         @vimProxy = StubVimProxy.new
 		@testTools = TestTools.new
 		@gradle = Gradle.new(@vimProxy)
