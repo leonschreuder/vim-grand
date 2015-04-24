@@ -21,7 +21,7 @@ class VimProxy
     end
 
     def runOnShellForResult(command)
-        if exists?("Dispatch")
+        if commandDefined?("Dispatch")
             VIM.command("Dispatch " + command)
         else
             VIM.command("! " + command)

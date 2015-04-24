@@ -29,14 +29,12 @@ class VimProxyTest < Minitest::Test
     end
 
     def test_addCommandCallingRuby()
-
         @proxy.addCommandCallingRuby("CommandName", "rubyMethod")
 
         assert_equal "command CommandName :ruby rubyMethod", VIM.getCommand[0]
     end
 
     def test_addTagsFile()
-
         @proxy.addTagsFile(".tags")
 
         assert_equal "silent! set tags+=.tags", VIM.getCommand[0]
@@ -59,7 +57,6 @@ class VimProxyTest < Minitest::Test
     end
 
     def test_setGlobalVariableToValue()
-
         @proxy.setGlobalVariableToValue("some_global_var", 1)
         @proxy.setGlobalVariableToValue("some_global_var", "2")
 
