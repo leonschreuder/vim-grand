@@ -9,4 +9,4 @@ endif
 let s:script_folder_path = escape( expand( '<sfile>:p:h' ), '\' ) . '/'
 
 execute "rubyfile ". s:script_folder_path . "grand.rb"
-execute "ruby Grand.new"
+execute "ruby Grand.loadPlugin()"

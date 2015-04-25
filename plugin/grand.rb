@@ -7,45 +7,30 @@ require_relative 'vim_proxy'
 
 class Grand
 
-	def initialize(proxy = VimProxy.new)
+    # NEXT:
+    # Refactor
+
+    def self.loadPlugin(proxy = VimProxy.new)
         @vimProxy = proxy
 		setupCommand('Setup')
-	end
+    end
 
-	def addAllCommands()
-        setupCommand('Tags')
-		setupCommand('Install')
-	end
-
-	def executeCommand(command)
-		actualMethod = 'execute'+command
-
-		if respond_to? actualMethod
-			send(actualMethod)
-		else
-			puts "Command \"" + command + "\" not recognised."
-		end
-	end
-
-	def setupCommand(commandId)
+	def self.setupCommand(commandId)
 		commandName = "Grand" + commandId
-		rubyCall = "Grand.new.executeCommand('" + commandId + "')"
-
+		rubyCall = "Grand.executeGrand" + commandId + "()"
 
         if not @vimProxy.commandDefined?(commandName)
             @vimProxy.addCommandCallingRuby(commandName, rubyCall)
         end
 	end
 
-
-	# Commands
-	#----------------------------------------
-
-	def executeInstall()
+	def self.executeGrandInstall()
 		Gradle.new.executeGradleCommand('installDebug')
 	end
 
-	def executeTags()
+
+	def self.executeGrandTags(proxy = VimProxy.new)
+        @vimProxy = proxy
         if ProjectControler.hasExuberantCtags()
             TagsHandler.new.generateTagsFile()
 
@@ -55,7 +40,8 @@ class Grand
         end
 	end
 
-	def executeSetup()
+	def self.executeGrandSetup(proxy = VimProxy.new)
+        @vimProxy = proxy
 		#TODO: check $ANDROID_HOME is set
 		if ProjectControler.isGradleProject() and ProjectControler.isAndroidProject()
 			configurator = Configurator.new()
@@ -66,6 +52,12 @@ class Grand
 
 			addAllCommands()
 		end
+	end
+
+	def self.addAllCommands(proxy = VimProxy.new)
+        @vimProxy = proxy
+        setupCommand('Tags')
+		setupCommand('Install')
 	end
 
 end

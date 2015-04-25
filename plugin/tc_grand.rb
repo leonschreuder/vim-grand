@@ -44,7 +44,6 @@ class TestGrand < Minitest::Test
         ENV['ANDROID_HOME'] = ANDROID_HOME_VALUE
         @vimProxy = StubVimProxy.new()
         @testTools = TestTools.new()
-        @grand = Grand.new(@vimProxy)
     end
 
     def teardown()
@@ -53,58 +52,34 @@ class TestGrand < Minitest::Test
     end
 
 
-    def test_init_shouldAddSetupCommand()
-
-        @vimProxy.commandDefinedResult = true
-        @grand.setupCommand("Setup")
+    def test_loadPlugin()
+        Grand.loadPlugin(@vimProxy)
 
         assert_equal @vimProxy.commandDefinedCalledWith, "GrandSetup"
-        assert_equal @vimProxy.rubyCallingCommandsAdded[0], ["GrandSetup",  "Grand.new.executeCommand('Setup')"]
+        assert_equal @vimProxy.rubyCallingCommandsAdded[0], ["GrandSetup",  "Grand.executeGrandSetup()"]
     end
 
-    def test_addAllCommands()
-
-        @grand.addAllCommands()
-
-        assert_equal 3, @vimProxy.rubyCallingCommandsAdded.length
-        assert_equal "GrandTags", @vimProxy.rubyCallingCommandsAdded[1][0]
-        assert_equal "Grand.new.executeCommand('Tags')", @vimProxy.rubyCallingCommandsAdded[1][1]
-        assert_equal "GrandInstall", @vimProxy.rubyCallingCommandsAdded[2][0]
-        assert_equal "Grand.new.executeCommand('Install')", @vimProxy.rubyCallingCommandsAdded[2][1]
-    end
-
-    #TODO: Remove this madness (Needless Complexity)
-    def test_executeCommand_shouldCatchNonExistent()
-        out = capture_io do
-            @grand.executeCommand("something")
-        end
-
-        assert_equal "Command \"something\" not recognised.\n", out[0]
-    end
-
-    def test_executeCommand_withInstall()
-        @vimProxy.commandDefinedResult = false
-
-        @grand.executeCommand("Install")
+    def test_executeGrandInstall()
+        Grand.executeGrandInstall()
 
         assert_equal "installDebug", Gradle.getCommandLastExecuted()
     end
 
-    def test_executeCommand_withTags()
+    def test_executeGrandTags()
         @testTools.createTestBuildFile()
         Kernel.backtickReturns TestProjectControler::CTAGS_MAN_EXUBERANT
 
-        @grand.executeCommand("Tags")
+        Grand.executeGrandTags(@vimProxy)
 
         assert_equal ".tags", @vimProxy.tagsFileAdded
     end
 
-    def test_executeCommand_withSetup()
+    def test_executeGrandSetup()
         @testTools.createTestBuildFile()
         @testTools.createTestFile("./src/main/AndroidManifest.xml")
         @vimProxy.commandDefinedResult = false
 
-        @grand.executeCommand("Setup")
+        Grand.executeGrandSetup(@vimProxy)
 
         assert Configurator.pathFileWasUpdated?, "Should have updated path file"
         assert File.exists?(ProjectControler::PATH_FILE)
@@ -112,13 +87,15 @@ class TestGrand < Minitest::Test
         assert Configurator.syntasticWasSetUp?, "Should have setup sysntastic"
     end
 
-    # Helpers
-    #--------------------------------------------------------------------------------
-    def contains(array, string)
-        array.each { |command|
-            return true if command =~ /#{string}/
-        }
-        return false
+    def test_addAllCommands2()
+
+        Grand.addAllCommands(@vimProxy)
+
+        assert_equal 2, @vimProxy.rubyCallingCommandsAdded.length
+        assert_equal "GrandTags", @vimProxy.rubyCallingCommandsAdded[0][0]
+        assert_equal "Grand.executeGrandTags()", @vimProxy.rubyCallingCommandsAdded[0][1]
+        assert_equal "GrandInstall", @vimProxy.rubyCallingCommandsAdded[1][0]
+        assert_equal "Grand.executeGrandInstall()", @vimProxy.rubyCallingCommandsAdded[1][1]
     end
 
 end
