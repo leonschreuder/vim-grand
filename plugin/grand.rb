@@ -4,23 +4,20 @@ require_relative 'project_controler'
 require_relative 'configurator'
 require_relative 'find_paths/path_file_manager'
 require_relative 'vim_proxy'
+require_relative 'read_test_results/quickfix_content_generator'
 
 class Grand
 
-    # NEXT:
-    # Refactor
-
     def self.loadPlugin(proxy = VimProxy.new)
         @vimProxy = proxy
-		setupCommand('Setup')
+		setupCommand('GrandSetup')
     end
 
-	def self.setupCommand(commandId)
-		commandName = "Grand" + commandId
-		rubyCall = "Grand.executeGrand" + commandId + "()"
+	def self.setupCommand(commandName)
+		rubyMethodCall = "Grand.execute" + commandName + "()"
 
         if not @vimProxy.commandDefined?(commandName)
-            @vimProxy.addCommandCallingRuby(commandName, rubyCall)
+            @vimProxy.addCommandCallingRuby(commandName, rubyMethodCall)
         end
 	end
 
@@ -29,20 +26,23 @@ class Grand
 	end
 
 
-	def self.executeGrandTags(proxy = VimProxy.new)
-        @vimProxy = proxy
+	def self.executeGrandTags(vimProxy = VimProxy.new)
         if ProjectControler.hasExuberantCtags()
-            TagsHandler.new.generateTagsFile()
 
-            @vimProxy.addTagsFile(".tags")
+            TagsHandler.new.generateTagsFile()
+            vimProxy.addTagsFile(".tags")
+
         else
             puts "You need to install Exuberant-Ctags for :GrandTags to work..."
         end
 	end
 
-	def self.executeGrandSetup(proxy = VimProxy.new)
-        @vimProxy = proxy
+	def self.executeGrandSetup()
 		#TODO: check $ANDROID_HOME is set
+        # - Check-method in ProjectControler
+        # - Call from here
+        # - puts message if not set
+
 		if ProjectControler.isGradleProject() and ProjectControler.isAndroidProject()
 			configurator = Configurator.new()
 			configurator.updatePathFile()
@@ -54,10 +54,15 @@ class Grand
 		end
 	end
 
+    def self.loadTestResults(vimProxy = VimProxy.new)
+        result = QuickfixContentGenerator.new.generateQuickfixFromResultXml()
+        vimProxy.loadStringToQuickFix(result)
+    end
+
 	def self.addAllCommands(proxy = VimProxy.new)
         @vimProxy = proxy
-        setupCommand('Tags')
-		setupCommand('Install')
+        setupCommand('GrandTags')
+		setupCommand('GrandInstall')
 	end
 
 end

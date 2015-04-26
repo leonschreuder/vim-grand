@@ -60,12 +60,12 @@ class QuickfixContentGenerator
             lineNumber ,
             message ,
         ]
-        return quickFixMessage.join('|')
+        return quickFixMessage.join(':')
     end
 
     def getFileNameFromFailure(failure)
         className = failure[:classname]
-        return "src/java/" + className.gsub('.', '/') + '.java'
+        return "src/test/java/" + className.gsub('.', '/') + '.java'
     end
 
     def findLineNumberForFailure(failure)
@@ -80,7 +80,13 @@ class QuickfixContentGenerator
             end
         }
 
-        return rightLine.match(/(?!\(.*)\d+/)[0]
+        match = rightLine.match(/(?!\(.*)\d+/)
+        if match
+            return match[0]
+        else
+            # Linenumber not found.
+            return "1"
+        end
     end
 
 end

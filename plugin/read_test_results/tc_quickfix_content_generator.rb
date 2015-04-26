@@ -32,20 +32,20 @@ class QuickfixContentGeneratorTest < Minitest::Test
         result = @quickfixContentGenerator.generateQuickfixFromResultXml()
 
         expectedLine1 = [
-            'src/java/com/example/project/AddItemDialogFragmentTest.java',
+            'src/test/java/com/example/project/AddItemDialogFragmentTest.java',
             '35',
             'org.junit.ComparisonFailure: EditText value retrieval expected:<[]est> but was:<[t]est>',
         ]
         expectedLine2 = [
-            'src/java/com/example/project/model/DbHelperTest.java',
+            'src/test/java/com/example/project/model/DbHelperTest.java',
             '89',
             'java.lang.AssertionError',
         ]
         resultLines = result.split('\n')
 
         #FIXME: This fails the Travis build for some reason...
-        #assert_equal expectedLine1.join('|'), resultLines[0]
-        #assert_equal expectedLine2.join('|'), resultLines[1]
+        assert_equal expectedLine1.join(':'), resultLines[0]
+        assert_equal expectedLine2.join(':'), resultLines[1]
     end
 
     def test_getTestResultFiles

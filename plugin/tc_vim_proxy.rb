@@ -80,4 +80,11 @@ class VimProxyTest < Minitest::Test
         assert_equal "'1'", result2
     end
 
+    def test_stringToQuickFix()
+
+        @proxy.loadStringToQuickFix("some string")
+
+        assert_equal ":cexpr \"some string\"", VIM.getCommand[0]
+    end
+
 end

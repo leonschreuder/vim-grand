@@ -6,12 +6,14 @@ require_relative "utils/test_tools"
 
 require_relative "tc_project_controler"
 require_relative "vim_proxy"
+require_relative "read_test_results/tc_quickfix_content_generator"
 
 class StubVimProxy < VimProxy
     attr_accessor :commandDefinedCalledWith
     attr_accessor :commandDefinedResult
     attr_accessor :rubyCallingCommandsAdded
     attr_accessor :tagsFileAdded
+    attr_accessor :stringLoadedToQuickfix
 
     def initialize()
         @commandDefinedResult = false
@@ -29,6 +31,10 @@ class StubVimProxy < VimProxy
             @rubyCallingCommandsAdded = []
         end
         @rubyCallingCommandsAdded << [commandName, rubyMethod]
+    end
+
+    def loadStringToQuickFix(string)
+        @stringLoadedToQuickfix = string
     end
 
     def addTagsFile(tagsFile)
@@ -79,12 +85,22 @@ class TestGrand < Minitest::Test
         @testTools.createTestFile("./src/main/AndroidManifest.xml")
         @vimProxy.commandDefinedResult = false
 
-        Grand.executeGrandSetup(@vimProxy)
+        Grand.executeGrandSetup()
 
         assert Configurator.pathFileWasUpdated?, "Should have updated path file"
         assert File.exists?(ProjectControler::PATH_FILE)
         assert Configurator.javacompleteWasSetUp?, "Should have setup javacomplete"
         assert Configurator.syntasticWasSetUp?, "Should have setup sysntastic"
+    end
+
+    def test_loadTestResults()
+        @testTools.copyFileForTest(QuickfixContentGeneratorTest::TEST_SOURCES_DIR + 'test_result_failing.xml', QuickfixContentGeneratorTest::TEST_RESULT_DIR)
+
+        Grand.loadTestResults(@vimProxy)
+       
+        refute_nil @vimProxy.stringLoadedToQuickfix
+        resultLines = @vimProxy.stringLoadedToQuickfix.split('\n')
+        assert_equal 1, resultLines.length
     end
 
     def test_addAllCommands2()

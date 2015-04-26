@@ -1,6 +1,6 @@
 class VimProxy
     # TODO: Vim throws indeciphreable errors when some vim call isn't correct.
-    # Add a 'verbose' option or something to make debugging easier.
+    # Maybe add a 'verbose' option or something to make debugging easier.
 
     def exists?(aVimObject)
         result = evaluate("exists('#{aVimObject}')")
@@ -51,7 +51,10 @@ class VimProxy
         end
     end
 
-    private
+    def loadStringToQuickFix(string)
+        command("cexpr \"" + string + "\"")
+    end
+
     def evaluate(command)
         begin
             return VIM.evaluate(command)
@@ -59,7 +62,6 @@ class VimProxy
         end
     end
 
-    private
     def command(arg)
         begin
             return VIM.command(arg)
