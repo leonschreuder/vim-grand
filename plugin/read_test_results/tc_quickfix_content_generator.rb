@@ -29,22 +29,26 @@ class QuickfixContentGeneratorTest < Minitest::Test
         @testTools.copyFileForTest(TEST_SOURCES_DIR + 'test_result_failing.xml', TEST_RESULT_DIR)
         @testTools.copyFileForTest(TEST_SOURCES_DIR + 'test_result_failing2.xml', TEST_RESULT_DIR)
 
-        expectedLine1 = [
-            'src/test/java/com/example/project/AddItemDialogFragmentTest.java',
-            '35',
-            'org.junit.ComparisonFailure: EditText value retrieval expected:<[]est> but was:<[t]est>',
-        ]
-        expectedLine2 = [
-            'src/test/java/com/example/project/model/DbHelperTest.java',
-            '89',
-            'java.lang.AssertionError',
-        ]
+        expected = "src/test/java/com/example/project/AddItemDialogFragmentTest.java:35:org.junit.ComparisonFailure: EditText value retrieval expected:<[]est> but was:<[t]est>"
+        expected2 = "src/test/java/com/example/project/model/DbHelperTest.java:89:java.lang.AssertionError"
+
+        # expectedLine1 = [
+        #     'src/test/java/com/example/project/AddItemDialogFragmentTest.java',
+        #     '35',
+        #     'org.junit.ComparisonFailure: EditText value retrieval expected:<[]est> but was:<[t]est>',
+        # ]
+        # expectedLine2 = [
+        #     'src/test/java/com/example/project/model/DbHelperTest.java',
+        #     '89',
+        #     'java.lang.AssertionError',
+        # ]
 
         result = @quickfixContentGenerator.generateQuickfixFromResultXml()
         # resultLines = result.split('\n')
+        
+        refute_nil result
 
-        expectedResult = expectedLine1.join(":") + "\n" + expectedLine2.join(":")
-        assert_equal expectedResult, result
+        assert_equal expected+"\\n"+expected2, result
 
         # assert_equal 2, resultLines.length
         # assert_equal expectedLine1.join(":"), resultLines[0]
