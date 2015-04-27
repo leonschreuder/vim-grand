@@ -44,15 +44,23 @@ class QuickfixContentGeneratorTest < Minitest::Test
         # ]
 
         result = @quickfixContentGenerator.generateQuickfixFromResultXml()
-        # resultLines = result.split('\n')
+        resultLines = result.split("\\n")
+
+        p "expected1="+expected
+        p "expected2="+expected2
         
-        refute_nil result
+        resultLines.each{ |resultLine|
+            p "resultLine="+resultLine
+            if not resultLine == expected and not resultLine == expected2
+                fail
+            end
+        }
 
-        expectedResult = expected+"\\n"+expected2
-        p "expected="+expectedResult
-        p "actual="+result
+        # expectedResult = expected+"\\n"+expected2
+        # p "expected="+expectedResult
+        # p "actual="+result
 
-        assert_equal expectedResult, result
+        # assert_equal expectedResult, result
 
         # assert_equal 2, resultLines.length
         # assert_equal expectedLine1.join(":"), resultLines[0]
