@@ -29,8 +29,6 @@ class QuickfixContentGeneratorTest < Minitest::Test
         @testTools.copyFileForTest(TEST_SOURCES_DIR + 'test_result_failing.xml', TEST_RESULT_DIR)
         @testTools.copyFileForTest(TEST_SOURCES_DIR + 'test_result_failing2.xml', TEST_RESULT_DIR)
 
-        result = @quickfixContentGenerator.generateQuickfixFromResultXml()
-
         expectedLine1 = [
             'src/test/java/com/example/project/AddItemDialogFragmentTest.java',
             '35',
@@ -41,9 +39,11 @@ class QuickfixContentGeneratorTest < Minitest::Test
             '89',
             'java.lang.AssertionError',
         ]
+
+        result = @quickfixContentGenerator.generateQuickfixFromResultXml()
         resultLines = result.split('\n')
 
-        #FIXME: This fails the Travis build for some reason...
+        assert_equal 2, resultLines.length
         assert_equal expectedLine1.join(':'), resultLines[0]
         assert_equal expectedLine2.join(':'), resultLines[1]
     end
