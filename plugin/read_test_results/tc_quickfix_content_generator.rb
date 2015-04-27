@@ -28,43 +28,18 @@ class QuickfixContentGeneratorTest < Minitest::Test
     def test_generateQuickfixFromResultXml
         @testTools.copyFileForTest(TEST_SOURCES_DIR + 'test_result_failing.xml', TEST_RESULT_DIR)
         @testTools.copyFileForTest(TEST_SOURCES_DIR + 'test_result_failing2.xml', TEST_RESULT_DIR)
-
-        expected = "src/test/java/com/example/project/AddItemDialogFragmentTest.java:35:org.junit.ComparisonFailure: EditText value retrieval expected:<[]est> but was:<[t]est>"
-        expected2 = "src/test/java/com/example/project/model/DbHelperTest.java:89:java.lang.AssertionError"
-
-        # expectedLine1 = [
-        #     'src/test/java/com/example/project/AddItemDialogFragmentTest.java',
-        #     '35',
-        #     'org.junit.ComparisonFailure: EditText value retrieval expected:<[]est> but was:<[t]est>',
-        # ]
-        # expectedLine2 = [
-        #     'src/test/java/com/example/project/model/DbHelperTest.java',
-        #     '89',
-        #     'java.lang.AssertionError',
-        # ]
+        expectedLine1 = "src/test/java/com/example/project/AddItemDialogFragmentTest.java:35:org.junit.ComparisonFailure: EditText value retrieval expected:<[]est> but was:<[t]est>"
+        expectedLine2 = "src/test/java/com/example/project/model/DbHelperTest.java:89:java.lang.AssertionError"
 
         result = @quickfixContentGenerator.generateQuickfixFromResultXml()
         resultLines = result.split("\\n")
 
-        p "expected1="+expected
-        p "expected2="+expected2
-        
+        # Travis reads files in different order. This checks both lines are in the array.
         resultLines.each{ |resultLine|
-            p "resultLine="+resultLine
-            if not resultLine == expected and not resultLine == expected2
+            if not resultLine == expectedLine1 and not resultLine == expectedLine2
                 fail
             end
         }
-
-        # expectedResult = expected+"\\n"+expected2
-        # p "expected="+expectedResult
-        # p "actual="+result
-
-        # assert_equal expectedResult, result
-
-        # assert_equal 2, resultLines.length
-        # assert_equal expectedLine1.join(":"), resultLines[0]
-        # assert_equal expectedLine2.join(":"), resultLines[1]
     end
 
     def test_getTestResultFiles
