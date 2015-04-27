@@ -41,11 +41,14 @@ class QuickfixContentGeneratorTest < Minitest::Test
         ]
 
         result = @quickfixContentGenerator.generateQuickfixFromResultXml()
-        resultLines = result.split('\n')
+        # resultLines = result.split('\n')
 
-        assert_equal 2, resultLines.length
-        assert_equal expectedLine1.join(':'), resultLines[0]
-        assert_equal expectedLine2.join(':'), resultLines[1]
+        expectedResult = expectedLine1.join(":") + "\n" + expectedLine2.join(":")
+        assert_equal expectedResult, result
+
+        # assert_equal 2, resultLines.length
+        # assert_equal expectedLine1.join(":"), resultLines[0]
+        # assert_equal expectedLine2.join(":"), resultLines[1]
     end
 
     def test_getTestResultFiles
