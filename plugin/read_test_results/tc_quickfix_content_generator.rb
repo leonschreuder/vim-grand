@@ -48,7 +48,11 @@ class QuickfixContentGeneratorTest < Minitest::Test
         
         refute_nil result
 
-        assert_equal expected+"\\n"+expected2, result
+        expectedResult = expected+"\\n"+expected2
+        p "expected="+expectedResult
+        p "actual="+result
+
+        assert_equal expectedResult, result
 
         # assert_equal 2, resultLines.length
         # assert_equal expectedLine1.join(":"), resultLines[0]
