@@ -11,7 +11,7 @@ if exists(":CompilerSet") != 2 " for older vims
     command -nargs=* CompilerSet setlocal <args>
 endif
   
-exec 'CompilerSet makeprg=gradle\ --console\ plain'
+exec 'CompilerSet makeprg=gradle\ -i\ --console\ plain'
 " exec 'CompilerSet makeprg=./gradlew\ --no-color'
 
 " Sample errors:
