@@ -21,7 +21,6 @@ if not defined? $readingError
 end
 
 
-
 if $readingError
     if /^\s*$/ !~ $_
         puts $_
