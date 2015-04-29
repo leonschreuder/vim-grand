@@ -1,4 +1,0 @@
-
-
-class QuickFixFilter
-end

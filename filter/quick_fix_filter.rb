@@ -1,47 +1,66 @@
 #!/usr/bin/env ruby
-#
-# ruby -n #{this_script}
-
-#TODO: Move to tested class
 
 require 'optparse'
-
 $verbose = false
 
-# OptionParser.new { |opts|
-#   opts.on '-v', '--verbose', 'Print verbose messages' do
-#       puts "opt v"
-#     $verbose = true
-#   end
-# }
+class QuickFixFilter
+    @readingFailureInProgress = false
 
-if not defined? $readingError
-    $readingError = false
-    puts "QuickFix result filtering started ..." if $verbose
+    def filterLine(line)
+        if lineIsFailureLine(line)
+            @readingFailureInProgress = true
+
+            printLineWithPackageNameAsFilePath(line)
+
+        elsif @readingFailureInProgress
+
+            continuePrintingUntilWhiteLine(line)
+
+        elsif $verbose
+            puts line
+        end
+    end
+
+    def lineIsFailureLine(line)
+        return line =~ />.*FAILED$/
+    end
+
+    def continuePrintingUntilWhiteLine(line)
+        if /^\s*$/ !~ line
+            puts line
+        else
+            @readingFailureInProgress = false
+        end
+    end
+
+    def printLineWithPackageNameAsFilePath(packagString)
+        whole_words = packagString.split(" ")
+
+        slashedPackage = whole_words[0].gsub(/\./, "\/")
+        whole_words[0] = "src/test/java/" + slashedPackage + ".java"
+
+        puts whole_words.join(" ")
+    end
 end
 
+if __FILE__==$0
+    # this will only run if the script was the main, not load'd or require'd
 
-if $readingError
-    if /^\s*$/ !~ $_
-        puts $_
-    else
-        $readingError = false
-        puts "...done reading error" if $verbose
+    OptionParser.new do |opts|
+        opts.on '-v', '--verbose', 'Print verbose messages' do
+            puts "Verbose"
+            $verbose = true
+        end
+    end.parse!
+
+    puts "Build started"
+    # puts __FILE__
+
+    quickFilter = QuickFixFilter.new
+    $stdin.each_line do |line|
+        quickFilter.filterLine(line)
     end
-elsif $_ =~ /FAILED$/ and !$_.start_with?(":") and !$_.start_with?("BUILD")
-    puts "...starts reading error" if $verbose
 
-    whole_words = $_.split(" ")
-
-    whole_words[0] = "src/test/java/" + whole_words[0].gsub(/\./, "\/") + ".java"
-
-    puts whole_words.join(" ")
-
-    $readingError = true
-elsif $_.start_with?(":")
-    puts $_
-elsif $_ =~ /BUILD\ SUCCESSFUL/
-    puts $_
-else
-    puts "Nope: " + $_ if $verbose
+    t = Time.new
+    puts "Build completed at " + t.strftime("%H:%M")
 end
