@@ -33,7 +33,7 @@ exec 'CompilerSet makeprg=gradle\ -i\ --console\ plain'
 " 63 tests completed, 57 failed, 1 skipped
 CompilerSet errorformat=%-G:%.%#,
             \%-G\\s%#,
-            \%E%f\ >\ %.%#,
+            \%E%f\ >\ %.%#FAILED,
                 \%Z\s%#%m\ at\ %.%#.java:%l,
             \%A%*\\d\ tests\ completed\,\ %*\\d\ failed\,\ %*\\d\ skipped,
             \%-GFAILURE%.%#,
