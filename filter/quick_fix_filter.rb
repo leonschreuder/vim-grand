@@ -7,7 +7,7 @@ class QuickFixFilter
     @readingFailureInProgress = false
 
     def filterLine(line)
-        if lineIsFailureLine(line)
+        if lineIsImportantMessage(line)
             @readingFailureInProgress = true
 
             printLineWithPackageNameAsFilePath(line)
@@ -21,8 +21,8 @@ class QuickFixFilter
         end
     end
 
-    def lineIsFailureLine(line)
-        return line =~ />.*FAILED$/
+    def lineIsImportantMessage(line)
+        return line =~ />.*FAILED$/ || line =~ />.*STANDARD_OUT/ || line =~ />.*STANDARD_ERROR/
     end
 
     def continuePrintingUntilWhiteLine(line)
