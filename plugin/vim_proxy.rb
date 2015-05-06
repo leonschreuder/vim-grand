@@ -24,8 +24,10 @@ class VimProxy
     end
 
     def runOnShellForResult(command)
-        if commandDefined?("Dispatch")
-            command("Dispatch " + command)
+        if commandDefined?("Make")
+            # This presumes the compiler was set
+            command("Make " + command)
+            # command("Dispatch " + command)
         else
             command("! " + command)
         end
@@ -49,6 +51,10 @@ class VimProxy
         else
             return type.to_s()
         end
+    end
+
+    def getCurrentFileName()
+        return evaluate("expand('%:t:r')")
     end
 
     def loadStringToQuickFix(string)

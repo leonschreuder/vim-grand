@@ -5,16 +5,17 @@ class Adb
 	def self.getAdb()
 		androidHome = PathResolver.new.getAndroidHome()
 
-		return File.join(androidHome, 'platform-tools', 'adb')
+		return File.join(androidHome, "platform-tools", "adb")
 	end
 
 	def self.getDevices()
-		Kernel.system( [getAdb(), 'devices'])
+		stdout = `#{getAdb()} devices`
+        return stdout.split("\n")[1..-1]
 	end
 
 	def self.installLatestApk()
 		latestApk = PathResolver.new.getLatestApkFile()
-		Kernel.system( [getAdb(), 'install', '-r', latestApk])
+		Kernel.system( [getAdb(), "install", "-r", latestApk])
 	end
 end
 

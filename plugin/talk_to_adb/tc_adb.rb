@@ -23,10 +23,11 @@ class TestAdb < Minitest::Test
 	end
 
 	def test_getDevices()
+        Kernel.backtickReturns "List of devices attached\nR32D202RWKA\tdevice\n\n"
 
-		Adb.getDevices()
+		result = Adb.getDevices()
 
-		assert_equal [Adb.getAdb(), 'devices'], Kernel.getSystem()[0]
+        assert_equal ["R32D202RWKA\tdevice"], result
 	end
 
 	def test_installLatestApk()

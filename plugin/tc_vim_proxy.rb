@@ -53,7 +53,7 @@ class VimProxyTest < Minitest::Test
 
         @proxy.runOnShellForResult("ls")
 
-        assert_equal "Dispatch ls", VIM.getCommand[0]
+        assert_equal "Make ls", VIM.getCommand[0]
     end
 
     def test_setGlobalVariableToValue()
@@ -84,7 +84,16 @@ class VimProxyTest < Minitest::Test
 
         @proxy.loadStringToQuickFix("some string")
 
-        assert_equal ":cexpr \"some string\"", VIM.getCommand[0]
+        assert_equal "cexpr \"some string\"", VIM.getCommand[0]
     end
 
+
+    def test_getCurrentFileName()
+        VIM.setEvaluateResult("SomeClassName") #TODO: Remove this requirement
+
+        result = @proxy.getCurrentFileName()
+
+        assert_equal "SomeClassName", result
+        assert_equal "expand('%:t:r')", VIM.getEvaluate[0]
+    end
 end

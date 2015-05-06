@@ -6,6 +6,7 @@ require_relative "../utils/test_tools.rb"
 
 class StubVimProxy < VimProxy
     attr_accessor :runOnShellForResultArg
+    attr_accessor :commandArg
 
     def initialize()
         @runOnShellForResultArg = nil
@@ -13,6 +14,10 @@ class StubVimProxy < VimProxy
 
     def runOnShellForResult(command)
         @runOnShellForResultArg = command
+    end
+
+    def command(command)
+        @commandArg = command
     end
 end
 
@@ -28,28 +33,24 @@ class TestGradle < Minitest::Test
 		@testTools.removeTestFilesAndDirs()
 	end
 
+    def test_setsUpCompiler()
+        assert_equal "compiler gradle", @vimProxy.commandArg
+    end
+
 	def test_executeGradleCommand_shouldDefaultToStandardGradle()
 
-		@gradle.executeGradleCommand("test")
+		@gradle.executeGradleCommandForResult("test")
 
-        assert_equal "gradle test -q", @vimProxy.runOnShellForResultArg
+        assert_equal "test", @vimProxy.runOnShellForResultArg
 	end
 
-    # TODO: Move functionality to vimProxy
-	def test_executeGradleCommand_shouldUseDispatchWhenAvailable()
+	# def test_executeGradleCommand_shouldUseWrapperWhenAvailable()
+	# 	createGradlew()
 
-		@gradle.executeGradleCommand("test")
+	# 	@gradle.executeGradleCommandForResult("test")
 
-        assert_equal "gradle test -q", @vimProxy.runOnShellForResultArg
-	end
-
-	def test_executeGradleCommand_shouldUseWrapperWhenAvailable()
-		createGradlew()
-
-		@gradle.executeGradleCommand("test")
-
-        assert_equal "./gradlew test -q", @vimProxy.runOnShellForResultArg
-	end
+        # assert_equal "./gradlew test", @vimProxy.runOnShellForResultArg
+	# end
 
 	def test_hasGradleWrapper_falseWhenNoWrapper()
 

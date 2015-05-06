@@ -80,4 +80,12 @@ FAILURE_COMPLETE_OUT = "src/test/java/com/example/some_project/model/DbHelperTes
         assert_equal STANDARD_OUTPUT_OUT + "\n" + STANDARD_ERROR_OUT + "\n", out[0]
     end
 
+    def test_getScriptPath()
+        location = File.expand_path(File.dirname(__FILE__))
+        
+        path = QuickFixFilter.getScriptPath()
+
+        assert_equal location + "/quick_fix_filter.rb", path
+    end
+
 end

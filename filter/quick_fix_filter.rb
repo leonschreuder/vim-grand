@@ -15,7 +15,6 @@ class QuickFixFilter
         elsif @readingFailureInProgress
 
             continuePrintingUntilWhiteLine(line)
-
         elsif $verbose
             puts line
         end
@@ -40,6 +39,10 @@ class QuickFixFilter
         whole_words[0] = "src/test/java/" + slashedPackage + ".java"
 
         puts whole_words.join(" ")
+    end
+
+    def self.getScriptPath()
+        return File.expand_path(__FILE__)
     end
 end
 

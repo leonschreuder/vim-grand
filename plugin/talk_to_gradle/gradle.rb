@@ -1,34 +1,41 @@
-
-require_relative '../vim_proxy'
+require_relative "../vim_proxy"
 
 class Gradle
 
     def initialize(vimProxy = VimProxy.new)
         @vimProxy = vimProxy
+        @vimProxy.command("compiler gradle")
     end
 
-	def executeGradleCommand(command)
+    def executeGradleCommandForResult(command)
         @@commandLastExecuted = command
-		commandString = []
 
-		commandString << getGradleExe()
-		commandString << command
-		commandString << "-q"
+        # The compiler handles selecting the executable. So just pass it on.
+        @vimProxy.runOnShellForResult(command)
+    end
 
-        @vimProxy.runOnShellForResult(commandString.join(" "))
-	end
+    # def executeGradleCommand(command)
+    #     @@commandLastExecuted = command
+    #     commandString = []
 
-	def getGradleExe()
-		if hasGradleWrapper
-			return './gradlew'
-		else
-			return 'gradle'
-		end
-	end
+    #     commandString << getGradleExe()
+    #     commandString << command
 
-	def hasGradleWrapper()
-		File.executable?('./gradlew') || File.executable?('./gradlew.bat') 
-	end
+    #     @vimProxy.runOnShellForResult(commandString.join(" "))
+    # end
+
+    #TODO: Add support for gradlew.bat
+    def getGradleExe()
+        if hasGradleWrapper
+            return './gradlew'
+        else
+            return 'gradle'
+        end
+    end
+
+    def hasGradleWrapper()
+        File.executable?('./gradlew') || File.executable?('./gradlew.bat') 
+    end
 
 
     def self.getCommandLastExecuted(); @@commandLastExecuted; end
