@@ -38,10 +38,12 @@ def addProjectConfigsToList(proj) {
     }
 }
 def addProjectSourceSetsToList(proj) {
-    for (srcSet in proj.sourceSets) {
-        for (dir in srcSet.java.srcDirs) {
-            classpathFiles += dir.absolutePath
-        }
+    if (proj.hasProperty("sourceSets")) {
+      for (srcSet in proj.sourceSets) {
+          for (dir in srcSet.java.srcDirs) {
+              classpathFiles += dir.absolutePath
+          }
+      }
     }
 }
 
