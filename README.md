@@ -11,17 +11,11 @@ that it is written mostly in ruby, is unit tested, and exclusively supports
 the Gradle build system. If you'd like to use ant/maven, or don't need
 unit-testing, maybe hsanson's plugin will do the trick.
 
-
-BREAKING CHANGES!
---------------------------------------------------------------------------------
-
-Since I've completely rewritten the plugin, things might inexplicably stop
-to work. Here's what I've changed:
-
-- The plugin is now written in ruby instead of python (liked it better).
-- Calling `gradle ouputPaths` now writes to a different output file.
-- The plugin now creates and uses a central import-paths file that you can
-  manually customize.
+NOTICE:  
+Since I'm no longer working with Android professionally, and the scale of the
+java projects I am currently working on is way to mutch for Javacomplete, I'm
+not using the plugin right now. The plugin is therefor currently in hiatus.
+Pull requests are welcome though.
 
 
 Requirements
